@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "701628102519",
+    "project_id": "remit-e1e2a",
+    "storage_bucket": "remit-e1e2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701628102519:android:f436409fc402913884d372",
+        "android_client_info": {
+          "package_name": "com.example.remit_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701628102519-c7j611mdpj3hgrounsi8rb0m2m89q7jv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwFjQwfeRKpNIXl3JY8mvV6RZG8clZyis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701628102519-c7j611mdpj3hgrounsi8rb0m2m89q7jv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

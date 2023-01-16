@@ -4,6 +4,7 @@ import 'package:remit_app/colors.dart';
 import 'package:remit_app/pages/home_page.dart';
 
 import '../custom_widgits/button1.dart';
+import '../models/country_api_list.dart';
 import 'login_page.dart';
 
 class SignupPage extends StatefulWidget {
@@ -19,7 +20,14 @@ class _SignupPageState extends State<SignupPage> {
   bool showPass = true;
 
   bool? clickCheck = false;
-  List<String> listOfValue = ['Bangladesh', 'India', 'Pakistan', 'Australia', 'Denmark'];
+  final phoneCon=TextEditingController();
+
+  @override
+  void dispose() {
+
+    phoneCon.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,38 +51,25 @@ class _SignupPageState extends State<SignupPage> {
                 padding: const EdgeInsets.only(
                     left: 16, right: 16, top: 8.0, bottom: 8),
                 child: DropdownButtonFormField(
-                  value: country,
-                  hint: Text(
-                    'Select Country',
-                    style: TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
+                    // prefixIcon: Icon(Icons.settings),
+                    hintText: 'Select Country',
+                    hintStyle: TextStyle(color: Colors.black)
+                    // filled: true,
+                    // fillColor: Colors.white,
+                    // errorStyle: TextStyle(color: Colors.red),
                   ),
-                  isExpanded: true,
-                  onChanged: (value) {
-                    setState(() {
-                      country = value;
-                    });
-                  },
-                  onSaved: (value) {
-                    setState(() {
-                      country = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return "can't empty";
-                    } else {
-                      return null;
-                    }
-                  },
-                  items: listOfValue.map((String val) {
+                  items: countryList.map((map) {
                     return DropdownMenuItem(
-                      value: val,
-                      child: Text(
-                        val,
-                      ),
+                      value: map['code'],
+                      child: Text(map['name']!),
                     );
-                  }).toList(),
-                ),
+                  }).toList(), onChanged: (value) {
+                  print(value);
+                  setState(() {
+                    phoneCon.text=value.toString();
+                  });
+                },),
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -153,21 +148,24 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(
                 height: 20,
               ),
-              const Padding(
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 8.0, bottom: 8),
-                child: Text(
-                  'Mobile',
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 8.0, bottom: 8),
+                child: TextFormField(
+                  controller: phoneCon,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: "Mobile",
+                    errorStyle: TextStyle(height: 0, color: Colors.transparent),
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
                   style: TextStyle(
                     fontSize: 16,
+                    color: Color(0xFF3C3C43),
                   ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16),
-                child: Divider(
-                  thickness: 1,
-                  color: Colors.grey,
                 ),
               ),
               Wrap(
