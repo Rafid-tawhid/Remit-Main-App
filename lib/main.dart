@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: LauncherPage.routeName,
+      initialRoute: LoginPage.routeName,
       routes: {
         LauncherPage.routeName:(context)=>LauncherPage(),
         SignupPage.routeName:(context)=>SignupPage(),
