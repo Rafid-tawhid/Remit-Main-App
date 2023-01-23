@@ -1,22 +1,62 @@
 import 'package:flutter/material.dart';
 
 import '../colors.dart';
+import '../models/calculator_info_model.dart';
+import '../models/recipient_model.dart';
 import '../pages/user_profile_page.dart';
 import 'drawer.dart';
 
-class ReceiverWidget extends StatefulWidget {
-  const ReceiverWidget({Key? key}) : super(key: key);
+class ReceipientWidget extends StatefulWidget {
+  const ReceipientWidget({Key? key}) : super(key: key);
 
   @override
-  State<ReceiverWidget> createState() => _ReceiverWidgetState();
+  State<ReceipientWidget> createState() => _ReceipientWidgetState();
 }
 
-class _ReceiverWidgetState extends State<ReceiverWidget> {
-  String? country;
+
+class _ReceipientWidgetState extends State<ReceipientWidget> {
+  RecipientModel? recipient;
+  String? serviceName;
+  String? currency;
+  String? sendAmount;
+  String? fees;
+  String? totalPayable;
+  String? rate;
+  String? recipientGets;
+
+
   bool showPass=true;
-  List<String> listOfValue = ['Daily', 'Weekly', 'Monthly', 'Yearly',];
+  List<RecipientModel> listOfRecipient = [
+    RecipientModel('Rafid','Bangladesh','Https::/'),
+    RecipientModel('Rafid 2','Bangladesh','Https::/'),
+    RecipientModel('Rafid 3','Bangladesh','Https::/'),
+    RecipientModel('Rafid 4','Bangladesh','Https::/'),
+  ];
+  late CalculatorInfoModel calculatorInfo;
+
+  @override
+  void didChangeDependencies() {
+    calculatorInfo=ModalRoute.of(context)!.settings.arguments as CalculatorInfoModel;
+    if(calculatorInfo!=null){
+      print(calculatorInfo.toMap());
+      serviceName=calculatorInfo.serviceName;
+      currency=calculatorInfo.currency;
+      sendAmount=calculatorInfo.sendAmount;
+      fees=calculatorInfo.fees;
+      totalPayable=calculatorInfo.totalPayable;
+      rate=calculatorInfo.exchangeRate;
+      recipientGets=calculatorInfo.recipientGets;
+
+    }
+    else{
+      print('NOTHIN PHONE');
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: MyDrawer(),
@@ -42,62 +82,172 @@ class _ReceiverWidgetState extends State<ReceiverWidget> {
       ),
       body: ListView(
         children: [
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 16,right: 16),
+          //   child: Row(
+          //     children: [
+          //       const Expanded(
+          //         flex: 3,
+          //         child: Text('History',style: TextStyle(fontSize: 18)),),
+          //       Expanded(
+          //         child: DropdownButtonFormField(
+          //           decoration: InputDecoration(
+          //               enabledBorder: InputBorder.none
+          //           ),
+          //           value: country,
+          //           hint: Text(
+          //             'Daily',
+          //             style: TextStyle(color: Colors.black),
+          //           ),
+          //           isExpanded: true,
+          //           onChanged: (value) {
+          //             setState(() {
+          //               country = value;
+          //             });
+          //           },
+          //           onSaved: (value) {
+          //             setState(() {
+          //               country = value;
+          //             });
+          //           },
+          //           validator: (value) {
+          //             if (value==null) {
+          //               return "can't empty";
+          //             } else {
+          //               return null;
+          //             }
+          //           },
+          //           items: listOfValue
+          //               .map((String val) {
+          //             return DropdownMenuItem(
+          //               value: val,
+          //               child: Text(
+          //                 val,
+          //               ),
+          //             );
+          //           }).toList(),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Padding(
-            padding: const EdgeInsets.only(left: 16,right: 16),
-            child: Row(
-              children: [
-                const Expanded(
-                  flex: 3,
-                    child: Text('History',style: TextStyle(fontSize: 18)),),
-                Expanded(
-                  child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: InputBorder.none
-                        ),
-                    value: country,
-                    hint: Text(
-                      'Daily',
-                      style: TextStyle(color: Colors.black),
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              elevation: 5,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('$serviceName',style: TextStyle(fontSize: 22),),
+                    Align(
+                      alignment: Alignment.topRight,
+                        child: Text('AUD-$currency')),
+                    SizedBox(height: 10,),
+                    Divider(height: 5,color: Colors.black,),
+                    SizedBox(height: 5,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Send Amount'),
+                        Text('$sendAmount AUD')
+                      ],
                     ),
-                    isExpanded: true,
-                    onChanged: (value) {
-                      setState(() {
-                        country = value;
-                      });
-                    },
-                    onSaved: (value) {
-                      setState(() {
-                        country = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value==null) {
-                        return "can't empty";
-                      } else {
-                        return null;
-                      }
-                    },
-                    items: listOfValue
-                        .map((String val) {
-                      return DropdownMenuItem(
-                        value: val,
-                        child: Text(
-                          val,
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                    SizedBox(height: 5,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Fees'),
+                        Text('$fees AUD')
+                      ],
+                    ),
+                    SizedBox(height: 5,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('You pay in total'),
+                        Text('$totalPayable AUD')
+                      ],
+                    ),
+                    SizedBox(height: 5,),
+                    Divider(height: 5,color: Colors.black,),
+                    SizedBox(height: 5,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Exchange Rate',style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text('1 AUD->$rate $currency',style: TextStyle(fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                    SizedBox(height: 5,),
+                    Divider(height: 5,color: Colors.black,),
+                    SizedBox(height: 5,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Your recipient gets',style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text('$recipientGets $currency',style: TextStyle(fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                    SizedBox(height: 5,),
+                    Divider(height: 5,color: Colors.black,),
+
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-          ListTile(
+          SizedBox(height: 20,),
+          Text('Choose your Recipient',style: TextStyle(fontSize: 22),textAlign: TextAlign.center,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownButtonFormField<RecipientModel>(
 
-            leading: Image.network(
-                'https://newwallpapershd.com/wp-content/uploads/2016/03/bangladesh-Flag.gif',width: 60,height: 45,),
-            title: Text('Bangladesh'),
-            subtitle: Text('Dhaka , Mirpur'),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                  enabledBorder: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder()
+              ),
+              value: recipient,
+              hint: Text(
+                '  Existing Receipient',
+                style: TextStyle(color: Colors.black),
+              ),
+              isExpanded: true,
+              onChanged: (value) {
+                setState(() {
+                  recipient = value;
+                });
+              },
+              onSaved: (value) {
+                setState(() {
+                  recipient = value;
+                });
+              },
+              validator: (value) {
+                if (value==null) {
+                  return "can't empty";
+                } else {
+                  return null;
+                }
+              },
+              items: listOfRecipient.map((reciver) => DropdownMenuItem<RecipientModel>(
+                value: reciver,
+                child: Row(
+                  children: [
+                    SizedBox(width: 10,),
+                    Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbn0HXI_7p1y9Tp__5xyLaS4HudK-IauKLB8JQSv9h&s',height: 25,width: 40,),
+                    SizedBox(width: 15,),
+                    Text(reciver.name),
+                  ],
+                )
+              )).toList()
+
+            ),
           ),
+
           SizedBox(height: 20,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +256,248 @@ class _ReceiverWidgetState extends State<ReceiverWidget> {
               SizedBox(width: 10,),
               Text('Add Recepint',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)
             ],
-          )
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'First Name ',
+                      style: TextStyle(
+                          color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'First Name',
+                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                      hintStyle: TextStyle(),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Middle Name ',
+                      style: TextStyle(
+                          color: MyColor.grey, fontSize: 16),
+                    ),
+
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Middle Name',
+                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                      hintStyle: TextStyle(),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Last Name ',
+                      style: TextStyle(
+                          color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Last Name',
+                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                      hintStyle: TextStyle(),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Address ',
+                      style: TextStyle(
+                          color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Enter Your Address',
+                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                      hintStyle: TextStyle(),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Suburb/town/city ',
+                      style: TextStyle(
+                          color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Suburb/town/city',
+                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                      hintStyle: TextStyle(),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

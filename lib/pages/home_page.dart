@@ -21,10 +21,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = [
-    HomeWidget(),
-    ReceiverWidget(),
+
+    ReceipientWidget(),
     SendMoneyWidget(),
     SendWidget(),
+    HomeWidget(),
   ];
 
 

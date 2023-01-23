@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import '../models/country_models.dart';
+import '../models/cupon_rate_model.dart';
 import 'api_calls.dart';
 
 class CalculatorAPICalls{
@@ -78,7 +79,37 @@ class CalculatorAPICalls{
   }
 
 
+  static Future<CuponRateModel?> getCuponDetails(String cuponCode) async {
+    var data;
+    CuponRateModel? cuponRateModel;
+    await LoginApiCalls.getAuthToken().then((auth) async {
+      print('THIS IS SERVICE Cupon TOKEN ${auth['token']}');
+      try {
+        Response response = await post(
+            Uri.parse('https://remit.daneshexchange.com/staging/api/get_coupon'),
+            headers: {
+              'Authorization': 'Bearer ${auth['token']}',
+            },
+            body: {
+              "promo_code" : cuponCode,
+            }
+        );
+        if (response.statusCode == 200) {
+          data =await jsonDecode(response.body.toString());
+          cuponRateModel=CuponRateModel.fromJson(data);
+          return cuponRateModel;
+        }
+        else {
+          print('Failed........');
+          return cuponRateModel;
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    });
 
+    return cuponRateModel;
+  }
 
 
 }

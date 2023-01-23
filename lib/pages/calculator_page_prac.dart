@@ -2,17 +2,20 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/api_calls/calculator_api_calls.dart';
 import 'package:remit_app/pages/calculator_page.dart';
+import 'package:remit_app/pages/home_page.dart';
 
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
+import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
 import '../providers/calculator_provider.dart';
 import 'login_page.dart';
 
 class CalculatorPage2 extends StatefulWidget {
   const CalculatorPage2({Key? key}) : super(key: key);
-  static const String routeName='/calculator2';
+  static const String routeName = '/calculator2';
 
   @override
   State<CalculatorPage2> createState() => _CalculatorPage2State();
@@ -21,6 +24,8 @@ class CalculatorPage2 extends StatefulWidget {
 class _CalculatorPage2State extends State<CalculatorPage2> {
   final sendControler = TextEditingController();
   final receiveControler = TextEditingController();
+  final cuponControler = TextEditingController();
+
   late CalculatorProvider provider;
   String? countryName;
   String? img;
@@ -32,29 +37,33 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   List<CurrencyDetails> currencyList = [];
   String? serviceId;
   String? currencyName;
+  String? serviceName;
   CurrencyDetails? currency_details;
-  bool showError=false;
+  bool showError = false;
   String? showErrorMsg;
   String? recerversAmount;
-  String fees="0.0";
-  bool showRateInfo=false;
-  bool showSendMoneyBtn=false;
-  final _fromKey=GlobalKey<FormState>();
-
+  String fees = "0.0";
+  bool showRateInfo = false;
+  bool showSendMoneyBtn = false;
+  final _fromKey = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() {
     if (callOnce) {
       provider = Provider.of(context, listen: true);
       _country = provider.getAllCountriesInfoList.first;
-      serviceList = provider.getAllCountriesInfoList.first.currencyDetails!; //initial service
+      serviceList = provider
+          .getAllCountriesInfoList.first.currencyDetails!; //initial service
       currencyList = provider.getAllCountriesInfoList.first.currencyDetails!;
       finalRate = _country!.currencyDetails!.first.finalRate;
       serviceId = _country!.currencyDetails!.first!.serviceId;
       currencyName = _country!.currencyDetails!.first!.currency;
-      sendControler.text='1000';
-      receiveControler.text= (1000*double.parse(finalRate!)).toStringAsFixed(2);
-      currency_details=_country!.currencyDetails!.first;
+      serviceName = _country!.currencyDetails!.first!.serviceName;
+      sendControler.text = '1000';
+      receiveControler.text =
+          (1000 * double.parse(finalRate!)).toStringAsFixed(2);
+      currency_details = _country!.currencyDetails!.first;
       // provider.getServiceCharges("1000",currency_details!.countryTableId,currency_details!.serviceId).then((charge) {
       //   fees=charge['service_fee'];
       // });
@@ -67,11 +76,12 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   void dispose() {
     sendControler.dispose();
     receiveControler.dispose();
+    cuponControler.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -152,13 +162,14 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                 color: Color(0xffD9D9D9)),
                             child: countryName == null
                                 ? Image.network(
-                              provider.getAllCountriesInfoList.first.image!,
-                              fit: BoxFit.fitWidth,
-                            )
+                                    provider
+                                        .getAllCountriesInfoList.first.image!,
+                                    fit: BoxFit.fitWidth,
+                                  )
                                 : Image.network(
-                              img!,
-                              fit: BoxFit.fitWidth,
-                            ),
+                                    img!,
+                                    fit: BoxFit.fitWidth,
+                                  ),
                           ),
                           Expanded(
                             child: Container(
@@ -177,18 +188,26 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                         value.currencyDetails!.first.serviceId!,
                                         value.currencyDetails!.first.currency!);
                                     finalRate = provider.finalRate!.toString();
-                                    currency_details=value.currencyDetails!.first;
+                                    currency_details =
+                                        value.currencyDetails!.first;
+                                    serviceName = value
+                                        .currencyDetails!.first.serviceName;
+                                    serviceId =
+                                        value.currencyDetails!.first.serviceId;
 
                                     setState(() {
-                                      showRateInfo=false;
-                                      showError=false;
-                                      showSendMoneyBtn=false;
+                                      showRateInfo = false;
+                                      showError = false;
+                                      showSendMoneyBtn = false;
                                       _country = value;
                                       img = _country!.image!;
                                       countryName = value!.name!;
-                                      currencyName = value.currencyDetails!.first.currency;
-                                      sendControler.text='1000';
-                                      receiveControler.text= (1000*double.parse(finalRate!)).toStringAsFixed(2);
+                                      currencyName =
+                                          value.currencyDetails!.first.currency;
+                                      sendControler.text = '1000';
+                                      receiveControler.text =
+                                          (1000 * double.parse(finalRate!))
+                                              .toStringAsFixed(2);
                                     });
                                   }
 
@@ -265,22 +284,27 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                       },
                       items: serviceList
                           .map((catModel) => DropdownMenuItem(
-                          value: catModel,
-                          child: Text(catModel.serviceName!)))
+                              value: catModel,
+                              child: Text(catModel.serviceName!)))
                           .toList(),
                       onChanged: (value) async {
-                        currency_details=value;
+                        currency_details = value;
                         serviceId = value!.serviceId;
+                        serviceName = value!.serviceName;
                         print('Service Id ${serviceId}');
                         // print('${_country!.id!} + ${value!.serviceId!} + ${currencyName}');
-                        await provider.getFinalRate(_country!.id!, serviceId!, currencyName!);
+                        await provider.getFinalRate(
+                            _country!.id!, serviceId!, currencyName!);
                         finalRate = provider.finalRate.toString();
                         print('finalRate $finalRate');
                         setState(() {
-                          showSendMoneyBtn=false;
-                          receiveControler.text= (double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2);
-                          showRateInfo=false;
-                          showError=false;
+                          showSendMoneyBtn = false;
+                          receiveControler.text =
+                              (double.parse(sendControler.text) *
+                                      double.parse(finalRate!))
+                                  .toStringAsFixed(2);
+                          showRateInfo = false;
+                          showError = false;
                         });
                       },
                     ),
@@ -300,30 +324,33 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                         height: 5,
                       ),
                       Focus(
-                        onFocusChange: (change){
+                        onFocusChange: (change) {
                           setState(() {
-                            showRateInfo=false;
-                            showError=false;
-                            showSendMoneyBtn=false;
+                            showRateInfo = false;
+                            showError = false;
+                            showSendMoneyBtn = false;
                           });
                         },
                         child: TextFormField(
                           controller: sendControler,
-                          onChanged: (value){
-                            showSendMoneyBtn=false;
-                            double receive=double.parse(value)*double.parse(finalRate!);
-                            receiveControler.text=receive.toStringAsFixed(2);
+                          onChanged: (value) {
+                            showSendMoneyBtn = false;
+                            double receive =
+                                double.parse(value) * double.parse(finalRate!);
+                            receiveControler.text = receive.toStringAsFixed(2);
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             fillColor: Colors.white,
                             filled: true,
                             labelText: 'Amount',
-                            errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                            errorStyle:
+                                TextStyle(overflow: TextOverflow.ellipsis),
                             suffixIconConstraints:
-                            BoxConstraints(maxHeight: 30, maxWidth: 38),
+                                BoxConstraints(maxHeight: 30, maxWidth: 38),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2, color: MyColor.blue),
+                              borderSide:
+                                  BorderSide(width: 2, color: MyColor.blue),
                               //<-- SEE HERE
                               borderRadius: BorderRadius.circular(4.0),
                             ),
@@ -336,7 +363,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               borderRadius: BorderRadius.circular(4.0),
                             ),
                             errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2, color: Colors.red),
+                              borderSide:
+                                  BorderSide(width: 2, color: Colors.red),
                               //<-- SEE HERE
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -348,14 +376,17 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                             errorMaxLines: 2,
                           ),
                           validator: (val) {
-                            if(val==null||val.isEmpty){
+                            if (val == null || val.isEmpty) {
                               return 'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
                             }
                           },
                         ),
                       ),
-                      if(showError)Text('$showErrorMsg',
-                        style: TextStyle(color:Colors.red ),)
+                      if (showError)
+                        Text(
+                          '$showErrorMsg',
+                          style: TextStyle(color: Colors.red),
+                        )
                     ],
                   ),
                   SizedBox(
@@ -372,7 +403,6 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                       const SizedBox(
                         height: 5,
                       ),
-
                     ],
                   ),
                   SizedBox(
@@ -383,32 +413,34 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                     children: <Widget>[
                       Expanded(
                         child: Focus(
-                          onFocusChange: (change){
+                          onFocusChange: (change) {
                             setState(() {
-                              showRateInfo=false;
-                              showError=false;
-                              showSendMoneyBtn=false;
+                              showRateInfo = false;
+                              showError = false;
+                              showSendMoneyBtn = false;
                             });
                           },
                           child: TextFormField(
                             controller: receiveControler,
-                            onChanged: (value){
-                              showSendMoneyBtn=false;
-                              double receive=double.parse(value)/double.parse(finalRate!);
-                              sendControler.text=receive.toStringAsFixed(2);
+                            onChanged: (value) {
+                              showSendMoneyBtn = false;
+                              double receive = double.parse(value) /
+                                  double.parse(finalRate!);
+                              sendControler.text = receive.toStringAsFixed(2);
                               //showErrorMessage(value);
-
                             },
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               fillColor: Colors.white,
                               filled: true,
                               labelText: 'Recipient Gets',
-                              errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                              errorStyle:
+                                  TextStyle(overflow: TextOverflow.ellipsis),
                               suffixIconConstraints:
-                              BoxConstraints(maxHeight: 30, maxWidth: 150),
+                                  BoxConstraints(maxHeight: 30, maxWidth: 150),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width: 2, color: MyColor.blue),
+                                borderSide:
+                                    BorderSide(width: 2, color: MyColor.blue),
                                 //<-- SEE HERE
                                 borderRadius: BorderRadius.circular(4.0),
                               ),
@@ -421,7 +453,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                 borderRadius: BorderRadius.circular(4.0),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width: 2, color: Colors.red),
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.red),
                                 //<-- SEE HERE
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -438,7 +471,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                     // border:
                                     //     Border.all(color: Colors.black, width: 2)
                                   ),
-                                  child: DropdownButtonFormField<CurrencyDetails>(
+                                  child:
+                                      DropdownButtonFormField<CurrencyDetails>(
                                     decoration: const InputDecoration.collapsed(
                                       hintText: '',
                                     ),
@@ -453,16 +487,21 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                     },
                                     items: currencyList
                                         .map((catModel) => DropdownMenuItem(
-                                        value: catModel,
-                                        child: Text('${catModel.currency!}')))
+                                            value: catModel,
+                                            child:
+                                                Text('${catModel.currency!}')))
                                         .toList(),
                                     onChanged: (value) async {
                                       currencyName = value!.currency;
-                                      serviceId=value.serviceId;
-                                      print(currencyName!+serviceId!);
-                                      await provider.getFinalRate(_country!.id!, serviceId!, currencyName!);
+                                      serviceId = value.serviceId;
+                                      print(currencyName! + serviceId!);
+                                      await provider.getFinalRate(_country!.id!,
+                                          serviceId!, currencyName!);
                                       finalRate = provider.finalRate.toString();
-                                      receiveControler.text= (double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2);
+                                      receiveControler.text =
+                                          (double.parse(sendControler.text) *
+                                                  double.parse(finalRate!))
+                                              .toStringAsFixed(2);
                                       setState(() {
                                         // initialCurrency=null;
                                         // selectService = value;
@@ -478,20 +517,261 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               errorMaxLines: 2,
                             ),
                             validator: (val) {
-                              if(val==null||val.isEmpty){
+                              if (val == null || val.isEmpty) {
                                 return 'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
                               }
                             },
                           ),
                         ),
                       ),
-
-
                     ],
                   ),
                   SizedBox(
                     height: 5,
                   ),
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: TextButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              String showCuponMsg = "";
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: Text('Enter your Promo code'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Form(
+                                          key: formKey2,
+                                          child: TextFormField(
+                                            controller: cuponControler,
+                                            onChanged: (value) {},
+                                            keyboardType: TextInputType.text,
+                                            decoration: InputDecoration(
+                                              fillColor: Colors.white,
+                                              filled: true,
+                                              labelText: 'Promo Code',
+                                              errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                                              suffixIconConstraints:
+                                              BoxConstraints(maxHeight: 30, maxWidth: 38),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: MyColor.blue),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: .2,
+                                                  color: Colors.grey.shade500,
+                                                ),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: Colors.red),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                              hintStyle: TextStyle(),
+                                              errorMaxLines: 2,
+                                            ),
+                                            validator: (val) {
+                                              if (val == null || val.isEmpty) {
+                                                return 'Promo Code Required';
+                                              } else
+                                                return null;
+                                            },
+                                          ),
+                                        ),
+                                        Text(
+                                          '$showCuponMsg',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                              style: ElevatedButton.styleFrom(primary: Colors.grey),
+                                            ),
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                  if (formKey2.currentState!.validate()) {
+                                                    EasyLoading.show();
+                                                    await CalculatorAPICalls.getCuponDetails(
+                                                        cuponControler.text)
+                                                        .then((cupon) {
+                                                      EasyLoading.dismiss();
+                                                      double reduceFees = 0.0;
+                                                      if (cupon != null) {
+                                                        if (cupon.data!.discountType == "P") {
+                                                          double val = double.parse(cupon.data!.reduceFee!) * double.parse(finalRate!);
+                                                          reduceFees = double.parse((val / 100).toStringAsFixed(4));
+                                                        }
+                                                        if (cupon.data!.discountType == "F") {
+                                                          reduceFees = double.parse(double.parse(cupon.data!.reduceFee!).toStringAsFixed(4));
+                                                        }
+
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                showCuponCongratulationsDialog(reduceFees));
+                                                      } else {
+                                                        setState(() {
+                                                          showCuponMsg = 'Invalid Cupon Code';
+                                                        });
+                                                      }
+                                                    });
+                                                  }
+                                                  // Navigator.pop(context);
+                                                  // Navigator.pushNamed(context, HomePage.routeName);
+                                                },
+                                                child: Text('Submit')),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                          // showDialog(
+                          //     context: context,
+                          //   builder: (dialogContext) {
+                          //     return StatefulBuilder(builder: (stfContext, setState) {
+                          //       String? showCuponMsg = '';
+                          //       return AlertDialog(
+                          //         title: Text('Enter your Promo code'),
+                          //         content: Column(
+                          //           mainAxisSize: MainAxisSize.min,
+                          //           children: [
+                          //             Form(
+                          //               key: formKey2,
+                          //               child: TextFormField(
+                          //                 controller: cuponControler,
+                          //                 onChanged: (value) {},
+                          //                 keyboardType: TextInputType.text,
+                          //                 decoration: InputDecoration(
+                          //                   fillColor: Colors.white,
+                          //                   filled: true,
+                          //                   labelText: 'Promo Code',
+                          //                   errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                          //                   suffixIconConstraints:
+                          //                   BoxConstraints(maxHeight: 30, maxWidth: 38),
+                          //                   focusedBorder: OutlineInputBorder(
+                          //                     borderSide: BorderSide(width: 2, color: MyColor.blue),
+                          //                     //<-- SEE HERE
+                          //                     borderRadius: BorderRadius.circular(4.0),
+                          //                   ),
+                          //                   enabledBorder: OutlineInputBorder(
+                          //                     borderSide: BorderSide(
+                          //                       width: .2,
+                          //                       color: Colors.grey.shade500,
+                          //                     ),
+                          //                     //<-- SEE HERE
+                          //                     borderRadius: BorderRadius.circular(4.0),
+                          //                   ),
+                          //                   errorBorder: OutlineInputBorder(
+                          //                     borderSide: BorderSide(width: 2, color: Colors.red),
+                          //                     //<-- SEE HERE
+                          //                     borderRadius: BorderRadius.circular(10.0),
+                          //                   ),
+                          //                   hintStyle: TextStyle(),
+                          //                   errorMaxLines: 2,
+                          //                 ),
+                          //                 validator: (val) {
+                          //                   if (val == null || val.isEmpty) {
+                          //                     return 'Promo Code Required';
+                          //                   } else
+                          //                     return null;
+                          //                 },
+                          //               ),
+                          //             ),
+                          //             Text(
+                          //               '$showCuponMsg',
+                          //               style: TextStyle(color: Colors.blue),
+                          //             ),
+                          //             SizedBox(
+                          //               height: 10,
+                          //             ),
+                          //             Row(
+                          //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //               children: [
+                          //                 ElevatedButton(
+                          //                   onPressed: () {
+                          //                     Navigator.pop(context);
+                          //                   },
+                          //                   child: Text(
+                          //                     'Cancel',
+                          //                     style: TextStyle(color: Colors.white),
+                          //                   ),
+                          //                   style: ElevatedButton.styleFrom(primary: Colors.grey),
+                          //                 ),
+                          //                 ElevatedButton(
+                          //                     onPressed: () async {
+                          //                       if (formKey2.currentState!.validate()) {
+                          //                         EasyLoading.show();
+                          //                         await CalculatorAPICalls.getCuponDetails(
+                          //                             cuponControler.text)
+                          //                             .then((cupon) {
+                          //                           EasyLoading.dismiss();
+                          //                           double reduceFees = 0.0;
+                          //                           if (cupon != null) {
+                          //                             if (cupon.data!.discountType == "P") {
+                          //                               double val = double.parse(cupon.data!.reduceFee!) *
+                          //                                   double.parse(finalRate!);
+                          //                               reduceFees = val / 100;
+                          //                             }
+                          //                             if (cupon.data!.discountType == "F") {
+                          //                               reduceFees = double.parse(cupon.data!.reduceFee!);
+                          //                             }
+                          //
+                          //                             Navigator.pop(context);
+                          //                             showDialog(
+                          //                                 context: context,
+                          //                                 builder: (context) =>
+                          //                                     showCuponCongratulationsDialog(reduceFees));
+                          //                           } else {
+                          //                             setState(() {
+                          //                               showCuponMsg = 'Invalid Cupon Code';
+                          //                             });
+                          //                           }
+                          //                         });
+                          //                       }
+                          //                       // Navigator.pop(context);
+                          //                       // Navigator.pushNamed(context, HomePage.routeName);
+                          //                     },
+                          //                     child: Text('Submit')),
+                          //               ],
+                          //             )
+                          //           ],
+                          //         ),
+                          //       );
+                          //     });
+                          //   },
+                          //     // builder: (context) =>
+                          //     //     showCuponAlertDialog(context),
+                          // );
+                        },
+                        child: Text(
+                          'Promo code',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      )),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
@@ -514,267 +794,230 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                       ),
                     ),
                   ),
-
                   SizedBox(
                     height: 5,
                   ),
-                  if(showRateInfo)Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: RichText(
-                            text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Total Fees: ',
-                                      style: TextStyle(color: Colors.black)),
-                                  TextSpan(
-                                      text: '${fees} ',
-                                      style: TextStyle(color: Colors.grey)),
-                                  TextSpan(
-                                      text: ' ${currencyName}',
-                                      style: TextStyle(color: Colors.black))
-                                ]),
+                  if (showRateInfo)
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text: 'Total Fees: ',
+                                    style: TextStyle(color: Colors.black)),
+                                TextSpan(
+                                    text: '${fees} ',
+                                    style: TextStyle(color: Colors.grey)),
+                                TextSpan(
+                                    text: ' ${currencyName}',
+                                    style: TextStyle(color: Colors.black))
+                              ]),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: RichText(
-                            text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Total Payable Amount : ',
-                                      style: TextStyle(color: Colors.black)),
-                                  TextSpan(
-                                      text: '${double.parse(sendControler.text)+double.parse(fees)} ',
-                                      style: TextStyle(color: Colors.grey)),
-                                  TextSpan(
-                                      text: ' ${currencyName}',
-                                      style: TextStyle(color: Colors.black))
-                                ]),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text: 'Total Payable Amount : ',
+                                    style: TextStyle(color: Colors.black)),
+                                TextSpan(
+                                    text:
+                                        '${double.parse(sendControler.text) + double.parse(fees)} ',
+                                    style: TextStyle(color: Colors.grey)),
+                                TextSpan(
+                                    text: ' ${currencyName}',
+                                    style: TextStyle(color: Colors.black))
+                              ]),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  SizedBox(
+                    height: 20,
                   ),
-                  SizedBox(height: 20,),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if(showSendMoneyBtn)Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                fixedSize: Size.fromHeight(50),
-                                backgroundColor: Color(0xff02A6EB)
-                            ),
-                            onPressed: (){
-                              setState(() {
-                                showSendMoneyBtn=false;
-                              });
-                            },
-                            child: Text('Send',
-                              style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                      if (showSendMoneyBtn)
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  fixedSize: Size.fromHeight(50),
+                                  backgroundColor: Color(0xff02A6EB)),
+                              onPressed: () {
+                                final model = CalculatorInfoModel(
+                                    countryName: _country!.name,
+                                    countryId: _country!.id,
+                                    serviceName: serviceName,
+                                    serviceId: serviceId,
+                                    currency: currencyName,
+                                    sendAmount: sendControler.text,
+                                    fees: fees,
+                                    totalPayable:
+                                        (double.parse(sendControler.text) +
+                                                double.parse(fees!))
+                                            .toString(),
+                                    exchangeRate: finalRate,
+                                    recipientGets: receiveControler.text);
+
+                                Navigator.pushNamed(context, HomePage.routeName,
+                                    arguments: model);
+                              },
+                              child: Text(
+                                'Send',
+                                style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      if(!showSendMoneyBtn)Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                fixedSize: Size.fromHeight(50),
-                                backgroundColor: Color(0xff02A6EB)
-                            ),
-                            onPressed: (){
-                              if(_fromKey.currentState!.validate()){
-                                getTheFeesAndTotalAmount(sendControler.text, receiveControler.text).then((value) {
-                                  setState(() {
-                                    showSendMoneyBtn=true;
-                                    showRateInfo=true;
+                      if (!showSendMoneyBtn)
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  fixedSize: Size.fromHeight(50),
+                                  backgroundColor: Color(0xff02A6EB)),
+                              onPressed: () {
+                                if (_fromKey.currentState!.validate()) {
+                                  getTheFeesAndTotalAmount(sendControler.text,
+                                          receiveControler.text)
+                                      .then((value) {
+                                    setState(() {
+                                      showSendMoneyBtn = true;
+                                      showRateInfo = true;
+                                    });
                                   });
-                                });
-                              }
-                            },
-                            child: Text('Calculate',
-                              style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                                }
+                              },
+                              child: Text(
+                                'Calculate',
+                                style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                              ),
                             ),
                           ),
-                        ),
-                      )
+                        )
                     ],
                   )
                 ],
               ),
             )
-            // Consumer<CalculatorProvider>(
-            //   builder: (context, provider, _) => FutureBuilder(
-            //     future: provider.getAllCountryInfo(),
-            //     builder: (context, snapshot) {
-            //       if (snapshot.hasData) {
-            //         // countryName=provider.getAllCountriesInfoList.first.name;
-            //         // img=provider.getAllCountriesInfoList.first.image;
-            //         return Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Text(
-            //               'Send to',
-            //               style: TextStyle(
-            //                   fontSize: 12, color: Colors.grey.shade600),
-            //             ),
-            //             const SizedBox(
-            //               height: 5,
-            //             ),
-            //             Container(
-            //                 height: 40,
-            //                 decoration: BoxDecoration(
-            //                   color: Colors.grey.shade300,
-            //                   borderRadius: BorderRadius.circular(6),
-            //                   // border:
-            //                   //     Border.all(color: Colors.black, width: 2)
-            //                 ),
-            //                 child: Row(
-            //                   children: [
-            //                     Container(
-            //                       width: 35,
-            //                       padding: const EdgeInsets.only(
-            //                           top: 10.0, bottom: 10, left: 6, right: 6),
-            //                       decoration: const BoxDecoration(
-            //                           borderRadius: BorderRadius.only(
-            //                               topLeft: Radius.circular(8),
-            //                               bottomLeft: Radius.circular(8)),
-            //                           color: Color(0xffD9D9D9)),
-            //                       child: countryName == null
-            //                           ? Image.network(
-            //                         provider.getAllCountriesInfoList.first.image!,
-            //                         fit: BoxFit.fitWidth,
-            //                       )
-            //                           : Image.network(
-            //                         img!,
-            //                         fit: BoxFit.fitWidth,
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       child: Container(
-            //                         child: DropdownSearch<Info>(
-            //                           selectedItem: _country,
-            //                           onChanged: (value) {
-            //
-            //                             setState(() {
-            //                               _country = value;
-            //                               img = _country!.image!;
-            //                               countryName = value!.name!;
-            //                             });
-            //                             _country!.currencyDetails!.forEach((element) {
-            //                               print(element.toString());
-            //                             });
-            //                           },
-            //                           items: provider.getAllCountriesInfoList,
-            //                           dropdownDecoratorProps:
-            //                           DropDownDecoratorProps(
-            //                             dropdownSearchDecoration:
-            //                             InputDecoration(
-            //                               labelText: countryName,
-            //                               // enabledBorder: OutlineInputBorder(
-            //                               //     borderRadius: BorderRadius.circular(6),
-            //                               //     borderSide: BorderSide(color: Colors.grey.shade300,),
-            //                               // ),
-            //                               enabledBorder: InputBorder.none,
-            //                               filled: true,
-            //                               hintText: countryName ??
-            //                                   provider
-            //                                       .getAllCountriesInfoList.first.name,
-            //                             ),
-            //                           ),
-            //                           popupProps: PopupProps.menu(
-            //                             showSearchBox: true,
-            //                             itemBuilder:
-            //                                 (context, item, isSelected) {
-            //                               return ListTile(
-            //                                 title: Text(item.name!),
-            //                                 leading: Padding(
-            //                                   padding: const EdgeInsets.only(
-            //                                       top: 4.0, bottom: 4),
-            //                                   child: Image.network(item.image!),
-            //                                 ),
-            //                               );
-            //                             },
-            //                             showSelectedItems: false,
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 )),
-            //             const SizedBox(
-            //               height: 15,
-            //             ),
-            //             const Text(
-            //               'Select Service',
-            //               style: TextStyle(fontSize: 12, color: Colors.grey),
-            //             ),
-            //             const SizedBox(
-            //               height: 5,
-            //             ),
-            //
-            //             SizedBox(
-            //               height: 15,
-            //             ),
-            //           ],
-            //         );
-            //       } else {
-            //         return Center(
-            //           child: Container(
-            //               width: 60,
-            //               height: 60,
-            //               child: const CircularProgressIndicator()),
-            //         );
-            //       }
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
     );
   }
-  Future<dynamic> getRate(String text, String? id, String? serviceId) async {
 
-    return await provider.getServiceCharges(sendControler.text,currency_details!.countryTableId,
-        currency_details!.serviceId!);
+
+
+  AlertDialog showCuponCongratulationsDialog(double reduceFees) {
+    return AlertDialog(
+      title: Text('Congratulations'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Exchange Rate : 1 AUD ='),
+              Text(' $finalRate',
+                  style: TextStyle(decoration: TextDecoration.lineThrough)),
+            ],
+          ),
+          Wrap(
+            children: [
+              Align(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 14, bottom: 8),
+                  child: Text('Discount rate $reduceFees (%) :'),
+                ),
+                alignment: Alignment.center,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  '1 AUD = ${double.parse(finalRate!) + reduceFees}',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Remove'),
+                  style: ElevatedButton.styleFrom(primary: Colors.grey),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      finalRate='${double.parse(finalRate!) + reduceFees}';
+                      receiveControler.text='${double.parse(sendControler.text)*double.parse(finalRate!)}';
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text('Get Discount'),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<dynamic> getRate(String text, String? id, String? serviceId) async {
+    return await provider.getServiceCharges(sendControler.text,
+        currency_details!.countryTableId, currency_details!.serviceId!);
   }
 
   void showErrorMessage(String value) {
-
     print(value);
-    if(double.parse(value)>double.parse(currency_details!.maximumLimit!)){
+    if (double.parse(value) > double.parse(currency_details!.maximumLimit!)) {
       setState(() {
-        showError=true;
-        showErrorMsg='Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+        showError = true;
+        showErrorMsg =
+            'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
       });
-    }
-    else if(double.parse(value)<double.parse(currency_details!.minimumLimit!)){
+    } else if (double.parse(value) <
+        double.parse(currency_details!.minimumLimit!)) {
       setState(() {
-        showError=true;
-        showErrorMsg='Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+        showError = true;
+        showErrorMsg =
+            'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
       });
-    }
-    else {
+    } else {
       setState(() {
-        showError=false;
+        showError = false;
       });
     }
   }
@@ -782,36 +1025,36 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   Future<void> getTheFeesAndTotalAmount(String send, String receive) async {
     EasyLoading.show();
     print('Final Rate of total are ${send} and ${receive}');
-    if(double.parse(send)<=double.parse(currency_details!.minimumLimit!)){
+    if (double.parse(send) <= double.parse(currency_details!.minimumLimit!)) {
       EasyLoading.dismiss();
       setState(() {
-        showError=true;
-        showErrorMsg='Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+        showError = true;
+        showErrorMsg =
+            'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
       });
-    }
-
-    else if(double.parse(receive)>double.parse(currency_details!.maximumLimit!)){
+    } else if (double.parse(receive) >
+        double.parse(currency_details!.maximumLimit!)) {
       EasyLoading.dismiss();
       setState(() {
-        showError=true;
-        showErrorMsg='Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+        showError = true;
+        showErrorMsg =
+            'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
       });
-    }
-    else {
+    } else {
       print('${sendControler.text},${_country!.id},$serviceId');
 
-      await getRate(sendControler.text,_country!.id,serviceId).then((charge) {
+      await getRate(sendControler.text, _country!.id, serviceId).then((charge) {
         print(charge['service_fee']);
         EasyLoading.dismiss();
         setState(() {
-          fees=charge['service_fee'].toString();
+          fees = charge['service_fee'].toString();
           // showSendBtn=true;
         });
       });
-
     }
   }
 }
+
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -853,7 +1096,7 @@ class MyDrawer extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                                 border:
-                                Border.all(color: Colors.white, width: 2)),
+                                    Border.all(color: Colors.white, width: 2)),
                             child: Icon(Icons.person)))
                   ],
                 ),

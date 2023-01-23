@@ -46,9 +46,9 @@ class _HomeWidgetState extends State<HomeWidget> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            Align(
-                alignment: Alignment.center,
-                child: Text('Welcome ${GetUserDetails.userProfileModel!.username}!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+            // Align(
+            //     alignment: Alignment.center,
+            //     child: Text('Welcome ${GetUserDetails.userProfileModel!.username}!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
             SizedBox(height: 20,),
             SvgPicture.asset('svg/home.svg',width: 300,height: 220,),
             const Padding(
@@ -65,9 +65,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 title: 'Send Money Now',
               ),
             ),
-            ElevatedButton(onPressed: (){
 
-            }, child: Text('Called'))
           ],
         ),
       ),
