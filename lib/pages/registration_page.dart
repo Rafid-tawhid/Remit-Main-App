@@ -203,174 +203,201 @@ class _SignupPageState extends State<SignupPage> {
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: MyColor.blue,
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: TextFormField(
-                                controller: emailCon,
-                                decoration: InputDecoration(
-                                  prefixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: TextFormField(
+                              controller: emailCon,
+                              decoration: InputDecoration(
+                                prefixIcon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
 
-                                    children: [
-                                      Icon(Icons.mail_outline,color: MyColor.blue,),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: Icon(Icons.star,color: Colors.red,size: 8,),
-                                      ),
-                                    ],
-                                  ),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  labelText: 'Email Address',
-                                  hintStyle: TextStyle(),
-
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                    //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                    //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
+                                  children: [
+                                    Icon(Icons.mail_outline,color: MyColor.blue,),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 10.0),
+                                      child: Icon(Icons.star,color: Colors.red,size: 8,),
+                                    ),
+                                  ],
                                 ),
-                                validator: (s) {
-                                  if (EmailValidator.validate(emailCon.text)) {
-                                    return null;
-                                  } else
-                                    return 'Please give a valid email';
-                                },
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Email Address',
+                                hintStyle: TextStyle(),
+
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: MyColor.blue),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: .2,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: Colors.red),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
                               ),
+                              validator: (s) {
+                                if (EmailValidator.validate(emailCon.text)) {
+                                  return null;
+                                } else
+                                  return 'Please give a valid email';
+                              },
                             ),
                           ),
                         ),
                         SizedBox(height: 20,),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: MyColor.blue,
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: TextFormField(
-                                controller: confirmmailCon,
-                                decoration: InputDecoration(
-                                  prefixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: TextFormField(
+                              controller: confirmmailCon,
+                              decoration: InputDecoration(
+                                prefixIcon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
 
-                                    children: [
-                                      Icon(Icons.mail_outline,color: MyColor.blue,),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: Icon(Icons.star,color: Colors.red,size: 8,),
-                                      ),
-                                    ],
-                                  ),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  labelText: 'Confirm Email Address',
-                                  hintStyle: TextStyle(),
-
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                    //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                    //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
+                                  children: [
+                                    Icon(Icons.mail_outline,color: MyColor.blue,),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 10.0),
+                                      child: Icon(Icons.star,color: Colors.red,size: 8,),
+                                    ),
+                                  ],
                                 ),
-                                validator: (s) {
-                                  if (emailCon.text==confirmmailCon.text) {
-                                    return null;
-                                  } else
-                                    return 'The email confirmation does not match.';
-                                },
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Confirm Email Address',
+                                hintStyle: TextStyle(),
+
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: MyColor.blue),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: .2,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: Colors.red),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
                               ),
+                              validator: (s) {
+                                if (emailCon.text==confirmmailCon.text) {
+                                  return null;
+                                } else
+                                  return 'The email confirmation does not match.';
+                              },
                             ),
                           ),
                         ),
                         SizedBox(height: 20,),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: MyColor.blue,
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: TextFormField(
-                                controller: passCon,
-                                keyboardType: TextInputType.visiblePassword,
-                                obscureText: showPass,
-                                decoration: InputDecoration(
-                                  prefixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: TextFormField(
+                              controller: passCon,
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: showPass,
+                              decoration: InputDecoration(
+                                prefixIcon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
 
-                                    children: [
-                                      Icon(Icons.key,color: MyColor.blue,),
-                                      const Padding(
-                                        padding: EdgeInsets.only(bottom: 10.0),
-                                        child: Icon(Icons.star,color: Colors.red,size: 8,),
-                                      ),
-                                    ],
-                                  ),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  labelText: 'Password',
-                                  hintStyle: TextStyle(),
-                                  suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                                  suffixIcon: Padding(
-                                    padding: const EdgeInsetsDirectional.only(end: 8.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: MyColor.blue,
-                                          borderRadius: BorderRadius.circular(8)
-                                      ),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: (){
-                                          setState(() {
-                                            showPass=!showPass;
-                                          });
-                                        }, icon: showPass?Icon(Icons.visibility_off,color: Colors.white,size: 18,
-                                      ):Icon(Icons.visibility,color: Colors.white,size: 18,
-                                      ),
-                                      ),
+                                  children: [
+                                    Icon(Icons.key,color: MyColor.blue,),
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 10.0),
+                                      child: Icon(Icons.star,color: Colors.red,size: 8,),
+                                    ),
+                                  ],
+                                ),
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Password',
+                                hintStyle: TextStyle(),
+                                suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsetsDirectional.only(end: 8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: MyColor.blue,
+                                        borderRadius: BorderRadius.circular(8)
+                                    ),
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: (){
+                                        setState(() {
+                                          showPass=!showPass;
+                                        });
+                                      }, icon: showPass?Icon(Icons.visibility_off,color: Colors.white,size: 18,
+                                    ):Icon(Icons.visibility,color: Colors.white,size: 18,
+                                    ),
                                     ),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                    //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                    //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
                                 ),
-                                validator: (s) {
-                                  if (passCon.text.length > 8) {
-                                    return null;
-                                  } else
-                                    return 'Minimum length is 8';
-                                },
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: MyColor.blue),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: .2,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: Colors.red),
+                                  //<-- SEE HERE
+                                  borderRadius:
+                                  BorderRadius.circular(15.0),
+                                ),
                               ),
+                              validator: (s) {
+                                if (passCon.text.length > 8) {
+                                  return null;
+                                } else
+                                  return 'Minimum length is 8';
+                              },
                             ),
                           ),
                         ),

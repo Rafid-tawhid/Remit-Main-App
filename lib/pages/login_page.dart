@@ -1,9 +1,15 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:remit_app/api_calls/show_data.dart';
+import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
+import 'package:remit_app/providers/user_profile_provider.dart';
 
+import '../api_calls/api_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
 import '../custom_widgits/button_2.dart';
@@ -22,7 +28,16 @@ class _LoginPageState extends State<LoginPage> {
   bool checkBox = true;
   final emailCon = TextEditingController();
   final passCon = TextEditingController();
+  late UserProfileProvider userProfileProvider;
   final _globalKey = GlobalKey<FormState>();
+
+  @override
+  void didChangeDependencies() {
+    userProfileProvider=Provider.of<UserProfileProvider>(context,listen: false);
+    super.didChangeDependencies();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -61,16 +76,12 @@ class _LoginPageState extends State<LoginPage> {
                                 //set border radius more than 50% of height and width to make circle
                               ),
                               child: Container(
+
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color: Color.fromARGB(125, 218, 247, 253),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.grey.shade200,
-                                          spreadRadius: 2,
-                                          blurRadius: 2,
-                                          offset: Offset(-2, 2))
-                                    ]),
+
+                                ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -84,58 +95,61 @@ class _LoginPageState extends State<LoginPage> {
                                           fontWeight: FontWeight.bold,
                                           color: MyColor.blue),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: MyColor.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(15.0),
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 4.0),
-                                          child: TextFormField(
-                                            controller: emailCon,
-                                            decoration: InputDecoration(
-                                              prefixIcon: Icon(
-                                                Icons.mail_outline,
-                                                color: MyColor.blue,
-                                              ),
-                                              fillColor: Colors.white,
-                                              filled: true,
-                                              labelText: 'Email or Username',
-                                              hintStyle: TextStyle(),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 4.0),
+                                        child: TextFormField(
 
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    width: 2,
-                                                    color: MyColor.blue),
-                                                //<-- SEE HERE
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    width: 2,
-                                                    color: Colors.transparent),
-                                                //<-- SEE HERE
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
+                                          controller: emailCon,
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.mail_outline,
+                                              color: MyColor.blue,
                                             ),
-                                            validator: (s) {
-                                              if (EmailValidator.validate(
-                                                  emailCon.text)) {
-                                                return null;
-                                              } else
-                                                return 'Please give a valid email';
-                                            },
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            labelText: 'Email or Username',
+                                            hintStyle: TextStyle(),
+
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: MyColor.blue),
+                                              //<-- SEE HERE
+                                              borderRadius:
+                                              BorderRadius.circular(15.0),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: .2,
+                                                color: Colors.grey.shade500,
+                                              ),
+                                              //<-- SEE HERE
+                                              borderRadius:
+                                              BorderRadius.circular(15.0),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.red),
+                                              //<-- SEE HERE
+                                              borderRadius:
+                                              BorderRadius.circular(15.0),
+                                            ),
                                           ),
+                                          validator: (s) {
+                                            if (EmailValidator.validate(
+                                                emailCon.text)) {
+                                              return null;
+                                            } else
+                                              return 'Please give a valid email';
+                                          },
                                         ),
                                       ),
                                     ),
@@ -145,89 +159,104 @@ class _LoginPageState extends State<LoginPage> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: MyColor.blue,
-                                          borderRadius:
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 4.0),
+                                        child: TextFormField(
+                                          controller: passCon,
+                                          keyboardType:
+                                              TextInputType.visiblePassword,
+                                          obscureText: showPass,
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.key,
+                                              color: MyColor.blue,
+                                            ),
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            labelText: 'Password',
+                                            errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                                            suffixIconConstraints: BoxConstraints(
+                                                    maxHeight: 30,
+                                                    maxWidth: 38),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: MyColor.blue),
+                                              //<-- SEE HERE
+                                              borderRadius:
                                               BorderRadius.circular(15.0),
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 4.0),
-                                          child: TextFormField(
-                                            controller: passCon,
-                                            keyboardType:
-                                                TextInputType.visiblePassword,
-                                            obscureText: showPass,
-                                            decoration: InputDecoration(
-                                              prefixIcon: Icon(
-                                                Icons.key,
-                                                color: MyColor.blue,
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: .2,
+                                                color: Colors.grey.shade500,
                                               ),
-                                              fillColor: Colors.white,
-                                              filled: true,
-                                              labelText: 'Password',
-                                              suffixIconConstraints:
-                                                  BoxConstraints(
-                                                      maxHeight: 30,
-                                                      maxWidth: 38),
-                                              hintStyle: TextStyle(),
-                                              suffixIcon: Padding(
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .only(end: 8.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: MyColor.blue,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
-                                                  child: IconButton(
-                                                    padding: EdgeInsets.zero,
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        showPass = !showPass;
-                                                      });
-                                                    },
-                                                    icon: showPass
-                                                        ? Icon(
-                                                            Icons
-                                                                .visibility_off,
-                                                            color: Colors.white,
-                                                            size: 18,
-                                                          )
-                                                        : Icon(
-                                                            Icons.visibility,
-                                                            color: Colors.white,
-                                                            size: 18,
-                                                          ),
-                                                  ),
+                                              //<-- SEE HERE
+                                              borderRadius:
+                                              BorderRadius.circular(15.0),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: Colors.red),
+                                              //<-- SEE HERE
+                                              borderRadius:
+                                              BorderRadius.circular(15.0),
+                                            ),
+                                            hintStyle: TextStyle(),
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .only(end: 8.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: MyColor.blue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      showPass = !showPass;
+                                                    });
+                                                  },
+                                                  icon: showPass
+                                                      ? Icon(
+                                                          Icons
+                                                              .visibility_off,
+                                                          color: Colors.white,
+                                                          size: 18,
+                                                        )
+                                                      : Icon(
+                                                          Icons.visibility,
+                                                          color: Colors.white,
+                                                          size: 18,
+                                                        ),
                                                 ),
                                               ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    width: 2,
-                                                    color: MyColor.blue),
-                                                //<-- SEE HERE
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    width: 2,
-                                                    color: Colors.transparent),
-                                                //<-- SEE HERE
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
                                             ),
-                                            validator: (s) {
-                                              if (passCon.text.length > 8) {
-                                                return null;
-                                              } else
-                                                return 'Minimum length is 8';
-                                            },
+                                              errorMaxLines: 2,
                                           ),
+                                          validator: (s) {
+                                            if (passCon.text.length < 8) {
+                                              return 'The password must be at least 8 characters.';
+                                            }
+                                            if(!passCon.text.contains(RegExp(r"[a-z]"))||
+                                                !passCon.text.contains(RegExp(r"[A-Z]"))||
+                                                !passCon.text.contains(RegExp(r"[0-9]"))||
+                                                !passCon.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))){
+                                              return 'Password must be contain 1 uppercase, '
+                                                  '1 lower case 1 number and 1 special character.';
+                                            }
+                                            else
+                                              {
+                                                return null;
+                                              }
+
+
+                                          },
                                         ),
                                       ),
                                     ),
@@ -522,10 +551,32 @@ class _LoginPageState extends State<LoginPage> {
                                                   BorderRadius.circular(10),
                                             )),
                                         onPressed: () {
+
                                           if (_globalKey.currentState!
                                               .validate()) {
-                                            Navigator.pushNamed(
-                                                context, HomePage.routeName);
+                                            EasyLoading.show();
+                                            userProfileProvider.getUserInfoByEmailPassword(emailCon.text,passCon.text).then((data) {
+                                              EasyLoading.dismiss();
+                                              if(data['success']==true){
+                                                final user=UserProfileModel.fromJson(data['data']);
+                                                print('MY NAME IS  ${user.email}');
+                                                Navigator.pushNamed(context, ShowDataPage.routeName,arguments: user);
+                                              }
+                                              else {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context)=>AlertDialog(
+                                                      title: Text("Error"),
+                                                      content: Text(data['message']),
+                                                      actions: [
+                                                        ElevatedButton(onPressed: (){
+                                                          Navigator.pop(context);
+                                                        }, child: Text('Ok'))
+                                                      ],
+                                                    ) );
+                                              }
+
+                                            });
                                           }
                                         },
                                         child: Padding(
@@ -710,6 +761,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ],
                                     ),
+
                                     SizedBox(
                                       height: 40,
                                     ),
@@ -717,6 +769,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
+
                           ),
                         ),
                       ),
