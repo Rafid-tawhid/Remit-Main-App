@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:remit_app/api_calls/api_calls.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/models/user_profile_model.dart';
 
@@ -61,8 +62,12 @@ class _HomeWidgetState extends State<HomeWidget> {
             Container(
               width: double.infinity,
               child: MainButton(
-                title: 'Send Money Now',),
-            )
+                title: 'Send Money Now',
+              ),
+            ),
+            ElevatedButton(onPressed: (){
+
+            }, child: Text('Called'))
           ],
         ),
       ),

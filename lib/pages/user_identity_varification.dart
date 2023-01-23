@@ -10,15 +10,12 @@ class UserIdentityVerification extends StatelessWidget {
       appBar: AppBar(title: Text('Identity Verification'),),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               onPressed: (){},
               child: Text('View Identities'),
-            ),
-            ElevatedButton(
-              onPressed: (){},
-              child: Text('View Identities'),
-            ),
+            )
           ],
         ),
       ),

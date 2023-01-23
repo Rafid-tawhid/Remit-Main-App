@@ -25,7 +25,8 @@ class _LauncherPageState extends State<LauncherPage> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      getValueFromSharedPref();
+      Navigator.pushNamed(context, LoginPage.routeName);
+    //  getValueFromSharedPref();
     });
     super.initState();
   }
@@ -48,18 +49,25 @@ class _LauncherPageState extends State<LauncherPage> {
 
   getValueFromSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("email") != null && prefs.getString("pass") != null) {
+    //
+    //
+    // LoginApiCalls.getAuthToken().then((auth) {
+    //   print(auth.toString());
+    // });
+
+    if (prefs.getString("email") != null && prefs.getString("pass") != null&&prefs.getString("token")!=null) {
       EasyLoading.show();
       userProfileProvider
           .getUserInfoByEmailPassword(
           prefs.getString("email"), prefs.getString("pass"))
           .then((data) async {
         EasyLoading.dismiss();
+
         if (data == null) {
           showServerProblemDialog(context);
         } else {
           if (data['success'] == true) {
-            final user = UserProfileModel.fromJson(data['data']);
+            final user = Data.fromJson(data['data']);
             GetUserDetails.setUserInfo(user).then((value) {
               Navigator.pushNamed(
                 context, HomePage.routeName,

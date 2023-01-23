@@ -1,34 +1,75 @@
 class UserProfileModel {
   UserProfileModel({
+      bool? success, 
+      String? message, 
+      Data? data,}){
+    _success = success;
+    _message = message;
+    _data = data;
+}
+
+  UserProfileModel.fromJson(dynamic json) {
+    _success = json['success'];
+    _message = json['message'];
+    _data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  }
+  bool? _success;
+  String? _message;
+  Data? _data;
+UserProfileModel copyWith({  bool? success,
+  String? message,
+  Data? data,
+}) => UserProfileModel(  success: success ?? _success,
+  message: message ?? _message,
+  data: data ?? _data,
+);
+  bool? get success => _success;
+  String? get message => _message;
+  Data? get data => _data;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['success'] = _success;
+    map['message'] = _message;
+    if (_data != null) {
+      map['data'] = _data?.toJson();
+    }
+    return map;
+  }
+
+}
+
+class Data {
+  Data({
       num? id, 
       String? firstname, 
       dynamic middlename, 
       String? lastname, 
       String? username, 
       dynamic adminId, 
-      num? merchantId, 
+      String? merchantId, 
       dynamic referralId, 
       dynamic languageId, 
       String? email, 
       String? phone, 
       String? gender, 
-      num? balance, 
-      dynamic image, 
+      String? balance, 
+      String? image, 
       String? address, 
-      String? occupation, 
+      dynamic occupation, 
       String? countryOfBirth, 
       dynamic provider, 
       dynamic providerId, 
-      num? status, 
-      num? blocked, 
-      num? identityVerify, 
-      num? addressVerify, 
-      num? twoFa, 
-      num? twoFaVerify, 
+      String? status, 
+      String? blocked, 
+      String? identityVerify, 
+      String? addressVerify, 
+      String? twoFa, 
+      String? twoFaVerify, 
       dynamic twoFaCode, 
-      num? emailVerification, 
-      num? smsVerification, 
-      num? documentVerify, 
+      String? emailVerification, 
+      String? smsVerification, 
+      String? documentVerify, 
       dynamic verifyCode, 
       dynamic sentAt, 
       String? lastLogin, 
@@ -82,7 +123,7 @@ class UserProfileModel {
     _photo = photo;
 }
 
-  UserProfileModel.fromJson(dynamic json) {
+  Data.fromJson(dynamic json) {
     _id = json['id'];
     _firstname = json['firstname'];
     _middlename = json['middlename'];
@@ -130,29 +171,29 @@ class UserProfileModel {
   String? _lastname;
   String? _username;
   dynamic _adminId;
-  num? _merchantId;
+  String? _merchantId;
   dynamic _referralId;
   dynamic _languageId;
   String? _email;
   String? _phone;
   String? _gender;
-  num? _balance;
-  dynamic _image;
+  String? _balance;
+  String? _image;
   String? _address;
-  String? _occupation;
+  dynamic _occupation;
   String? _countryOfBirth;
   dynamic _provider;
   dynamic _providerId;
-  num? _status;
-  num? _blocked;
-  num? _identityVerify;
-  num? _addressVerify;
-  num? _twoFa;
-  num? _twoFaVerify;
+  String? _status;
+  String? _blocked;
+  String? _identityVerify;
+  String? _addressVerify;
+  String? _twoFa;
+  String? _twoFaVerify;
   dynamic _twoFaCode;
-  num? _emailVerification;
-  num? _smsVerification;
-  num? _documentVerify;
+  String? _emailVerification;
+  String? _smsVerification;
+  String? _documentVerify;
   dynamic _verifyCode;
   dynamic _sentAt;
   String? _lastLogin;
@@ -164,35 +205,35 @@ class UserProfileModel {
   String? _mobile;
   String? _profileName;
   String? _photo;
-UserProfileModel copyWith({  num? id,
+Data copyWith({  num? id,
   String? firstname,
   dynamic middlename,
   String? lastname,
   String? username,
   dynamic adminId,
-  num? merchantId,
+  String? merchantId,
   dynamic referralId,
   dynamic languageId,
   String? email,
   String? phone,
   String? gender,
-  num? balance,
-  dynamic image,
+  String? balance,
+  String? image,
   String? address,
-  String? occupation,
+  dynamic occupation,
   String? countryOfBirth,
   dynamic provider,
   dynamic providerId,
-  num? status,
-  num? blocked,
-  num? identityVerify,
-  num? addressVerify,
-  num? twoFa,
-  num? twoFaVerify,
+  String? status,
+  String? blocked,
+  String? identityVerify,
+  String? addressVerify,
+  String? twoFa,
+  String? twoFaVerify,
   dynamic twoFaCode,
-  num? emailVerification,
-  num? smsVerification,
-  num? documentVerify,
+  String? emailVerification,
+  String? smsVerification,
+  String? documentVerify,
   dynamic verifyCode,
   dynamic sentAt,
   String? lastLogin,
@@ -204,7 +245,7 @@ UserProfileModel copyWith({  num? id,
   String? mobile,
   String? profileName,
   String? photo,
-}) => UserProfileModel(  id: id ?? _id,
+}) => Data(  id: id ?? _id,
   firstname: firstname ?? _firstname,
   middlename: middlename ?? _middlename,
   lastname: lastname ?? _lastname,
@@ -251,29 +292,29 @@ UserProfileModel copyWith({  num? id,
   String? get lastname => _lastname;
   String? get username => _username;
   dynamic get adminId => _adminId;
-  num? get merchantId => _merchantId;
+  String? get merchantId => _merchantId;
   dynamic get referralId => _referralId;
   dynamic get languageId => _languageId;
   String? get email => _email;
   String? get phone => _phone;
   String? get gender => _gender;
-  num? get balance => _balance;
-  dynamic get image => _image;
+  String? get balance => _balance;
+  String? get image => _image;
   String? get address => _address;
-  String? get occupation => _occupation;
+  dynamic get occupation => _occupation;
   String? get countryOfBirth => _countryOfBirth;
   dynamic get provider => _provider;
   dynamic get providerId => _providerId;
-  num? get status => _status;
-  num? get blocked => _blocked;
-  num? get identityVerify => _identityVerify;
-  num? get addressVerify => _addressVerify;
-  num? get twoFa => _twoFa;
-  num? get twoFaVerify => _twoFaVerify;
+  String? get status => _status;
+  String? get blocked => _blocked;
+  String? get identityVerify => _identityVerify;
+  String? get addressVerify => _addressVerify;
+  String? get twoFa => _twoFa;
+  String? get twoFaVerify => _twoFaVerify;
   dynamic get twoFaCode => _twoFaCode;
-  num? get emailVerification => _emailVerification;
-  num? get smsVerification => _smsVerification;
-  num? get documentVerify => _documentVerify;
+  String? get emailVerification => _emailVerification;
+  String? get smsVerification => _smsVerification;
+  String? get documentVerify => _documentVerify;
   dynamic get verifyCode => _verifyCode;
   dynamic get sentAt => _sentAt;
   String? get lastLogin => _lastLogin;
@@ -333,6 +374,6 @@ UserProfileModel copyWith({  num? id,
 
   @override
   String toString() {
-    return 'UserProfileModel{_id: $_id, _firstname: $_firstname, _middlename: $_middlename, _lastname: $_lastname, _username: $_username, _adminId: $_adminId, _merchantId: $_merchantId, _referralId: $_referralId, _languageId: $_languageId, _email: $_email, _phone: $_phone, _gender: $_gender, _balance: $_balance, _image: $_image, _address: $_address, _occupation: $_occupation, _countryOfBirth: $_countryOfBirth, _provider: $_provider, _providerId: $_providerId, _status: $_status, _blocked: $_blocked, _identityVerify: $_identityVerify, _addressVerify: $_addressVerify, _twoFa: $_twoFa, _twoFaVerify: $_twoFaVerify, _twoFaCode: $_twoFaCode, _emailVerification: $_emailVerification, _smsVerification: $_smsVerification, _documentVerify: $_documentVerify, _verifyCode: $_verifyCode, _sentAt: $_sentAt, _lastLogin: $_lastLogin, _lastLoginIp: $_lastLoginIp, _emailVerifiedAt: $_emailVerifiedAt, _createdAt: $_createdAt, _updatedAt: $_updatedAt, _fullname: $_fullname, _mobile: $_mobile, _profileName: $_profileName, _photo: $_photo}';
+    return 'Data{_id: $_id, _firstname: $_firstname, _middlename: $_middlename, _lastname: $_lastname, _username: $_username, _adminId: $_adminId, _merchantId: $_merchantId, _referralId: $_referralId, _languageId: $_languageId, _email: $_email, _phone: $_phone, _gender: $_gender, _balance: $_balance, _image: $_image, _address: $_address, _occupation: $_occupation, _countryOfBirth: $_countryOfBirth, _provider: $_provider, _providerId: $_providerId, _status: $_status, _blocked: $_blocked, _identityVerify: $_identityVerify, _addressVerify: $_addressVerify, _twoFa: $_twoFa, _twoFaVerify: $_twoFaVerify, _twoFaCode: $_twoFaCode, _emailVerification: $_emailVerification, _smsVerification: $_smsVerification, _documentVerify: $_documentVerify, _verifyCode: $_verifyCode, _sentAt: $_sentAt, _lastLogin: $_lastLogin, _lastLoginIp: $_lastLoginIp, _emailVerifiedAt: $_emailVerifiedAt, _createdAt: $_createdAt, _updatedAt: $_updatedAt, _fullname: $_fullname, _mobile: $_mobile, _profileName: $_profileName, _photo: $_photo}';
   }
 }

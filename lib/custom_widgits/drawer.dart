@@ -49,7 +49,7 @@ class MyDrawer extends StatelessWidget {
                   ),
                   SizedBox(height: 5,),
                   Text(
-                    '${GetUserDetails.userProfileModel!.firstname}'??'Tawhidur Rahman',
+                    '${GetUserDetails.userProfileModel!.username}'??'Tawhidur Rahman',
                     style: TextStyle(fontSize: 20,color: Colors.white),
                   ),
 

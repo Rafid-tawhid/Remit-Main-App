@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../api_calls/api_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
@@ -553,31 +553,29 @@ class _LoginPageState extends State<LoginPage> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             )),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           if (_globalKey.currentState!
                                               .validate()) {
                                             EasyLoading.show();
-                                            userProfileProvider
-                                                .getUserInfoByEmailPassword(
-                                                    emailCon.text, passCon.text)
+                                           await userProfileProvider
+                                                .getUserInfoByEmailPassword(emailCon.text, passCon.text)
                                                 .then((data) async {
+                                                  print('RECEIVE DATA $data');
                                               EasyLoading.dismiss();
                                               if (data == null) {
                                                 showServerProblemDialog(context);
                                               } else {
+
                                                 if (data['success'] == true) {
-                                                  final prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  prefs.setString(
-                                                      "email", emailCon.text);
-                                                  prefs.setString(
-                                                      "pass", passCon.text);
-                                                  final user =
-                                                      UserProfileModel.fromJson(
-                                                          data['data']);
+                                                  // final prefs = await SharedPreferences.getInstance();
+                                                  // prefs.setString("email", emailCon.text);
+                                                  // prefs.setString("pass", passCon.text);
+                                                  // prefs.setString("token", get);
+                                                  final user =await Data.fromJson(data['data']);
+                                                  print('USER DATAS ${user.toString()}');
+
                                                   print(
-                                                      'MY NAME IS  ${user.email}');
+                                                      'MY NAME IS  ${user.email!}');
                                                   GetUserDetails.setUserInfo(
                                                           user)
                                                       .then((value) {
@@ -586,9 +584,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       HomePage.routeName,
                                                     );
                                                   });
-                                                  // Navigator.pushNamed(context,
-                                                  //     ShowDataPage.routeName,
-                                                  //     arguments: user);
+
                                                 } else {
                                                   showErrorMsgDialog(context, data);
                                                 }
