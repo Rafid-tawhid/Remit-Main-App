@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/login_page.dart';
+import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,11 +23,13 @@ class LauncherPage extends StatefulWidget {
 
 class _LauncherPageState extends State<LauncherPage> {
   late UserProfileProvider userProfileProvider;
+  late CalculatorProvider provider;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Navigator.pushNamed(context, LoginPage.routeName);
+
+     // Navigator.pushNamed(context, LoginPage.routeName);
     //  getValueFromSharedPref();
     });
     super.initState();
@@ -34,6 +38,10 @@ class _LauncherPageState extends State<LauncherPage> {
   @override
   void didChangeDependencies() {
     userProfileProvider=Provider.of(context,listen: false);
+    provider=Provider.of(context,listen: false);
+    provider.getAllCountryInfo().then((value){
+      Navigator.pushNamed(context, CalculatorPage.routeName);
+    });
     super.didChangeDependencies();
   }
 

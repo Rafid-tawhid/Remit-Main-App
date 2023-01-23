@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remit_app/pages/launcher_page.dart';
+import 'package:remit_app/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
@@ -102,12 +103,7 @@ class MyDrawer extends StatelessWidget {
               leading: Icon(Icons.logout),
               title: const Text('LogOut'),
               onTap: () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.remove("email");
-                prefs.remove("pass").then((value) {
-                  Navigator.pushNamed(context, LauncherPage.routeName);
-                });
-
+                  Navigator.pushNamed(context, LoginPage.routeName);
               },
             ),
           ],

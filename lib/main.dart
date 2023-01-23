@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: CalculatorPage.routeName,
+        initialRoute: LauncherPage.routeName,
         routes: {
 
           FirstTabPage.routeName:(context)=>FirstTabPage(),

@@ -557,25 +557,27 @@ class _LoginPageState extends State<LoginPage> {
                                           if (_globalKey.currentState!
                                               .validate()) {
                                             EasyLoading.show();
-                                           await userProfileProvider
-                                                .getUserInfoByEmailPassword(emailCon.text, passCon.text)
+                                            await userProfileProvider
+                                                .getUserInfoByEmailPassword(
+                                                    emailCon.text, passCon.text)
                                                 .then((data) async {
-                                                  print('RECEIVE DATA $data');
+                                              print('RECEIVE DATA $data');
                                               EasyLoading.dismiss();
                                               if (data == null) {
-                                                showServerProblemDialog(context);
+                                                showServerProblemDialog(
+                                                    context);
                                               } else {
-
                                                 if (data['success'] == true) {
                                                   // final prefs = await SharedPreferences.getInstance();
                                                   // prefs.setString("email", emailCon.text);
                                                   // prefs.setString("pass", passCon.text);
                                                   // prefs.setString("token", get);
-                                                  final user =await Data.fromJson(data['data']);
+                                                  final user =
+                                                      await Data.fromJson(
+                                                          data['data']);
                                                   print('USER DATAS ${user.toString()}');
 
-                                                  print(
-                                                      'MY NAME IS  ${user.email!}');
+                                                  print('MY NAME IS  ${user.email!}');
                                                   GetUserDetails.setUserInfo(
                                                           user)
                                                       .then((value) {
@@ -584,9 +586,9 @@ class _LoginPageState extends State<LoginPage> {
                                                       HomePage.routeName,
                                                     );
                                                   });
-
                                                 } else {
-                                                  showErrorMsgDialog(context, data);
+                                                  showErrorMsgDialog(
+                                                      context, data);
                                                 }
                                               }
                                             });
@@ -805,6 +807,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 }

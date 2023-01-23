@@ -21,9 +21,14 @@ class LoginApiCalls {
                "password": "$pass",
              });
          if (response.statusCode == 200) {
-      data =await jsonDecode(response.body.toString());
+             data =await jsonDecode(response.body.toString());
         return data;
-         } else {
+         }
+         if (response.statusCode == 401) {
+           data =await jsonDecode(response.body.toString());
+           return data;
+         }
+         else {
            print('Failed........');
            return jsonDecode(response.body.toString());
          }
