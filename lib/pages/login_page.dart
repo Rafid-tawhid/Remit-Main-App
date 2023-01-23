@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:remit_app/pages/home_page.dart';
-import 'package:remit_app/pages/signup_page.dart';
+import 'package:remit_app/pages/registration_page.dart';
 
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
@@ -72,23 +72,32 @@ class _LoginPageState extends State<LoginPage> {
                                     SizedBox(height: 20,),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.mail_outline,color: MyColor.blue,),
-                                          fillColor: Colors.white,
-                                          filled: true,
-                                          hintText: 'Email or Username',
-                                          hintStyle: TextStyle(),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: MyColor.blue,
+                                          borderRadius: BorderRadius.circular(15.0),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 4.0),
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                              prefixIcon: Icon(Icons.mail_outline,color: MyColor.blue,),
+                                              fillColor: Colors.white,
+                                              filled: true,
+                                              labelText: 'Email or Username',
+                                              hintStyle: TextStyle(),
 
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                            //<-- SEE HERE
-                                            borderRadius: BorderRadius.circular(15.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                            //<-- SEE HERE
-                                            borderRadius: BorderRadius.circular(15.0),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: MyColor.blue),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(15.0),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: Colors.transparent),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(15.0),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -96,44 +105,53 @@ class _LoginPageState extends State<LoginPage> {
                                     SizedBox(height: 20,),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                      child: TextFormField(
-                                        keyboardType: TextInputType.visiblePassword,
-                                        obscureText: showPass,
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.key,color: MyColor.blue,),
-                                          fillColor: Colors.white,
-                                          filled: true,
-                                          hintText: 'Password',
-                                          suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                                          hintStyle: TextStyle(),
-                                          suffixIcon: Padding(
-                                            padding: const EdgeInsetsDirectional.only(end: 8.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(8)
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: MyColor.blue,
+                                          borderRadius: BorderRadius.circular(15.0),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 4.0),
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.visiblePassword,
+                                            obscureText: showPass,
+                                            decoration: InputDecoration(
+                                              prefixIcon: Icon(Icons.key,color: MyColor.blue,),
+                                              fillColor: Colors.white,
+                                              filled: true,
+                                              labelText: 'Password',
+                                              suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                                              hintStyle: TextStyle(),
+                                              suffixIcon: Padding(
+                                                padding: const EdgeInsetsDirectional.only(end: 8.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: MyColor.blue,
+                                                      borderRadius: BorderRadius.circular(8)
+                                                  ),
+                                                  child: IconButton(
+                                                    padding: EdgeInsets.zero,
+                                                    onPressed: (){
+                                                      setState(() {
+                                                        showPass=!showPass;
+                                                      });
+                                                    }, icon: showPass?Icon(Icons.visibility_off,color: Colors.white,size: 18,
+                                                  ):Icon(Icons.visibility,color: Colors.white,size: 18,
+                                                  ),
+                                                  ),
+                                                ),
                                               ),
-                                              child: IconButton(
-                                                padding: EdgeInsets.zero,
-                                                onPressed: (){
-                                                  setState(() {
-                                                    showPass=!showPass;
-                                                  });
-                                                }, icon: showPass?Icon(Icons.visibility_off,color: Colors.white,size: 18,
-                                              ):Icon(Icons.visibility,color: Colors.white,size: 18,
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: MyColor.blue),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(15.0),
                                               ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: Colors.transparent),
+                                                //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(15.0),
                                               ),
                                             ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                            //<-- SEE HERE
-                                            borderRadius: BorderRadius.circular(15.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                            //<-- SEE HERE
-                                            borderRadius: BorderRadius.circular(15.0),
                                           ),
                                         ),
                                       ),
@@ -379,107 +397,112 @@ class _LoginPageState extends State<LoginPage> {
                                       children: [
                                         Text('Don\'t have an account?',style: TextStyle(color: Colors.grey.shade600),),
                                         SizedBox(width: 5,),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text('SIGN UP',style: TextStyle(color: MyColor.blue),),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
-                                                Container(
-                                                  height: 2,
-                                                  width: 2,
-                                                  color: MyColor.blue,
-                                                ),
-                                                SizedBox(width: 2,),
+                                        InkWell(
+                                          onTap: (){
+                                            Navigator.pushNamed(context, SignupPage.routeName);
+                                          },
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text('SIGN UP',style: TextStyle(color: MyColor.blue),),
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
+                                                  Container(
+                                                    height: 2,
+                                                    width: 2,
+                                                    color: MyColor.blue,
+                                                  ),
+                                                  SizedBox(width: 2,),
 
-                                              ],
-                                            )
-                                          ],
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         ),
 
                                       ],

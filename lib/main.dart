@@ -4,7 +4,9 @@ import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 import 'package:remit_app/pages/login_page.dart';
-import 'package:remit_app/pages/signup_page.dart';
+import 'package:remit_app/pages/registration_page.dart';
+import 'package:remit_app/pages/registration_step2.dart';
+import 'package:remit_app/pages/registration_step3.dart';
 
 
 void main() async {
@@ -32,6 +34,8 @@ class MyApp extends StatelessWidget {
         LoginPage.routeName:(context)=>LoginPage(),
         OtpPage.routeName:(context)=>OtpPage(),
         HomePage.routeName:(context)=>HomePage(),
+        RegistrationStep2.routeName:(context)=>RegistrationStep2(),
+        RegistrationStep3.routeName:(context)=>RegistrationStep3(),
 
       },
     );

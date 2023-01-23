@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/pages/login_page.dart';
-import 'package:remit_app/pages/signup_page.dart';
+import 'package:remit_app/pages/registration_page.dart';
 
 class LauncherPage extends StatelessWidget {
   static const String routeName='/';
