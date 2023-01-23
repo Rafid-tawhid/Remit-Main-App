@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:remit_app/pages/launcher_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
 import '../helper_method/get_user_info.dart';
@@ -99,8 +101,13 @@ class MyDrawer extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.logout),
               title: const Text('LogOut'),
-              onTap: () {
-                Navigator.pop(context);
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.remove("email");
+                prefs.remove("pass").then((value) {
+                  Navigator.pushNamed(context, LauncherPage.routeName);
+                });
+
               },
             ),
           ],

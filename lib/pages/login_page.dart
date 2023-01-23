@@ -8,12 +8,13 @@ import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../api_calls/api_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
 import '../custom_widgits/button_2.dart';
 import '../helper_method/get_user_info.dart';
+import '../helper_method/helper_class.dart';
 import 'enter_otp_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -31,6 +32,11 @@ class _LoginPageState extends State<LoginPage> {
   final passCon = TextEditingController();
   late UserProfileProvider userProfileProvider;
   final _globalKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -554,21 +560,31 @@ class _LoginPageState extends State<LoginPage> {
                                             userProfileProvider
                                                 .getUserInfoByEmailPassword(
                                                     emailCon.text, passCon.text)
-                                                .then((data) {
+                                                .then((data) async {
                                               EasyLoading.dismiss();
                                               if (data == null) {
                                                 showServerProblemDialog(context);
                                               } else {
                                                 if (data['success'] == true) {
+                                                  final prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  prefs.setString(
+                                                      "email", emailCon.text);
+                                                  prefs.setString(
+                                                      "pass", passCon.text);
                                                   final user =
                                                       UserProfileModel.fromJson(
                                                           data['data']);
                                                   print(
                                                       'MY NAME IS  ${user.email}');
-                                                  GetUserDetails.setUserInfo(user).then((value) {
-                                                    Navigator.pushNamed(context,
-                                                        HomePage.routeName,
-                                                        );
+                                                  GetUserDetails.setUserInfo(
+                                                          user)
+                                                      .then((value) {
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      HomePage.routeName,
+                                                    );
                                                   });
                                                   // Navigator.pushNamed(context,
                                                   //     ShowDataPage.routeName,
@@ -794,41 +810,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<dynamic> showErrorMsgDialog(BuildContext context, data) {
-    return showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                          title:
-                                                              Text("Error"),
-                                                          content: Text(data[
-                                                              'message']),
-                                                          actions: [
-                                                            ElevatedButton(
-                                                                onPressed:
-                                                                    () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                child: Text(
-                                                                    'Ok'))
-                                                          ],
-                                                        ));
-  }
 
-  Future<dynamic> showServerProblemDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Server Problem"),
-              content: Text('Try again later...'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Close'))
-              ],
-            ));
-  }
 }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
+import 'package:remit_app/pages/first_tab_page.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 import 'package:remit_app/pages/login_page.dart';
 import 'package:remit_app/pages/manual_upload_step3.dart';
@@ -42,8 +43,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: LoginPage.routeName,
+        initialRoute: LauncherPage.routeName,
         routes: {
+          FirstTabPage.routeName:(context)=>FirstTabPage(),
           LauncherPage.routeName:(context)=>LauncherPage(),
           SignupPage.routeName:(context)=>SignupPage(),
           LoginPage.routeName:(context)=>LoginPage(),
