@@ -91,6 +91,28 @@ class CalculatorProvider extends ChangeNotifier{
     return finalRate;
   }
 
+  Future<dynamic> getServiceCharges(amount,country_id,service_id)=>
+      CalculatorAPICalls.getServiceCharges(amount, country_id, service_id);
+
+
+
+  String? getAllServicesIdByCurrencyDts(CurrencyDetails currencyDetails) {
+
+    String? serviceId;
+
+    getAllCountriesInfoList.forEach((element) {
+      if(element.id==currencyDetails.countryTableId){
+        element.currencyDetails!.forEach((element) {
+          if(currencyDetails.currency==element.currency){
+            serviceId=currencyDetails.serviceId;
+          }
+        });
+      }
+    });
+    print('MY SERVICE ID ${serviceId}');
+    return serviceId;
+  }
+
 
 
 

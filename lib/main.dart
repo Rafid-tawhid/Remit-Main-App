@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/pages/calculator_page.dart';
+import 'package:remit_app/pages/calculator_page_prac.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
           UserImageUpdatePage.routeName:(context)=>UserImageUpdatePage(),
           UserIdentityVerification.routeName:(context)=>UserIdentityVerification(),
           CalculatorPage.routeName:(context)=>CalculatorPage(),
+          CalculatorPage2.routeName:(context)=>CalculatorPage2(),
 
         },
       ),

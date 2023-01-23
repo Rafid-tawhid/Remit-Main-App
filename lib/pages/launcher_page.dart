@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import '../models/user_profile_model.dart';
+import 'calculator_page_prac.dart';
 import 'home_page.dart';
 
 class LauncherPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _LauncherPageState extends State<LauncherPage> {
     userProfileProvider=Provider.of(context,listen: false);
     provider=Provider.of(context,listen: false);
     provider.getAllCountryInfo().then((value){
-      Navigator.pushNamed(context, CalculatorPage.routeName);
+      Navigator.pushNamed(context, CalculatorPage2.routeName);
     });
     super.didChangeDependencies();
   }

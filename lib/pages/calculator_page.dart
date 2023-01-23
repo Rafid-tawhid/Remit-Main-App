@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/pages/login_page.dart';
 import '../api_calls/calculator_api_calls.dart';
+import '../colors.dart';
 import '../models/country_models.dart';
 import '../providers/calculator_provider.dart';
 
@@ -16,7 +17,6 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
-
   final sendControler = TextEditingController();
   final receiveControler = TextEditingController();
   late CalculatorProvider provider;
@@ -25,27 +25,36 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Info? _country;
   String? initialService;
   String? finalRate;
-  bool callOnce=true;
-  List<CurrencyDetails> serviceList=[];
-  List<CurrencyDetails> currencyList=[];
-  CurrencyDetails? service;
-  CurrencyDetails? currency;
+  bool callOnce = true;
+  List<CurrencyDetails> serviceList = [];
+  List<CurrencyDetails> currencyList = [];
+  String? serviceId;
+  String? currencyName;
+  CurrencyDetails? currency_details;
+  bool showError=false;
+  String? showErrorMsg;
+  String? recerversAmount;
+  String fees="0.0";
+  bool showSendBtn=false;
 
   @override
   void didChangeDependencies() {
-
-    if(callOnce) {
-      provider=Provider.of(context,listen: true);
-      _country=provider.getAllCountriesInfoList.first;
-      serviceList=provider.getAllCountriesInfoList.first.currencyDetails!; //initial service
-      currencyList=provider.getAllCountriesInfoList.first.currencyDetails!;
-      finalRate=_country!.currencyDetails!.first.finalRate;
-      service=_country!.currencyDetails!.first!;
-      currency=_country!.currencyDetails!.first!;
+    if (callOnce) {
+      provider = Provider.of(context, listen: true);
+      _country = provider.getAllCountriesInfoList.first;
+      serviceList = provider
+          .getAllCountriesInfoList.first.currencyDetails!; //initial service
+      currencyList = provider.getAllCountriesInfoList.first.currencyDetails!;
+      finalRate = _country!.currencyDetails!.first.finalRate;
+      serviceId = _country!.currencyDetails!.first!.serviceId;
+      currencyName = _country!.currencyDetails!.first!.currency;
+      sendControler.text='1000';
+      receiveControler.text= (1000*double.parse(finalRate!)).toStringAsFixed(2);
+      currency_details=_country!.currencyDetails!.first;
     }
-    callOnce=false;
- //initial currency
-   // provider.getAllCountryInfo();
+    callOnce = false;
+    //initial currency
+    // provider.getAllCountryInfo();
     super.didChangeDependencies();
   }
 
@@ -85,7 +94,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color(0xff02A6EB),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
@@ -95,7 +104,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     padding: EdgeInsets.all(12.0),
                     child: Text(
                       'International Money Transfer',
-                      style: TextStyle(color: Colors.white,fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -105,231 +114,447 @@ class _CalculatorPageState extends State<CalculatorPage> {
             const SizedBox(
               height: 20,
             ),
-             Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Send to',
-            style: TextStyle(
-                fontSize: 12, color: Colors.grey.shade600),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(6),
-                // border:
-                //     Border.all(color: Colors.black, width: 2)
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 35,
-                    padding: const EdgeInsets.only(
-                        top: 10.0, bottom: 10, left: 6, right: 6),
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                        color: Color(0xffD9D9D9)),
-                    child: countryName == null
-                        ? Image.network(
-                      provider.getAllCountriesInfoList.first.image!,
-                      fit: BoxFit.fitWidth,
-                    )
-                        : Image.network(
-                      img!,
-                      fit: BoxFit.fitWidth,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Send to',
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(6),
+                      // border:
+                      //     Border.all(color: Colors.black, width: 2)
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: DropdownSearch<Info>(
-                        selectedItem: _country,
-                        onChanged: (value) async{
-                        await  provider.getAllServicesByCurrencyDts(value!.currencyDetails!);
-                       serviceList=provider.getServiceList;
-                        await provider.getAllCurrencyByCurrencyDts(value.currencyDetails!.first!);
-                        currencyList=provider.getCurrencyList;
-                        await provider.getFinalRate(value.id!, value.currencyDetails!.first.serviceId!,
-                        value.currencyDetails!.first.currency!);
-                        finalRate=provider.finalRate!.toString();
-                          setState(() {
-                            _country = value;
-                            img = _country!.image!;
-                            countryName = value!.name!;
-                          });
-                          // _country!.currencyDetails!.forEach((element) {
-                          //   print(element.toString());
-                          // });
-                          // provider.getAllCurrencyByCurrencyDts(_country.currencyDetails!);
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 35,
+                          padding: const EdgeInsets.only(
+                              top: 10.0, bottom: 10, left: 6, right: 6),
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8)),
+                              color: Color(0xffD9D9D9)),
+                          child: countryName == null
+                              ? Image.network(
+                                  provider.getAllCountriesInfoList.first.image!,
+                                  fit: BoxFit.fitWidth,
+                                )
+                              : Image.network(
+                                  img!,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: DropdownSearch<Info>(
+                              selectedItem: _country,
+                              onChanged: (value) async {
+                                if (_country!.name != value!.name) {
+                                  await provider.getAllServicesByCurrencyDts(
+                                      value!.currencyDetails!);
+                                  serviceList = provider.getServiceList;
+                                  await provider.getAllCurrencyByCurrencyDts(
+                                      value.currencyDetails!.first!);
+                                  currencyList = provider.getCurrencyList;
+                                  await provider.getFinalRate(
+                                      value.id!,
+                                      value.currencyDetails!.first.serviceId!,
+                                      value.currencyDetails!.first.currency!);
+                                  finalRate = provider.finalRate!.toString();
 
-                        },
-                        items: provider.getAllCountriesInfoList,
-                        dropdownDecoratorProps:
-                        DropDownDecoratorProps(
-                          dropdownSearchDecoration:
-                          InputDecoration(
-                            labelText: countryName??_country!.name,
-                            // enabledBorder: OutlineInputBorder(
-                            //     borderRadius: BorderRadius.circular(6),
-                            //     borderSide: BorderSide(color: Colors.grey.shade300,),
-                            // ),
-                            enabledBorder: InputBorder.none,
-                            filled: true,
-                            hintText: countryName ??
-                                provider
-                                    .getAllCountriesInfoList.first.name,
+                                  currency_details=value.currencyDetails!.first;
+
+                                  setState(() {
+                                    _country = value;
+                                    img = _country!.image!;
+                                    countryName = value!.name!;
+                                    currencyName = value.currencyDetails!.first.currency;
+                                    sendControler.text='1000';
+                                    receiveControler.text= (1000*double.parse(finalRate!)).toStringAsFixed(2);
+                                  });
+                                }
+
+                                // _country!.currencyDetails!.forEach((element) {
+                                //   print(element.toString());
+                                // });
+                                // provider.getAllCurrencyByCurrencyDts(_country.currencyDetails!);
+                              },
+                              items: provider.getAllCountriesInfoList,
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                  labelText: countryName ?? _country!.name,
+                                  // enabledBorder: OutlineInputBorder(
+                                  //     borderRadius: BorderRadius.circular(6),
+                                  //     borderSide: BorderSide(color: Colors.grey.shade300,),
+                                  // ),
+                                  enabledBorder: InputBorder.none,
+                                  filled: true,
+                                  hintText: countryName ??
+                                      provider
+                                          .getAllCountriesInfoList.first.name,
+                                ),
+                              ),
+                              popupProps: PopupProps.menu(
+                                showSearchBox: true,
+                                itemBuilder: (context, item, isSelected) {
+                                  return ListTile(
+                                    title: Text(item.name!),
+                                    leading: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 4.0, bottom: 4),
+                                      child: Image.network(item.image!),
+                                    ),
+                                  );
+                                },
+                                showSelectedItems: false,
+                              ),
+                            ),
                           ),
                         ),
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          itemBuilder:
-                              (context, item, isSelected) {
-                            return ListTile(
-                              title: Text(item.name!),
-                              leading: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 4.0, bottom: 4),
-                                child: Image.network(item.image!),
-                              ),
-                            );
+                      ],
+                    )),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text(
+                  'Select Service',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      top: 7.0, bottom: 7, left: 6, right: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(6),
+                    // border:
+                    //     Border.all(color: Colors.black, width: 2)
+                  ),
+                  child: DropdownButtonFormField<CurrencyDetails>(
+                    decoration: const InputDecoration.collapsed(
+                      hintText: '',
+                    ),
+                    hint: Text('${serviceList.first.serviceName}'),
+                    value: serviceList.first,
+                    isExpanded: true,
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select a services';
+                      }
+                      return null;
+                    },
+                    items: serviceList
+                        .map((catModel) => DropdownMenuItem(
+                            value: catModel,
+                            child: Text(catModel.serviceName!)))
+                        .toList(),
+                    onChanged: (value) async {
+                      currency_details=value;
+                      serviceId = value!.serviceId;
+                      print('Service Id ${serviceId}');
+                      // print('${_country!.id!} + ${value!.serviceId!} + ${currencyName}');
+                      await provider.getFinalRate(
+                          _country!.id!, serviceId!, currencyName!);
+                      finalRate = provider.finalRate.toString();
+                      print('finalRate $finalRate');
+                      setState(() {
+                        receiveControler.text= (double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2);
+                        // selectService = value;
+                        // countryMarginRate = null;
+                        // sendControler.clear();
+                        // receiveControler.clear();
+                        // final_rate == 0.0;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'You Transfer',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Focus(
+                      onFocusChange: (change){
+                        if(!change){
+                          getTheFeesAndTotalAmount(sendControler.text,receiveControler.text);
+                        }
+                        if(change){
+                          setState(() {
+                            showSendBtn=false;
+                          });
+                        }
+                      },
+                      child: TextFormField(
+                        controller: sendControler,
+                        onChanged: (value){
+                        //  showErrorMessage(receiveControler.text);
+                           double receive=double.parse(value)*double.parse(finalRate!);
+                           receiveControler.text=receive.toStringAsFixed(2);
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          labelText: 'Amount',
+                          errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                          suffixIconConstraints:
+                              BoxConstraints(maxHeight: 30, maxWidth: 38),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2, color: MyColor.blue),
+                            //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: .2,
+                              color: Colors.grey.shade500,
+                            ),
+                            //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2, color: Colors.red),
+                            //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          hintStyle: TextStyle(),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Text('AUD'),
+                          ),
+                          errorMaxLines: 2,
+                        ),
+                        validator: (s) {},
+                      ),
+                    ),
+                    if(showError)Text('$showErrorMsg',
+                      style: TextStyle(color:Colors.red ),)
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Recipient Gets',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Focus(
+                        onFocusChange: (change){
+                          if(!change){
+                            getTheFeesAndTotalAmount(sendControler.text,receiveControler.text);
+                          }
+                          if(change){
+                            setState(() {
+                              showSendBtn=false;
+                            });
+                          }
+
+                        },
+                        child: TextFormField(
+                          controller: receiveControler,
+                          onChanged: (value){
+                            double receive=double.parse(value)/double.parse(finalRate!);
+                            sendControler.text=receive.toStringAsFixed(2);
+                            //showErrorMessage(value);
+
                           },
-                          showSelectedItems: false,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Recipient Gets',
+                            errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
+                            suffixIconConstraints:
+                            BoxConstraints(maxHeight: 30, maxWidth: 150),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2, color: MyColor.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: .2,
+                                color: Colors.grey.shade500,
+                              ),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2, color: Colors.red),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            hintStyle: TextStyle(),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Container(
+                                height: 30.0,
+                                width: 60.0,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(4),
+                                  // border:
+                                  //     Border.all(color: Colors.black, width: 2)
+                                ),
+                                child: DropdownButtonFormField<CurrencyDetails>(
+                                  decoration: const InputDecoration.collapsed(
+                                    hintText: '',
+                                  ),
+                                  hint: Text(currencyList.first.serviceName!),
+                                  value: currencyList.first,
+                                  isExpanded: true,
+                                  validator: (value) {
+                                    // if (value == null) {
+                                    //   return 'Please select a currency';
+                                    // }
+                                    return null;
+                                  },
+                                  items: currencyList
+                                      .map((catModel) => DropdownMenuItem(
+                                      value: catModel,
+                                      child: Text('${catModel.currency!}')))
+                                      .toList(),
+                                  onChanged: (value) async {
+                                    currencyName = value!.currency;
+
+                                    print(currencyName);
+                                    await provider.getFinalRate(
+                                        _country!.id!, serviceId!, currencyName!);
+                                    finalRate = provider.finalRate.toString();
+
+                                    setState(() {
+                                      // initialCurrency=null;
+                                      // selectService = value;
+                                      // countryMarginRate = null;
+                                      // sendControler.clear();
+                                      // receiveControler.clear();
+                                      // final_rate == 0.0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            errorMaxLines: 2,
+                          ),
+                          validator: (s) {},
                         ),
                       ),
                     ),
-                  ),
-                ],
-              )),
-          const SizedBox(
-            height: 15,
-          ),
-          const Text(
-            'Select Service',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-            padding: const EdgeInsets.only(
-                top: 7.0, bottom: 7, left: 6, right: 6),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(6),
-              // border:
-              //     Border.all(color: Colors.black, width: 2)
-            ),
-            child: DropdownButtonFormField<CurrencyDetails>(
-              decoration: const InputDecoration.collapsed(
-                hintText: '',
-              ),
-              hint: Text('${serviceList.first.serviceName}'),
-              value: serviceList.first,
-              isExpanded: true,
-              validator: (value) {
-                if (value == null) {
-                  return 'Please select a services';
-                }
-                return null;
-              },
-              items: serviceList
-                  .map((catModel) => DropdownMenuItem(
-                  value: catModel,
-                  child: Text(catModel.serviceName!)))
-                  .toList(),
-              onChanged: (value) async{
-                currency=value;
-                // print('${_country!.id!} + ${value!.serviceId!} + ${currency!.currency!}');
-               await provider.getFinalRate(_country!.id!,value!.serviceId!,currency!.currency!);
-               finalRate=provider.finalRate.toString();
-                setState(() {
-                  // initialCurrency=null;
-                  // selectService = value;
-                  // countryMarginRate = null;
-                  // sendControler.clear();
-                  // receiveControler.clear();
-                  // final_rate == 0.0;
-                });
-              },
-            ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          const Text(
-            'Select Currency',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-            padding: const EdgeInsets.only(
-                top: 7.0, bottom: 7, left: 6, right: 6),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(6),
-              // border:
-              //     Border.all(color: Colors.black, width: 2)
-            ),
-            child: DropdownButtonFormField<CurrencyDetails>(
-              decoration: const InputDecoration.collapsed(
-                hintText: '',
-              ),
-              hint: Text(currencyList.first.serviceName!),
-              value: currencyList.first,
-              isExpanded: true,
-              validator: (value) {
-                if (value == null) {
-                  return 'Please select a currency';
-                }
-                return null;
-              },
-              items: currencyList
-                  .map((catModel) => DropdownMenuItem(
-                  value: catModel,
-                  child: Text(catModel.currency!)))
-                  .toList(),
-              onChanged: (value) async {
-                service=value;
 
-                // print('${_country!.id!} + ${value!.serviceId!} + ${currency!.currency!}');
-                await provider.getFinalRate(_country!.id!,service!.serviceId!,value!.currency!);
-                finalRate=provider.finalRate.toString();
-                setState(() {
-                  // initialCurrency=null;
-                  // selectService = value;
-                  // countryMarginRate = null;
-                  // sendControler.clear();
-                  // receiveControler.clear();
-                  // final_rate == 0.0;
-                });
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: RichText(
-              text: TextSpan(
-                  style: TextStyle(color: Colors.grey),
-                  text: 'Exchange Rate : ',
-                  children: [
-                    TextSpan(
-                        text: '1 AUD = ',
-                        style: TextStyle(color: Colors.black)),
-                    TextSpan(
-                        text: '${finalRate}',
-                        style: TextStyle(color: Colors.grey))
-                  ]),
-            ),
-          ),
-        ],
-      )
+
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(color: Colors.grey),
+                          text: 'Exchange Rate : ',
+                          children: [
+                            TextSpan(
+                                text: '1 AUD = ',
+                                style: TextStyle(color: Colors.black)),
+                            TextSpan(
+                                text: '${finalRate} ',
+                                style: TextStyle(color: Colors.grey)),
+                            TextSpan(
+                                text: ' ${currencyName}',
+                                style: TextStyle(color: Colors.black))
+                          ]),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 5,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(color: Colors.grey),
+                          text: 'Exchange Rate : ',
+                          children: [
+                            TextSpan(
+                                text: 'Total Fees: ',
+                                style: TextStyle(color: Colors.black)),
+                            TextSpan(
+                                text: '${fees} ',
+                                style: TextStyle(color: Colors.grey)),
+                            TextSpan(
+                                text: ' ${currencyName}',
+                                style: TextStyle(color: Colors.black))
+                          ]),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20,),
+                if(showSendBtn)Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          fixedSize: Size.fromHeight(50),
+                          backgroundColor: Color(0xff02A6EB)
+                      ),
+                      onPressed: (){
+
+                      },
+                      child: Text('Send',
+                        style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
             // Consumer<CalculatorProvider>(
             //   builder: (context, provider, _) => FutureBuilder(
             //     future: provider.getAllCountryInfo(),
@@ -460,6 +685,65 @@ class _CalculatorPageState extends State<CalculatorPage> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> getRate(String text, String? id, String? serviceId) async {
+
+    return await provider.getServiceCharges(sendControler.text,currency_details!.countryTableId,
+       currency_details!.serviceId!);
+  }
+
+  void showErrorMessage(String value) {
+
+    print(value);
+    if(double.parse(value)>double.parse(currency_details!.maximumLimit!)){
+      setState(() {
+        showError=true;
+        showErrorMsg='Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+      });
+    }
+   else if(double.parse(value)<double.parse(currency_details!.minimumLimit!)){
+      setState(() {
+        showError=true;
+        showErrorMsg='Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+      });
+    }
+    else {
+      setState(() {
+        showError=false;
+      });
+    }
+  }
+
+  Future<void> getTheFeesAndTotalAmount(String send, String receive) async {
+    EasyLoading.show();
+    print('Final Rate of total are ${send} and ${receive}');
+    if(double.parse(send)<=double.parse(currency_details!.minimumLimit!)){
+      EasyLoading.dismiss();
+      setState(() {
+        showError=true;
+        showErrorMsg='Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+      });
+    }
+
+   else if(double.parse(receive)>double.parse(currency_details!.maximumLimit!)){
+      EasyLoading.dismiss();
+      setState(() {
+        showError=true;
+        showErrorMsg='Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+      });
+    }
+   else {
+     await getRate(sendControler.text,_country!.id,serviceId).then((charge) {
+       print(charge['service_fee']);
+       EasyLoading.dismiss();
+       setState(() {
+         fees=charge['service_fee'];
+         showSendBtn=true;
+       });
+     });
+
+    }
   }
 }
 
@@ -607,7 +891,9 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, CalculatorPage.routeName);
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

@@ -42,6 +42,41 @@ class CalculatorAPICalls{
 
 
 
+  static Future<dynamic> getServiceCharges(amountS,country_idS,service_idS)  async {
+    var data;
+    print(amountS+country_idS+service_idS);
+    await LoginApiCalls.getAuthToken().then((auth) async {
+      print('THIS IS SERVICE CALCULATION TOKEN ${auth['token']}');
+      try {
+        Response response = await post(
+          Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/service_charges'),
+          headers: {
+            'Authorization': 'Bearer ${auth['token']}',
+          },
+          body: {
+            "amount" : amountS,
+            "country_id":country_idS,
+            "service_id":service_idS,
+          }
+        );
+        if (response.statusCode == 200) {
+          data =await jsonDecode(response.body.toString());
+
+          return data;
+        }
+        else {
+          print('Failed........');
+          return jsonDecode(response.body.toString());
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    });
+
+    print('THIS IS RETURN DATA ${data}');
+    return data;
+  }
+
 
 
 
