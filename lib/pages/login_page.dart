@@ -13,6 +13,7 @@ import '../api_calls/api_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
 import '../custom_widgits/button_2.dart';
+import '../helper_method/get_user_info.dart';
 import 'enter_otp_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -33,10 +34,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void didChangeDependencies() {
-    userProfileProvider=Provider.of<UserProfileProvider>(context,listen: false);
+    userProfileProvider =
+        Provider.of<UserProfileProvider>(context, listen: false);
     super.didChangeDependencies();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +77,9 @@ class _LoginPageState extends State<LoginPage> {
                                 //set border radius more than 50% of height and width to make circle
                               ),
                               child: Container(
-
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Color.fromARGB(125, 218, 247, 253),
-
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color.fromARGB(125, 218, 247, 253),
                                 ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -105,7 +104,6 @@ class _LoginPageState extends State<LoginPage> {
                                         padding:
                                             const EdgeInsets.only(left: 4.0),
                                         child: TextFormField(
-
                                           controller: emailCon,
                                           decoration: InputDecoration(
                                             prefixIcon: Icon(
@@ -116,14 +114,13 @@ class _LoginPageState extends State<LoginPage> {
                                             filled: true,
                                             labelText: 'Email or Username',
                                             hintStyle: TextStyle(),
-
                                             focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   width: 2,
                                                   color: MyColor.blue),
                                               //<-- SEE HERE
                                               borderRadius:
-                                              BorderRadius.circular(15.0),
+                                                  BorderRadius.circular(15.0),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -132,15 +129,14 @@ class _LoginPageState extends State<LoginPage> {
                                               ),
                                               //<-- SEE HERE
                                               borderRadius:
-                                              BorderRadius.circular(15.0),
+                                                  BorderRadius.circular(15.0),
                                             ),
                                             errorBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: Colors.red),
+                                                  width: 2, color: Colors.red),
                                               //<-- SEE HERE
                                               borderRadius:
-                                              BorderRadius.circular(15.0),
+                                                  BorderRadius.circular(15.0),
                                             ),
                                           ),
                                           validator: (s) {
@@ -175,8 +171,11 @@ class _LoginPageState extends State<LoginPage> {
                                             fillColor: Colors.white,
                                             filled: true,
                                             labelText: 'Password',
-                                            errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
-                                            suffixIconConstraints: BoxConstraints(
+                                            errorStyle: TextStyle(
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                            suffixIconConstraints:
+                                                BoxConstraints(
                                                     maxHeight: 30,
                                                     maxWidth: 38),
                                             focusedBorder: OutlineInputBorder(
@@ -185,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   color: MyColor.blue),
                                               //<-- SEE HERE
                                               borderRadius:
-                                              BorderRadius.circular(15.0),
+                                                  BorderRadius.circular(15.0),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -194,15 +193,14 @@ class _LoginPageState extends State<LoginPage> {
                                               ),
                                               //<-- SEE HERE
                                               borderRadius:
-                                              BorderRadius.circular(15.0),
+                                                  BorderRadius.circular(15.0),
                                             ),
                                             errorBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: Colors.red),
+                                                  width: 2, color: Colors.red),
                                               //<-- SEE HERE
                                               borderRadius:
-                                              BorderRadius.circular(15.0),
+                                                  BorderRadius.circular(15.0),
                                             ),
                                             hintStyle: TextStyle(),
                                             suffixIcon: Padding(
@@ -224,8 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   },
                                                   icon: showPass
                                                       ? Icon(
-                                                          Icons
-                                                              .visibility_off,
+                                                          Icons.visibility_off,
                                                           color: Colors.white,
                                                           size: 18,
                                                         )
@@ -237,25 +234,25 @@ class _LoginPageState extends State<LoginPage> {
                                                 ),
                                               ),
                                             ),
-                                              errorMaxLines: 2,
+                                            errorMaxLines: 2,
                                           ),
                                           validator: (s) {
                                             if (passCon.text.length < 8) {
                                               return 'The password must be at least 8 characters.';
                                             }
-                                            if(!passCon.text.contains(RegExp(r"[a-z]"))||
-                                                !passCon.text.contains(RegExp(r"[A-Z]"))||
-                                                !passCon.text.contains(RegExp(r"[0-9]"))||
-                                                !passCon.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))){
+                                            if (!passCon.text.contains(
+                                                    RegExp(r"[a-z]")) ||
+                                                !passCon.text.contains(
+                                                    RegExp(r"[A-Z]")) ||
+                                                !passCon.text.contains(
+                                                    RegExp(r"[0-9]")) ||
+                                                !passCon.text.contains(RegExp(
+                                                    r'[!@#$%^&*(),.?":{}|<>]'))) {
                                               return 'Password must be contain 1 uppercase, '
                                                   '1 lower case 1 number and 1 special character.';
+                                            } else {
+                                              return null;
                                             }
-                                            else
-                                              {
-                                                return null;
-                                              }
-
-
                                           },
                                         ),
                                       ),
@@ -551,31 +548,35 @@ class _LoginPageState extends State<LoginPage> {
                                                   BorderRadius.circular(10),
                                             )),
                                         onPressed: () {
-
                                           if (_globalKey.currentState!
                                               .validate()) {
                                             EasyLoading.show();
-                                            userProfileProvider.getUserInfoByEmailPassword(emailCon.text,passCon.text).then((data) {
+                                            userProfileProvider
+                                                .getUserInfoByEmailPassword(
+                                                    emailCon.text, passCon.text)
+                                                .then((data) {
                                               EasyLoading.dismiss();
-                                              if(data['success']==true){
-                                                final user=UserProfileModel.fromJson(data['data']);
-                                                print('MY NAME IS  ${user.email}');
-                                                Navigator.pushNamed(context, ShowDataPage.routeName,arguments: user);
+                                              if (data == null) {
+                                                showServerProblemDialog(context);
+                                              } else {
+                                                if (data['success'] == true) {
+                                                  final user =
+                                                      UserProfileModel.fromJson(
+                                                          data['data']);
+                                                  print(
+                                                      'MY NAME IS  ${user.email}');
+                                                  GetUserDetails.setUserInfo(user).then((value) {
+                                                    Navigator.pushNamed(context,
+                                                        HomePage.routeName,
+                                                        );
+                                                  });
+                                                  // Navigator.pushNamed(context,
+                                                  //     ShowDataPage.routeName,
+                                                  //     arguments: user);
+                                                } else {
+                                                  showErrorMsgDialog(context, data);
+                                                }
                                               }
-                                              else {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context)=>AlertDialog(
-                                                      title: Text("Error"),
-                                                      content: Text(data['message']),
-                                                      actions: [
-                                                        ElevatedButton(onPressed: (){
-                                                          Navigator.pop(context);
-                                                        }, child: Text('Ok'))
-                                                      ],
-                                                    ) );
-                                              }
-
                                             });
                                           }
                                         },
@@ -761,7 +762,6 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ],
                                     ),
-
                                     SizedBox(
                                       height: 40,
                                     ),
@@ -769,7 +769,6 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
-
                           ),
                         ),
                       ),
@@ -793,5 +792,43 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> showErrorMsgDialog(BuildContext context, data) {
+    return showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title:
+                                                              Text("Error"),
+                                                          content: Text(data[
+                                                              'message']),
+                                                          actions: [
+                                                            ElevatedButton(
+                                                                onPressed:
+                                                                    () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Text(
+                                                                    'Ok'))
+                                                          ],
+                                                        ));
+  }
+
+  Future<dynamic> showServerProblemDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Server Problem"),
+              content: Text('Try again later...'),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Close'))
+              ],
+            ));
   }
 }

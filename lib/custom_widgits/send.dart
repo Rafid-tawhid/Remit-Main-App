@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../colors.dart';
+import '../pages/user_profile_page.dart';
 import 'button1.dart';
 import 'button_2.dart';
+import 'drawer.dart';
 
 class SendWidget extends StatefulWidget {
   static const String routeName='/congo';
@@ -16,31 +19,22 @@ class _SendWidgetState extends State<SendWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: MyDrawer(),
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(
-          color: Colors.black
-        ),
-        title: Row(
-          children: [
-            // Icon(Icons.arrow_back,color: Colors.black,),
-            // SizedBox(width: 10,),
-            Text('Back',style: TextStyle(color: Colors.black),)],
-        ),
         backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
+        title: Image.asset('images/logo.png',width: 120,),
+        centerTitle: true,
         actions: [
-          Container(
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, UserProfilePage.routeName);
+            },
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.black,
-                ),
-                splashColor: Colors.redAccent,
-                splashRadius: 100,
-                onPressed: () {},
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',),
               ),
             ),
           ),

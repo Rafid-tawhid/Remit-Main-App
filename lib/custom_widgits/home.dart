@@ -1,42 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:remit_app/colors.dart';
+import 'package:remit_app/models/user_profile_model.dart';
 
 
+import '../helper_method/get_user_info.dart';
+import '../pages/user_profile_page.dart';
 import 'button1.dart';
+import 'drawer.dart';
 
-class HomeWidget extends StatelessWidget {
-  const HomeWidget({Key? key}) : super(key: key);
+class HomeWidget extends StatefulWidget {
 
+  @override
+  State<HomeWidget> createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: MyDrawer(),
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 12.0,top: 5,bottom: 5),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png'),
-          ),
-        ),
         backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
         title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
-          Container(
-
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                icon: Icon( Icons.settings,color: Colors.black,),
-                splashColor: Colors.redAccent,
-                splashRadius: 100,
-                onPressed: (){},
-
+        InkWell(
+          onTap: (){
+            Navigator.pushNamed(context, UserProfilePage.routeName);
+          },
+          child: Padding(
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',),
               ),
             ),
-          ),
-
+        ),
         ],
       ),
       body: Center(
@@ -45,7 +47,7 @@ class HomeWidget extends StatelessWidget {
           children: [
             Align(
                 alignment: Alignment.center,
-                child: Text('Welcome Tarun !',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+                child: Text('Welcome ${GetUserDetails.userProfileModel!.username}!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
             SizedBox(height: 20,),
             SvgPicture.asset('svg/home.svg',width: 300,height: 220,),
             const Padding(

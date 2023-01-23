@@ -6,10 +6,13 @@ import '../custom_widgits/home.dart';
 import '../custom_widgits/receiver.dart';
 import '../custom_widgits/send.dart';
 import '../custom_widgits/send_money.dart';
+import '../helper_method/helper_class.dart';
+import '../models/user_profile_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static const String routeName = '/home';
+
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     SendMoneyWidget(),
     SendWidget(),
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +73,5 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MyIcons {
 
-  MyIcons();
-  static const _kFonts='MyIcons';
-  static const _kFonts2='MyIcons2';
-  static const IconData location=IconData(0XE800,fontFamily: _kFonts);
-  static const IconData person=IconData(0XE800,fontFamily: _kFonts2);
-
-}
-
-class MyIcons2 {
-
-  MyIcons2();
-  static const _kFonts2='MyIcons2';
-  static const IconData person=IconData(0XE800,fontFamily: _kFonts2);
-
-}
 

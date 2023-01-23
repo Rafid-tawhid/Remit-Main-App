@@ -7,7 +7,7 @@ class LoginApiCalls {
      var data;
      try {
        Response response = await post(
-           Uri.parse('http://192.168.95.101/staging/api/login'),
+           Uri.parse('http://192.168.95.29/staging/api/login'),
            body: {
              "email": "$email",
              "password": "$pass",
@@ -16,7 +16,7 @@ class LoginApiCalls {
          var data =jsonDecode(response.body.toString());
          print(data['token']);
          Response responses=await post(
-             Uri.parse('http://192.168.95.101/staging/api/user-detail'),
+             Uri.parse('http://192.168.95.29/staging/api/user-detail'),
              headers: {
                'Content-Type': 'application/json',
                'Accept': 'application/json',

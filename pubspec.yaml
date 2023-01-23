@@ -46,6 +46,8 @@ dependencies:
   intl:
   image_picker: ^0.8.6+1
   email_validator: ^2.1.16
+  permission_handler: ^10.2.0
+  shared_preferences: ^2.0.17
 
 
 
