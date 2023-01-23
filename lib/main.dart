@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
@@ -15,9 +16,8 @@ import 'package:remit_app/pages/registration_step3.dart';
 import 'package:remit_app/pages/user_identity_varification.dart';
 import 'package:remit_app/pages/user_password_update_page.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
+import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
-
-import 'api_calls/show_data.dart';
 import 'pages/user_image_update_page.dart';
 
 
@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=>UserProfileProvider())
+        ChangeNotifierProvider(create: (_)=>UserProfileProvider()),
+        ChangeNotifierProvider(create: (_)=>CalculatorProvider()),
       ],
       child: MaterialApp(
         title: 'Remit App',
@@ -43,8 +44,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: LauncherPage.routeName,
+        initialRoute: CalculatorPage.routeName,
         routes: {
+
           FirstTabPage.routeName:(context)=>FirstTabPage(),
           LauncherPage.routeName:(context)=>LauncherPage(),
           SignupPage.routeName:(context)=>SignupPage(),
@@ -54,12 +56,11 @@ class MyApp extends StatelessWidget {
           RegistrationStep2.routeName:(context)=>RegistrationStep2(),
           RegistrationStep3.routeName:(context)=>RegistrationStep3(),
           ManualUploadPage3.routeName:(context)=>ManualUploadPage3(),
-          ShowDataPage.routeName:(context)=>ShowDataPage(),
           UserProfilePage.routeName:(context)=>UserProfilePage(),
           UserUpdatePasswordPage.routeName:(context)=>UserUpdatePasswordPage(),
           UserImageUpdatePage.routeName:(context)=>UserImageUpdatePage(),
           UserIdentityVerification.routeName:(context)=>UserIdentityVerification(),
-
+          CalculatorPage.routeName:(context)=>CalculatorPage(),
 
         },
       ),
