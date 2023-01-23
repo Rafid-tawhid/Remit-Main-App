@@ -9,9 +9,17 @@ class UserIdentityVerification extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Identity Verification'),),
       body: Center(
-        child: ElevatedButton(
-          onPressed: (){},
-          child: Text('View Identities'),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: (){},
+              child: Text('View Identities'),
+            ),
+            ElevatedButton(
+              onPressed: (){},
+              child: Text('View Identities'),
+            ),
+          ],
         ),
       ),
     );
