@@ -29,6 +29,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   void didChangeDependencies() {
     provider=Provider.of(context,listen: true);
     _country=provider.getAllCountriesInfoList.first;
+    provider.getServiceList=provider.getAllCountriesInfoList.first.currencyDetails!; //initial service
+    provider.getCurrencyList=provider.getAllCountriesInfoList.first.currencyDetails!; //initial currency
    // provider.getAllCountryInfo();
     super.didChangeDependencies();
   }
@@ -139,7 +141,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: DropdownSearch<Info>(
                         selectedItem: _country,
                         onChanged: (value) {
-
+                          provider.getCurrencyList.clear();
+                          provider.getServiceList.clear();
                           setState(() {
                             _country = value;
                             img = _country!.image!;
@@ -148,6 +151,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _country!.currencyDetails!.forEach((element) {
                             print(element.toString());
                           });
+                          provider.getAllServicesByCurrencyDts(_country!.currencyDetails!);
                         },
                         items: provider.getAllCountriesInfoList,
                         dropdownDecoratorProps:
@@ -218,12 +222,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 }
                 return null;
               },
-              items: _country!.currencyDetails!
+              items: provider.getServiceList
                   .map((catModel) => DropdownMenuItem(
                   value: catModel,
                   child: Text(catModel.serviceName!)))
                   .toList(),
               onChanged: (value) {
+                provider.getCurrencyList.clear();
+                provider.getAllCurrencyByCurrencyDts(_country!.currencyDetails!.first);
                 setState(() {
                   // initialCurrency=null;
                   // selectService = value;
@@ -267,7 +273,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 }
                 return null;
               },
-              items: _country!.currencyDetails!
+              items: provider.getCurrencyList
                   .map((catModel) => DropdownMenuItem(
                   value: catModel,
                   child: Text(catModel.currency!)))

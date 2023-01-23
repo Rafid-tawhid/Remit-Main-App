@@ -8,6 +8,9 @@ class CalculatorProvider extends ChangeNotifier{
 
   List<Info> getAllCountriesInfoList=[];
   List<CurrencyDetails> getAllCurrencyInfoList=[];
+  List<CurrencyDetails> getServiceList=[];
+  List<CurrencyDetails> getCurrencyList=[];
+  List<CurrencyDetails> getCurrencyList2=[];
   //
   Future<List<Info>> getAllCountryInfo() async{
 
@@ -33,18 +36,43 @@ class CalculatorProvider extends ChangeNotifier{
     // print(countryNameList.length);
   }
   //
-  // List<Facilities> getAllFacilitiesByCountryName(String name) {
-  //
-  //   countryFacilitiesList.clear();
-  //   countryInfoList.forEach((element) {
-  //     if(element.name==name){
-  //       countryFacilitiesList.addAll(element.facilities!);
-  //     }
-  //   });
-  //   print('countryInfoList ${countryInfoList.length}');
-  //   notifyListeners();
-  //   return countryFacilitiesList;
-  // }
+  List<CurrencyDetails> getAllServicesByCurrencyDts(List<CurrencyDetails> currencyDetails) {
+
+    getServiceList.clear();
+        currencyDetails.forEach((details) {
+          if(!doesServiceExists(details.serviceName!)==true){
+            getServiceList.add(details);
+          }
+        });
+    print('SERVICE LIST SIZE ${getServiceList.length}');
+    notifyListeners();
+    return getServiceList;
+  }
+
+
+  List<CurrencyDetails> getAllCurrencyByCurrencyDts(CurrencyDetails currencyDetails) {
+
+    getCurrencyList.clear();
+    getCurrencyList2.clear();
+    getAllCountriesInfoList.forEach((country) {
+        if(country.id==currencyDetails.countryTableId){
+          getCurrencyList2.addAll(country.currencyDetails!);
+          getCurrencyList2.forEach((element) {
+            if(!doesCurrencyExists(element.currency!)==true){
+              getCurrencyList.add(element);
+            }
+          });
+        }
+
+    });
+    print('Currency LIST SIZE ${getCurrencyList.length}');
+    notifyListeners();
+    return getCurrencyList;
+  }
+
+
+
+
   //
   // Future<List<CountryMarginRate>> getCurrencyByCountryName(String name) async{
   //
@@ -125,14 +153,26 @@ class CalculatorProvider extends ChangeNotifier{
 
 
 
-  // bool doesCurrencyExists(String name) {
-  //   bool tag = false;
-  //   for (var n in countryCurrencyList2) {
-  //     if(name == n.currency) {
-  //       tag = true;
-  //       break;
-  //     }
-  //   }
-  //   return tag;
-  // }
+  bool doesServiceExists(String name) {
+    bool tag = false;
+    for (var n in getServiceList) {
+      if(name == n.serviceName) {
+        tag = true;
+        break;
+      }
+    }
+    return tag;
+  }
+
+
+  bool doesCurrencyExists(String name) {
+    bool tag = false;
+    for (var n in getCurrencyList) {
+      if(name == n.currency) {
+        tag = true;
+        break;
+      }
+    }
+    return tag;
+  }
 }
