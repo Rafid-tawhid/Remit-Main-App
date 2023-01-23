@@ -24,13 +24,27 @@ class _CalculatorPageState extends State<CalculatorPage> {
   String? img;
   Info? _country;
   String? initialService;
+  String? finalRate;
+  bool callOnce=true;
+  List<CurrencyDetails> serviceList=[];
+  List<CurrencyDetails> currencyList=[];
+  CurrencyDetails? service;
+  CurrencyDetails? currency;
 
   @override
   void didChangeDependencies() {
-    provider=Provider.of(context,listen: true);
-    _country=provider.getAllCountriesInfoList.first;
-    provider.getServiceList=provider.getAllCountriesInfoList.first.currencyDetails!; //initial service
-    provider.getCurrencyList=provider.getAllCountriesInfoList.first.currencyDetails!; //initial currency
+
+    if(callOnce) {
+      provider=Provider.of(context,listen: true);
+      _country=provider.getAllCountriesInfoList.first;
+      serviceList=provider.getAllCountriesInfoList.first.currencyDetails!; //initial service
+      currencyList=provider.getAllCountriesInfoList.first.currencyDetails!;
+      finalRate=_country!.currencyDetails!.first.finalRate;
+      service=_country!.currencyDetails!.first!;
+      currency=_country!.currencyDetails!.first!;
+    }
+    callOnce=false;
+ //initial currency
    // provider.getAllCountryInfo();
     super.didChangeDependencies();
   }
@@ -69,28 +83,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
         padding: EdgeInsets.all(25),
         child: ListView(
           children: [
-            InkWell(
-              onTap: (){
-
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        'International Money Transfer',
-                        style: TextStyle(color: Colors.white,fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Text(
+                      'International Money Transfer',
+                      style: TextStyle(color: Colors.white,fontSize: 16),
+                      textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -140,18 +149,24 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     child: Container(
                       child: DropdownSearch<Info>(
                         selectedItem: _country,
-                        onChanged: (value) {
-                          provider.getCurrencyList.clear();
-                          provider.getServiceList.clear();
+                        onChanged: (value) async{
+                        await  provider.getAllServicesByCurrencyDts(value!.currencyDetails!);
+                       serviceList=provider.getServiceList;
+                        await provider.getAllCurrencyByCurrencyDts(value.currencyDetails!.first!);
+                        currencyList=provider.getCurrencyList;
+                        await provider.getFinalRate(value.id!, value.currencyDetails!.first.serviceId!,
+                        value.currencyDetails!.first.currency!);
+                        finalRate=provider.finalRate!.toString();
                           setState(() {
                             _country = value;
                             img = _country!.image!;
                             countryName = value!.name!;
                           });
-                          _country!.currencyDetails!.forEach((element) {
-                            print(element.toString());
-                          });
-                          provider.getAllServicesByCurrencyDts(_country!.currencyDetails!);
+                          // _country!.currencyDetails!.forEach((element) {
+                          //   print(element.toString());
+                          // });
+                          // provider.getAllCurrencyByCurrencyDts(_country.currencyDetails!);
+
                         },
                         items: provider.getAllCountriesInfoList,
                         dropdownDecoratorProps:
@@ -213,8 +228,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
               decoration: const InputDecoration.collapsed(
                 hintText: '',
               ),
-              hint: Text(_country!.currencyDetails!.first.serviceName!),
-              value: _country!.currencyDetails!.first,
+              hint: Text('${serviceList.first.serviceName}'),
+              value: serviceList.first,
               isExpanded: true,
               validator: (value) {
                 if (value == null) {
@@ -222,14 +237,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 }
                 return null;
               },
-              items: provider.getServiceList
+              items: serviceList
                   .map((catModel) => DropdownMenuItem(
                   value: catModel,
                   child: Text(catModel.serviceName!)))
                   .toList(),
-              onChanged: (value) {
-                provider.getCurrencyList.clear();
-                provider.getAllCurrencyByCurrencyDts(_country!.currencyDetails!.first);
+              onChanged: (value) async{
+                currency=value;
+                // print('${_country!.id!} + ${value!.serviceId!} + ${currency!.currency!}');
+               await provider.getFinalRate(_country!.id!,value!.serviceId!,currency!.currency!);
+               finalRate=provider.finalRate.toString();
                 setState(() {
                   // initialCurrency=null;
                   // selectService = value;
@@ -264,8 +281,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
               decoration: const InputDecoration.collapsed(
                 hintText: '',
               ),
-              hint: Text(_country!.currencyDetails!.first.serviceName!),
-              value: _country!.currencyDetails!.first,
+              hint: Text(currencyList.first.serviceName!),
+              value: currencyList.first,
               isExpanded: true,
               validator: (value) {
                 if (value == null) {
@@ -273,12 +290,17 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 }
                 return null;
               },
-              items: provider.getCurrencyList
+              items: currencyList
                   .map((catModel) => DropdownMenuItem(
                   value: catModel,
                   child: Text(catModel.currency!)))
                   .toList(),
-              onChanged: (value) {
+              onChanged: (value) async {
+                service=value;
+
+                // print('${_country!.id!} + ${value!.serviceId!} + ${currency!.currency!}');
+                await provider.getFinalRate(_country!.id!,service!.serviceId!,value!.currency!);
+                finalRate=provider.finalRate.toString();
                 setState(() {
                   // initialCurrency=null;
                   // selectService = value;
@@ -295,13 +317,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
             child: RichText(
               text: TextSpan(
                   style: TextStyle(color: Colors.grey),
-                  text: '1 AUD =',
+                  text: 'Exchange Rate : ',
                   children: [
                     TextSpan(
-                        text: ' ${_country!.currencyDetails!.first!.finalRate!} ',
+                        text: '1 AUD = ',
                         style: TextStyle(color: Colors.black)),
                     TextSpan(
-                        text: '${_country!.currencyDetails!.first!.finalRate!}',
+                        text: '${finalRate}',
                         style: TextStyle(color: Colors.grey))
                   ]),
             ),

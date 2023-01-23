@@ -11,6 +11,7 @@ class CalculatorProvider extends ChangeNotifier{
   List<CurrencyDetails> getServiceList=[];
   List<CurrencyDetails> getCurrencyList=[];
   List<CurrencyDetails> getCurrencyList2=[];
+  double? finalRate;
   //
   Future<List<Info>> getAllCountryInfo() async{
 
@@ -68,6 +69,26 @@ class CalculatorProvider extends ChangeNotifier{
     print('Currency LIST SIZE ${getCurrencyList.length}');
     notifyListeners();
     return getCurrencyList;
+  }
+
+
+  double? getFinalRate(String countryTableId, String serviceId,String currency) {
+    print('TableId $countryTableId');
+    print('ServiceId $serviceId');
+    print('CurrencyId $currency');
+
+    getAllCountriesInfoList.forEach((country) {
+      if(country.id==countryTableId){
+        country.currencyDetails!.forEach((currency_details) {
+          if(currency_details.currency==currency&&currency_details.serviceId==serviceId){
+            finalRate=double.parse(currency_details.finalRate!);
+            print('finalRate $finalRate');
+          }
+        });
+
+      }
+    });
+    return finalRate;
   }
 
 
