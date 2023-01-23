@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:remit_app/colors.dart';
@@ -20,14 +21,18 @@ class _SignupPageState extends State<SignupPage> {
   bool showPass=true;
   bool checkBox=false;
   bool checkBox2=false;
-  final phoneCon=TextEditingController();
 
-
+  final emailCon = TextEditingController();
+  final confirmmailCon = TextEditingController();
+  final passCon = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    emailCon.dispose();
+    confirmmailCon.dispose();
+    passCon.dispose();
 
-    phoneCon.dispose();
     super.dispose();
   }
   @override
@@ -39,6 +44,7 @@ class _SignupPageState extends State<SignupPage> {
       body: Container(
         color: Colors.white,
         child: Form(
+          key: _formKey,
           child: ListView(
             children: [
               Container(
@@ -205,6 +211,7 @@ class _SignupPageState extends State<SignupPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 4.0),
                               child: TextFormField(
+                                controller: emailCon,
                                 decoration: InputDecoration(
                                   prefixIcon: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -234,6 +241,12 @@ class _SignupPageState extends State<SignupPage> {
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
                                 ),
+                                validator: (s) {
+                                  if (EmailValidator.validate(emailCon.text)) {
+                                    return null;
+                                  } else
+                                    return 'Please give a valid email';
+                                },
                               ),
                             ),
                           ),
@@ -249,6 +262,7 @@ class _SignupPageState extends State<SignupPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 4.0),
                               child: TextFormField(
+                                controller: confirmmailCon,
                                 decoration: InputDecoration(
                                   prefixIcon: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -278,6 +292,12 @@ class _SignupPageState extends State<SignupPage> {
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
                                 ),
+                                validator: (s) {
+                                  if (emailCon.text==confirmmailCon.text) {
+                                    return null;
+                                  } else
+                                    return 'The email confirmation does not match.';
+                                },
                               ),
                             ),
                           ),
@@ -293,6 +313,7 @@ class _SignupPageState extends State<SignupPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 4.0),
                               child: TextFormField(
+                                controller: passCon,
                                 keyboardType: TextInputType.visiblePassword,
                                 obscureText: showPass,
                                 decoration: InputDecoration(
@@ -343,6 +364,12 @@ class _SignupPageState extends State<SignupPage> {
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
                                 ),
+                                validator: (s) {
+                                  if (passCon.text.length > 8) {
+                                    return null;
+                                  } else
+                                    return 'Minimum length is 8';
+                                },
                               ),
                             ),
                           ),
@@ -427,7 +454,9 @@ class _SignupPageState extends State<SignupPage> {
                                 )
                             ),
                             onPressed: (){
-                              Navigator.pushNamed(context, RegistrationStep2.routeName);
+                              if(_formKey.currentState!.validate()){
+                                Navigator.pushNamed(context, RegistrationStep2.routeName);
+                              }
                             }, child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
                           child: Row(

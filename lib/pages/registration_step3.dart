@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../colors.dart';
+import 'manual_upload_step3.dart';
 
 class RegistrationStep3 extends StatefulWidget {
   static const String routeName='/step3';
@@ -12,11 +13,17 @@ class RegistrationStep3 extends StatefulWidget {
 }
 
 class _RegistrationStep3State extends State<RegistrationStep3> {
-  bool showAutomatic = true;
+  bool showDrivingLicenseField=false;
+  bool showPassportInfoField=false;
   bool checkBox = false;
   bool checkBox2 = false;
   String? gender;
-  List<String> issuingJurdictions=["VIC","NSW","SA","QLD","WA","NT","TAS","ACT"];
+  String? drivingLicenceType;
+  String? passportCountryName;
+  List<String> showDrivingLicenseType=["VIC","NSW","SA","QLD","WA","NT","TAS","ACT"];
+  List<String> showList=[];
+  List<String> passportCountryList=["Bangladesh","India","Pakistan"];
+
   List<String> idTypesList=["Australia Drivers License","Passport",];
   final phoneCon = TextEditingController();
   final _issueeDateCon = TextEditingController();
@@ -180,7 +187,7 @@ class _RegistrationStep3State extends State<RegistrationStep3> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Image.asset(
@@ -262,21 +269,37 @@ class _RegistrationStep3State extends State<RegistrationStep3> {
                                                   ),
                                                   child: DropdownButtonHideUnderline(
                                                     child: DropdownButtonFormField(
-                                                      
-                                                      decoration: InputDecoration(
+
+                                                      decoration: const InputDecoration(
                                                         enabledBorder: InputBorder.none,
                                                         focusedBorder: InputBorder.none
                                                       ),
                                                       hint: Text('  Select'),
                                                       items: idTypesList.map((e) => DropdownMenuItem(
+                                                        value: e,
                                                         child:  Padding(
                                                           padding: const EdgeInsets.only(left: 8.0),
                                                           child: Text(e),
                                                         ),
-                                                        value: e,
                                                       )).toList(),
                                                       onChanged: (value) {
-                                                        print(value);
+                                                        drivingLicenceType=null;
+                                                        if(value=='Passport'){
+                                                          setState(() {
+                                                            showPassportInfoField=true;
+                                                            showDrivingLicenseField=false;
+                                                            showList.clear();
+                                                            showList.addAll(passportCountryList);
+                                                          });
+                                                        }
+                                                        if(value=='Australia Drivers License'){
+                                                          setState(() {
+                                                            showPassportInfoField=false;
+                                                            showDrivingLicenseField=true;
+                                                            showList.clear();
+                                                            showList.addAll(showDrivingLicenseType);
+                                                          });
+                                                        }
                                                       },
                                                     ),
                                                   ),
@@ -284,115 +307,183 @@ class _RegistrationStep3State extends State<RegistrationStep3> {
                                               ),
                                             ),
                                           ),
-                                         
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 8.0,right: 8,bottom: 8,top: 8),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Issuing Jurisdictions :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
+
+                                           Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 8.0,right: 8,bottom: 8,top: 8),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      'Issuing Jurisdictions :',
+                                                      style: TextStyle(
+                                                          color: MyColor.blue, fontSize: 16),
+                                                    ),
+                                                    const Icon(
+                                                      Icons.star,
+                                                      color: Colors.red,
+                                                      size: 12,
+                                                    ),
+                                                  ],
                                                 ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: MyColor.blue,
-                                                borderRadius: BorderRadius.circular(15.0),
                                               ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 4.0),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
                                                 child: Container(
-                                                  padding: EdgeInsets.only(top: 4,bottom: 4),
                                                   decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.circular(12)
+                                                    color: MyColor.blue,
+                                                    borderRadius: BorderRadius.circular(15.0),
                                                   ),
-                                                  child: DropdownButtonHideUnderline(
-                                                    child: DropdownButtonFormField(
-
-                                                      decoration: const InputDecoration(
-                                                          enabledBorder: InputBorder.none,
-                                                          focusedBorder: InputBorder.none
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 4.0),
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(top: 4,bottom: 4),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.circular(12)
                                                       ),
-                                                      hint: Text('  Select'),
-                                                      items: issuingJurdictions.map((e) => DropdownMenuItem(
-                                                        value: e,
-                                                        child:  Padding(
-                                                          padding: const EdgeInsets.only(left: 8.0),
-                                                          child: Text(e),
+                                                      child: DropdownButtonHideUnderline(
+
+                                                        child: DropdownButtonFormField(
+                                                          value: drivingLicenceType,
+                                                          decoration: const InputDecoration(
+                                                              enabledBorder: InputBorder.none,
+                                                              focusedBorder: InputBorder.none
+                                                          ),
+                                                          hint: Text('  Select'),
+                                                          items: showList.map((e) => DropdownMenuItem(
+                                                            value: e,
+                                                            child:  Padding(
+                                                              padding: const EdgeInsets.only(left: 8.0),
+                                                              child: Text(e),
+                                                            ),
+                                                          )).toList(),
+                                                          onChanged: (value) {
+                                                           setState(() {
+                                                             drivingLicenceType=value;
+                                                           });
+                                                            print(value);
+                                                          },
                                                         ),
-                                                      )).toList(),
-                                                      onChanged: (value) {
-                                                        print(value);
-                                                      },
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
 
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Driving licence Number :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: MyColor.blue,
-                                                borderRadius: BorderRadius.circular(15.0),
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 4.0),
-                                                child: TextFormField(
-                                                  keyboardType: TextInputType.number,
-                                                  decoration: InputDecoration(
-                                                    fillColor: Colors.white,
-                                                    filled: true,
-                                                    hintText: 'ID Number',
-                                                    suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                                                    hintStyle: TextStyle(),
-
-                                                    focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                      //<-- SEE HERE
-                                                      borderRadius: BorderRadius.circular(15.0),
+                                          if(showDrivingLicenseField)Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      'Driving licence Number :',
+                                                      style: TextStyle(
+                                                          color: MyColor.blue, fontSize: 16),
                                                     ),
-                                                    enabledBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                      //<-- SEE HERE
-                                                      borderRadius: BorderRadius.circular(15.0),
+                                                    const Icon(
+                                                      Icons.star,
+                                                      color: Colors.red,
+                                                      size: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: MyColor.blue,
+                                                    borderRadius: BorderRadius.circular(15.0),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 4.0),
+                                                    child: TextFormField(
+                                                      keyboardType: TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        fillColor: Colors.white,
+                                                        filled: true,
+                                                        hintText: 'ID Number',
+                                                        suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                                                        hintStyle: TextStyle(),
+
+                                                        focusedBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(width: 2, color: MyColor.blue),
+                                                          //<-- SEE HERE
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                        enabledBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(width: 2, color: Colors.transparent),
+                                                          //<-- SEE HERE
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
+                                          if(showPassportInfoField)Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      'Passport Number :',
+                                                      style: TextStyle(
+                                                          color: MyColor.blue, fontSize: 16),
+                                                    ),
+                                                    const Icon(
+                                                      Icons.star,
+                                                      color: Colors.red,
+                                                      size: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: MyColor.blue,
+                                                    borderRadius: BorderRadius.circular(15.0),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 4.0),
+                                                    child: TextFormField(
+                                                      keyboardType: TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        fillColor: Colors.white,
+                                                        filled: true,
+                                                        hintText: 'ID Number',
+                                                        suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                                                        hintStyle: TextStyle(),
 
+                                                        focusedBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(width: 2, color: MyColor.blue),
+                                                          //<-- SEE HERE
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                        enabledBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(width: 2, color: Colors.transparent),
+                                                          //<-- SEE HERE
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
@@ -454,7 +545,7 @@ class _RegistrationStep3State extends State<RegistrationStep3> {
 
 
                                 SizedBox(height: 20,),
-                                showAutomatic?Padding(
+                                Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Card(
                                     elevation: 2,
@@ -630,386 +721,23 @@ class _RegistrationStep3State extends State<RegistrationStep3> {
                                       ),
                                     ),
                                   ),
-                                ):
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Card(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      //set border radius more than 50% of height and width to make circle
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: Color.fromARGB(125, 218, 247, 253),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.grey.shade200,
-                                                spreadRadius: 2,
-                                                blurRadius: 2,
-                                                offset: Offset(-2, 2))
-                                          ]),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(height: 20,),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Unit/Flat No :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 4.0),
-                                                  child: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      fillColor: Colors.white,
-
-                                                      filled: true,
-
-                                                      hintStyle: TextStyle(),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Street Number :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 4.0),
-                                                  child: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      fillColor: Colors.white,
-
-                                                      filled: true,
-
-                                                      hintStyle: TextStyle(),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Street Name :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 4.0),
-                                                  child: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      fillColor: Colors.white,
-
-                                                      filled: true,
-
-                                                      hintStyle: TextStyle(),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Street Subrub :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 4.0),
-                                                  child: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      fillColor: Colors.white,
-
-                                                      filled: true,
-
-                                                      hintStyle: TextStyle(),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'State :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 4.0),
-                                                  child: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      fillColor: Colors.white,
-
-                                                      filled: true,
-
-                                                      hintStyle: TextStyle(),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Postcode :',
-                                                  style: TextStyle(
-                                                      color: MyColor.blue, fontSize: 16),
-                                                ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.red,
-                                                  size: 12,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Container(
-
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.blue,
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 4.0),
-                                                  child: TextFormField(
-                                                    decoration: InputDecoration(
-                                                      fillColor: Colors.white,
-
-                                                      filled: true,
-
-                                                      hintStyle: TextStyle(),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 2, color: Colors.transparent),
-                                                        //<-- SEE HERE
-                                                        borderRadius: BorderRadius.circular(15.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
                                 ),
+
                               ],
                             ),
                           ),
-                          showAutomatic?Align(
+                          Align(
                             alignment: Alignment.topLeft,
                             child: InkWell(
                               onTap: (){
-                                setState(() {
-                                  showAutomatic=!showAutomatic;
-                                });
+                                Navigator.pushNamed(context, ManualUploadPage3.routeName);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text('Enter Address Manually',style: TextStyle(color: MyColor.blue),),
-                                    Text('-----------------------------------------',style: TextStyle(color: MyColor.blue),)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ):Align(
-                            alignment: Alignment.topLeft,
-                            child: InkWell(
-                              onTap: (){
-                                setState(() {
-                                  showAutomatic=!showAutomatic;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('Enter Address Automatic',style: TextStyle(color: MyColor.blue),),
+                                    Text('Skip to Manual Upload >',style: TextStyle(color: MyColor.blue),),
                                     Text('-----------------------------------------',style: TextStyle(color: MyColor.blue),)
                                   ],
                                 ),

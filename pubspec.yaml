@@ -44,6 +44,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   google_fonts: ^3.0.1
   intl:
+  image_picker: ^0.8.6+1
+  email_validator: ^2.1.16
 
 
 

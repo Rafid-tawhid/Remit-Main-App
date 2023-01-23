@@ -4,6 +4,7 @@ import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 import 'package:remit_app/pages/login_page.dart';
+import 'package:remit_app/pages/manual_upload_step3.dart';
 import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/pages/registration_step2.dart';
 import 'package:remit_app/pages/registration_step3.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         HomePage.routeName:(context)=>HomePage(),
         RegistrationStep2.routeName:(context)=>RegistrationStep2(),
         RegistrationStep3.routeName:(context)=>RegistrationStep3(),
+        ManualUploadPage3.routeName:(context)=>ManualUploadPage3(),
 
       },
     );
