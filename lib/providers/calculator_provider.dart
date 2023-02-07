@@ -119,7 +119,7 @@ class CalculatorProvider extends ChangeNotifier{
   }
 
 
-  Future<List<ServiceChargeModel>> getserviceChargeofAllCountry(String countryId,String serviceId,String amount) async{
+  Future<List<ServiceChargeModel>> getserviceChargeofAllCountry() async{
 
     // getServiceList.clear();
     getserviceChargeListofAllCountry.clear();
@@ -127,14 +127,9 @@ class CalculatorProvider extends ChangeNotifier{
         for(Map i in value){
           getserviceChargeListofAllCountry.add(ServiceChargeModel.fromJson(i));
         }
-        getserviceChargeListofAllCountry.forEach((element) {
-          if(element.countryId==countryId&&element.serviceId==serviceId){
-            getserviceChargeList.add(element);
-          }
-        });
 
+        //get the final service charge
 
-        print('getserviceChargeList ${getserviceChargeList.length}');
 
     });
     print('getserviceChargeListofAllCountry ${getserviceChargeListofAllCountry.length}');
@@ -246,5 +241,30 @@ class CalculatorProvider extends ChangeNotifier{
       }
     }
     return tag;
+  }
+
+
+//get Service Charge
+  String getServiceFeesFromList(String countryId,String serviceId,String amount) {
+    var serviceCharge='0.0';
+    getserviceChargeListofAllCountry.forEach((element) {
+      if(element.countryId==countryId&&element.serviceId==serviceId){
+        getserviceChargeList.add(element);
+        getserviceChargeList.sort((a, b) => double.parse(a.amount!).compareTo(double.parse(b.amount!)));
+      }
+    });
+    for(int i=0;i<getserviceChargeList.length;i++){
+      if(double.parse(amount)>double.parse(getserviceChargeList[i].amount!) &&
+          double.parse(amount)<=double.parse(getserviceChargeList[i+1].amount!)){
+        serviceCharge=getserviceChargeList[i+1].charge!;
+        print('My amount is ${getserviceChargeList[i+1].charge!}');
+      }
+    }
+    if(double.parse(amount)>=double.parse(getserviceChargeList.last.amount!)){
+      serviceCharge=getserviceChargeList.last.charge!;
+      print('My Last amount is ${getserviceChargeList.last.charge!}');
+    }
+
+    return serviceCharge;
   }
 }

@@ -928,16 +928,23 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                 fixedSize: Size.fromHeight(50),
                                 backgroundColor: Color(0xff02A6EB)),
                             onPressed: () {
-                              if (_fromKey.currentState!.validate()) {
-                                getTheFeesAndTotalAmount(sendControler.text,
-                                        receiveControler.text)
-                                    .then((value) {
-                                  setState(() {
+                            var serviceCharge= provider.getServiceFeesFromList(_country!.id!,serviceId!,sendControler.text);
+
+                            setState(() {
+                                     fees=serviceCharge;
                                     showSendMoneyBtn = true;
                                     showRateInfo = true;
-                                  });
-                                });
-                              }
+                            });
+                              // if (_fromKey.currentState!.validate()) {
+                              //   getTheFeesAndTotalAmount(sendControler.text,
+                              //           receiveControler.text)
+                              //       .then((value) {
+                              //     setState(() {
+                              //       showSendMoneyBtn = true;
+                              //       showRateInfo = true;
+                              //     });
+                              //   });
+                              // }
                             },
                             child: Text(
                               'Continue',

@@ -42,7 +42,7 @@ class _LauncherPageState extends State<LauncherPage> {
     provider=Provider.of(context,listen: false);
 
     provider.getAllCountryInfo().then((value){
-      provider.getserviceChargeofAllCountry("13", "4", "500").then((value) {
+      provider.getserviceChargeofAllCountry().then((value) {
         print('value.length ${value.length}');
         Navigator.pushNamed(context, LoginPage.routeName);
       });
