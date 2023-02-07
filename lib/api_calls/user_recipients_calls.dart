@@ -6,7 +6,7 @@ import '../models/recipents_model.dart';
 import 'api_calls.dart';
 
 class UserRecipientCalls{
-  static Future<dynamic> getRecipientsByEmailPassword(email,pass)  async {
+  static Future<dynamic> getRecipientsByEmailToken(email,token)  async {
     var data;
     await LoginApiCalls.getAuthToken().then((auth) async {
       try {
@@ -17,7 +17,7 @@ class UserRecipientCalls{
             },
             body: {
               "email": "$email",
-              "password": "$pass",
+              "user_token": "$token",
             });
         if (response.statusCode == 200) {
           data =await jsonDecode(response.body.toString());

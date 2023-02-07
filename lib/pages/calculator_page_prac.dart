@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/api_calls/calculator_api_calls.dart';
+import 'package:remit_app/helper_method/get_user_info.dart';
+import 'package:remit_app/models/submit_calculator_model.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/home_page.dart';
 
 import '../api_calls/user_recipients_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
+import '../custom_widgits/receiver.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
 import '../providers/calculator_provider.dart';
@@ -73,9 +76,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
 
       //call user recipient
       userProfileProvider=Provider.of(context,listen: false);
-      userProfileProvider.getRecipientsByMailAndPassword('email','pass').then((value) {
-        print('RECIPIENTS ${value.length}');
-      });
+
 
     }
     callOnce = false;
@@ -114,7 +115,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       drawer: MyDrawer(),
       body: Container(
         margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(25),
+        padding: EdgeInsets.symmetric(horizontal: 25),
         child: ListView(
           children: [
             Container(
@@ -136,153 +137,164 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20,),
+
             Form(
               key: _fromKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Send to',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
+                  Text('You\'re Sending to',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                   const SizedBox(
                     height: 5,
                   ),
                   Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(6),
-                        // border:
-                        //     Border.all(color: Colors.black, width: 2)
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 35,
-                            padding: const EdgeInsets.only(
-                                top: 10.0, bottom: 10, left: 6, right: 6),
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8),
-                                    bottomLeft: Radius.circular(8)),
-                                color: Color(0xffD9D9D9)),
-                            child: countryName == null
-                                ? Image.network(
-                                    provider
-                                        .getAllCountriesInfoList.first.image!,
-                                    fit: BoxFit.fitWidth,
-                                  )
-                                : Image.network(
-                                    img!,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: DropdownSearch<Info>(
-                                selectedItem: _country,
-                                onChanged: (value) async {
-                                  if (_country!.name != value!.name) {
-                                    await provider.getAllServicesByCurrencyDts(
-                                        value!.currencyDetails!);
-                                    serviceList = provider.getServiceList;
-                                    await provider.getAllCurrencyByCurrencyDts(
-                                        value.currencyDetails!.first!);
-                                    currencyList = provider.getCurrencyList;
-                                    await provider.getFinalRate(
-                                        value.id!,
-                                        value.currencyDetails!.first.serviceId!,
-                                        value.currencyDetails!.first.currency!);
-                                    finalRate = provider.finalRate!.toString();
-                                    cuponFixedRate = provider.finalRate!.toString();
-                                    currency_details =
-                                        value.currencyDetails!.first;
-                                    serviceName = value
-                                        .currencyDetails!.first.serviceName;
-                                    serviceId =
-                                        value.currencyDetails!.first.serviceId;
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: .4
+                        ),
+                      borderRadius: BorderRadius.circular(4)
+                    ),
+                    child: Container(
+                        height: 46,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 46,
+                              padding: const EdgeInsets.only(
+                                  top: 10.0, bottom: 10, left: 6, right: 6),
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      bottomLeft: Radius.circular(8)),
+                                  color: Colors.white),
+                              child: countryName == null
+                                  ? Image.network(
+                                      provider
+                                          .getAllCountriesInfoList.first.image!,
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                  : Image.network(
+                                      img!,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: DropdownSearch<Info>(
 
-                                    setState(() {
-                                      showRateInfo = false;
-                                      showError = false;
-                                      showSendMoneyBtn = false;
-                                      _country = value;
-                                      img = _country!.image!;
-                                      countryName = value!.name!;
-                                      currencyName =
-                                          value.currencyDetails!.first.currency;
-                                      sendControler.text = '1000';
-                                      receiveControler.text =
-                                          (1000 * double.parse(finalRate!))
-                                              .toStringAsFixed(2);
-                                    });
-                                  }
+                                  selectedItem: _country,
+                                  onChanged: (value) async {
+                                    if (_country!.name != value!.name) {
+                                      await provider.getAllServicesByCurrencyDts(value!.currencyDetails!);
+                                      serviceList = provider.getServiceList;
+                                      await provider.getAllCurrencyByCurrencyDts(value.currencyDetails!.first!);
+                                      currencyList = provider.getCurrencyList;
+                                      await provider.getFinalRate(value.id!,
+                                          value.currencyDetails!.first.serviceId!,
+                                          value.currencyDetails!.first.currency!);
+                                      finalRate = provider.finalRate!.toString();
+                                      cuponFixedRate = provider.finalRate!.toString();
+                                      currency_details =
+                                          value.currencyDetails!.first;
+                                      serviceName = value
+                                          .currencyDetails!.first.serviceName;
+                                      serviceId =
+                                          value.currencyDetails!.first.serviceId;
 
-                                  // _country!.currencyDetails!.forEach((element) {
-                                  //   print(element.toString());
-                                  // });
-                                  // provider.getAllCurrencyByCurrencyDts(_country.currencyDetails!);
-                                },
-                                items: provider.getAllCountriesInfoList,
-                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                  dropdownSearchDecoration: InputDecoration(
-                                    labelText: countryName ?? _country!.name,
-                                    // enabledBorder: OutlineInputBorder(
-                                    //     borderRadius: BorderRadius.circular(6),
-                                    //     borderSide: BorderSide(color: Colors.grey.shade300,),
-                                    // ),
-                                    enabledBorder: InputBorder.none,
-                                    filled: true,
-                                    hintText: countryName ??
-                                        provider
-                                            .getAllCountriesInfoList.first.name,
-                                  ),
-                                ),
-                                popupProps: PopupProps.menu(
-                                  showSearchBox: true,
-                                  itemBuilder: (context, item, isSelected) {
-                                    return ListTile(
-                                      title: Text(item.name!),
-                                      leading: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 4.0, bottom: 4),
-                                        child: Image.network(item.image!),
-                                      ),
-                                    );
+                                      setState(() {
+                                        showRateInfo = false;
+                                        showError = false;
+                                        showSendMoneyBtn = false;
+                                        _country = value;
+                                        img = _country!.image!;
+                                        countryName = value!.name!;
+                                        currencyName =
+                                            value.currencyDetails!.first.currency;
+                                        sendControler.text = '1000';
+                                        receiveControler.text =
+                                            (1000 * double.parse(finalRate!))
+                                                .toStringAsFixed(2);
+                                      });
+                                    }
+
+                                    // _country!.currencyDetails!.forEach((element) {
+                                    //   print(element.toString());
+                                    // });
+                                    // provider.getAllCurrencyByCurrencyDts(_country.currencyDetails!);
                                   },
-                                  showSelectedItems: false,
+                                  items: provider.getAllCountriesInfoList,
+                                  dropdownDecoratorProps: DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                      fillColor: Colors.white,
+                                      labelText: countryName ?? _country!.name ,
+                                      labelStyle: TextStyle(fontSize: 24,color: Colors.black),
+                                      hintStyle: TextStyle(fontSize: 24,color: Colors.black),
+                                      enabledBorder: InputBorder.none,
+                                      filled: true,
+                                      hintText: countryName ?? provider.getAllCountriesInfoList.first.name,
+                                    ),
+                                  ),
+                                  popupProps: PopupProps.menu(
+                                    showSearchBox: true,
+                                    itemBuilder: (context, item, isSelected) {
+                                      return ListTile(
+                                        title: Text(item.name!),
+                                        leading: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 4.0, bottom: 4),
+                                          child: Image.network(item.image!),
+                                        ),
+                                      );
+                                    },
+                                    showSelectedItems: false,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      )),
+                          ],
+                        )),
+                  ),
+
                   const SizedBox(
                     height: 15,
                   ),
-                  const Text(
-                    'Select Service',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
+
+
+                  Text('Select Service',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                   const SizedBox(
                     height: 5,
                   ),
                   Container(
-                    padding: const EdgeInsets.only(
-                        top: 7.0, bottom: 7, left: 6, right: 6),
+                    // padding: const EdgeInsets.only(
+                    //     top: 7.0, bottom: 7, left: 6, right: 6),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(6),
                       // border:
                       //     Border.all(color: Colors.black, width: 2)
                     ),
                     child: DropdownButtonFormField<CurrencyDetails>(
-                      decoration: const InputDecoration.collapsed(
-                        hintText: '',
+                      // decoration: const InputDecoration.collapsed(
+                      //   hintText: '',
+                      // ),
+                      decoration: InputDecoration(
+                        focusColor: Colors.grey,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: .1
+                          )
+                        ),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.grey,
+                                  width: .1
+                              )
+                          )
                       ),
                       hint: Text('${serviceList.first.serviceName}'),
                       value: serviceList.first,
@@ -329,7 +341,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                     children: [
                       const Text(
                         'You Transfer',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 5,
@@ -409,7 +421,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                     children: [
                       const Text(
                         'Recipient Gets',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 5,
@@ -444,7 +456,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                             decoration: InputDecoration(
                               fillColor: Colors.white,
                               filled: true,
-                              labelText: 'Recipient Gets',
+                              labelText: 'Recipient Amount',
                               errorStyle:
                                   TextStyle(overflow: TextOverflow.ellipsis),
                               suffixIconConstraints:
@@ -864,65 +876,72 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (showSendMoneyBtn)
-                        Align(
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  fixedSize: Size.fromHeight(50),
-                                  backgroundColor: Color(0xff02A6EB)),
-                              onPressed: () {
-                                final model = CalculatorInfoModel(
-                                    countryName: _country!.name,
-                                    countryId: _country!.id,
-                                    serviceName: serviceName,
-                                    serviceId: serviceId,
-                                    currency: currencyName,
-                                    sendAmount: sendControler.text,
-                                    fees: fees,
-                                    totalPayable:
-                                        (double.parse(sendControler.text) +
-                                                double.parse(fees!))
-                                            .toString(),
-                                    exchangeRate: finalRate,
-                                    recipientGets: receiveControler.text);
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: Size.fromHeight(50),
+                                backgroundColor: Color(0xff02A6EB)),
+                            onPressed: () {
+                              final submitModel=SubmitCalculatorModel(
+                                  email: GetUserDetails.email,
+                                  user_token: GetUserDetails.token,
+                                  getCountry: _country!.id,
+                                  service_id: serviceId,
+                                  receive_currency_code: currencyName,
+                                  input_aud_currency: sendControler.text,
+                                  currency_rate: finalRate,
+                                  service_charge: fees,
+                                  input_receiver_currency: receiveControler.text,
+                                  );
 
-                                Navigator.pushNamed(context, HomePage.routeName,
-                                    arguments: model);
-                              },
-                              child: Text(
-                                'Send',
-                                style: MyStyle.mytext(TextStyle(fontSize: 16)),
-                              ),
+
+                              final model = CalculatorInfoModel(
+                                  countryName: _country!.name,
+                                  countryId: _country!.id,
+                                  serviceName: serviceName,
+                                  serviceId: serviceId,
+                                  currency: currencyName,
+                                  sendAmount: sendControler.text,
+                                  fees: fees,
+                                  totalPayable:
+                                      (double.parse(sendControler.text) +
+                                              double.parse(fees!))
+                                          .toString(),
+                                  exchangeRate: finalRate,
+                                  recipientGets: receiveControler.text);
+
+                              Navigator.pushNamed(context, ReceipientWidget.routeName,
+                                  arguments: model);
+                            },
+                            child: Text(
+                              'Send',
+                              style: MyStyle.mytext(TextStyle(fontSize: 16)),
                             ),
                           ),
                         ),
                       if (!showSendMoneyBtn)
-                        Align(
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  fixedSize: Size.fromHeight(50),
-                                  backgroundColor: Color(0xff02A6EB)),
-                              onPressed: () {
-                                if (_fromKey.currentState!.validate()) {
-                                  getTheFeesAndTotalAmount(sendControler.text,
-                                          receiveControler.text)
-                                      .then((value) {
-                                    setState(() {
-                                      showSendMoneyBtn = true;
-                                      showRateInfo = true;
-                                    });
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: Size.fromHeight(50),
+                                backgroundColor: Color(0xff02A6EB)),
+                            onPressed: () {
+                              if (_fromKey.currentState!.validate()) {
+                                getTheFeesAndTotalAmount(sendControler.text,
+                                        receiveControler.text)
+                                    .then((value) {
+                                  setState(() {
+                                    showSendMoneyBtn = true;
+                                    showRateInfo = true;
                                   });
-                                }
-                              },
-                              child: Text(
-                                'Calculate',
-                                style: MyStyle.mytext(TextStyle(fontSize: 16)),
-                              ),
+                                });
+                              }
+                            },
+                            child: Text(
+                              'Continue',
+                              style: MyStyle.mytext(TextStyle(fontSize: 16)),
                             ),
                           ),
                         )

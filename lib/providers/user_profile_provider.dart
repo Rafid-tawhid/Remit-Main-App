@@ -7,19 +7,37 @@ import '../api_calls/user_recipients_calls.dart';
 class UserProfileProvider extends ChangeNotifier{
 
   List<Recipients> recipientsList=[];
+  List<String> recipientsNameList=[];
+  List<Recipients> recipientsList2=[
+    Recipients(
+      firstname: 'Rafid',
+      lastname: 'Tawhid'
+    ),
+    Recipients(
+        firstname: 'Rafid',
+        lastname: 'Tawhid'
+    ),
+    Recipients(
+        firstname: 'Rafid',
+        lastname: 'Tawhid'
+    ),
+  ];
 
    Future<dynamic> getUserInfoByEmailPassword(email,pass){
     return LoginApiCalls.getUserInfoByEmailPassword(email, pass);
   }
 
-  Future<List<Recipients>> getRecipientsByMailAndPassword(String email,String pass) async{
+  Future<List<Recipients>> getRecipientsByEmailToken(String email,String pass) async{
 
-   await UserRecipientCalls.getRecipientsByEmailPassword('akib@pencilbox.edu.bd','Akib123\$').then((data) {
+   await UserRecipientCalls.getRecipientsByEmailToken(email,pass).then((data) {
 
       if(data['status']==true){
         for(Map i in data['recipients']){
           recipientsList.add(Recipients.fromJson(i));
         }
+        recipientsList.forEach((element) {
+          recipientsNameList.add(element.firstname!);
+        });
         return recipientsList;
       }
       else {

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:remit_app/models/service_charge_model.dart';
+import 'package:remit_app/models/submit_calculator_model.dart';
 import '../models/country_models.dart';
 import '../models/cupon_rate_model.dart';
 import 'api_calls.dart';
@@ -8,7 +10,7 @@ import 'api_calls.dart';
 class CalculatorAPICalls{
 
    // static List<Info> allCountriesInfo=[];
-
+  List<ServiceChargeModel> allServiceCharge=[];
 
   static Future<dynamic> getAllCountriesInfo()  async {
     var data;
@@ -111,5 +113,65 @@ class CalculatorAPICalls{
     return cuponRateModel;
   }
 
+  static Future<void> sendCalculatorSubmitInfo(SubmitCalculatorModel model) async {
+    var data;
+    await LoginApiCalls.getAuthToken().then((auth) async {
+      print('THIS IS Submit calculator TOKEN ${auth['token']}');
+      try {
+        Response response = await post(
+            Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/submit_calculator'),
+            headers: {
+              'Authorization': 'Bearer ${auth['token']}',
+            },
+            body: model.toMap()
+        );
+        if (response.statusCode == 200) {
+          data =await jsonDecode(response.body.toString());
+
+        }
+        else {
+          print('Failed........');
+
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    });
+  }
+
+
+  static Future<dynamic?> getServiceChargeofAllCountry() async {
+    var data;
+
+    await LoginApiCalls.getAuthToken().then((auth) async {
+      print('THIS IS SERVICE Charge TOKEN ${auth['token']}');
+      try {
+        Response response = await get(
+            Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/get_service_charges'),
+            headers: {
+              'Authorization': 'Bearer ${auth['token']}',
+            },
+            // body: {
+            //   "promo_code" : cuponCode,
+            // }
+        );
+        print(response.body.toString());
+        if (response.statusCode == 200) {
+          data =await jsonDecode(response.body.toString());
+
+          // cuponRateModel=CuponRateModel.fromJson(data);
+          return data;
+        }
+        else {
+          print('Failed........Here');
+          return data;
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    });
+
+    return data;
+  }
 
 }

@@ -19,6 +19,7 @@ import 'package:remit_app/pages/user_password_update_page.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
 import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
+import 'custom_widgits/receiver.dart';
 import 'pages/user_image_update_page.dart';
 
 
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
           UserIdentityVerification.routeName:(context)=>UserIdentityVerification(),
           CalculatorPage.routeName:(context)=>CalculatorPage(),
           CalculatorPage2.routeName:(context)=>CalculatorPage2(),
+          ReceipientWidget.routeName:(context)=>ReceipientWidget(),
 
         },
       ),

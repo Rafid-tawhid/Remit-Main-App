@@ -1,6 +1,7 @@
 import 'package:custom_line_indicator_bottom_navbar/custom_line_indicator_bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:remit_app/pages/calculator_page_prac.dart';
 
 import '../custom_widgits/home.dart';
 import '../custom_widgits/receiver.dart';
@@ -22,10 +23,11 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = [
 
-    ReceipientWidget(),
-    SendMoneyWidget(),
-    SendWidget(),
     HomeWidget(),
+    ReceipientWidget(),
+    CalculatorPage2(),
+    SendWidget(),
+
   ];
 
 

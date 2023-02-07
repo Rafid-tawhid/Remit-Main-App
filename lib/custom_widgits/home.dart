@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:remit_app/api_calls/api_calls.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/models/user_profile_model.dart';
+import 'package:remit_app/pages/home_page.dart';
 
 
 import '../helper_method/get_user_info.dart';
@@ -46,23 +47,28 @@ class _HomeWidgetState extends State<HomeWidget> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            // Align(
-            //     alignment: Alignment.center,
-            //     child: Text('Welcome ${GetUserDetails.userProfileModel!.username}!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+            Align(
+                alignment: Alignment.center,
+                child: Text('Welcome ${GetUserDetails.userProfileModel!.username}!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
             SizedBox(height: 20,),
             SvgPicture.asset('svg/home.svg',width: 300,height: 220,),
             const Padding(
               padding:  EdgeInsets.all(16.0),
               child: Align(
                   alignment: Alignment.center,
-                  child: Text('Lorem ipsum dolor sit amet, consectetur adipiscing elit, Nunc',style: TextStyle(fontSize: 16,color: Colors.grey),textAlign: TextAlign.center,)
+                  child: Text('''If you're looking for a faster and cheaper way to send money to your loved ones, we've got you covered. Our service is the best way to send money quickly and securely. Plus, our low fees make it more affordable than ever''',style: TextStyle(fontSize: 16,color: Colors.grey),textAlign: TextAlign.center,)
               ),
             ),
             SizedBox(height: 30,),
             Container(
               width: double.infinity,
-              child: MainButton(
-                title: 'Send Money Now',
+              child: InkWell(
+                onTap: (){
+
+                },
+                child: MainButton(
+                  title: 'Send Money Now',
+                ),
               ),
             ),
 

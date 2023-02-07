@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:remit_app/models/service_charge_model.dart';
 import '../api_calls/calculator_api_calls.dart';
 import '../models/country_models.dart';
 
@@ -11,7 +12,11 @@ class CalculatorProvider extends ChangeNotifier{
   List<CurrencyDetails> getServiceList=[];
   List<CurrencyDetails> getCurrencyList=[];
   List<CurrencyDetails> getCurrencyList2=[];
+  List<ServiceChargeModel> getserviceChargeListofAllCountry=[];
+  List<ServiceChargeModel> getserviceChargeList=[];
   double? finalRate;
+
+
   //
   Future<List<Info>> getAllCountryInfo() async{
 
@@ -114,6 +119,30 @@ class CalculatorProvider extends ChangeNotifier{
   }
 
 
+  Future<List<ServiceChargeModel>> getserviceChargeofAllCountry(String countryId,String serviceId,String amount) async{
+
+    // getServiceList.clear();
+    getserviceChargeListofAllCountry.clear();
+    await CalculatorAPICalls.getServiceChargeofAllCountry().then((value) {
+        for(Map i in value){
+          getserviceChargeListofAllCountry.add(ServiceChargeModel.fromJson(i));
+        }
+        getserviceChargeListofAllCountry.forEach((element) {
+          if(element.countryId==countryId&&element.serviceId==serviceId){
+            getserviceChargeList.add(element);
+          }
+        });
+
+
+        print('getserviceChargeList ${getserviceChargeList.length}');
+
+    });
+    print('getserviceChargeListofAllCountry ${getserviceChargeListofAllCountry.length}');
+
+
+    return getserviceChargeListofAllCountry;
+    // print(countryNameList.length);
+  }
 
 
   //

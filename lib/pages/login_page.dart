@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/models/user_profile_model.dart';
+import 'package:remit_app/pages/calculator_page_prac.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
@@ -37,13 +38,17 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    GetUserDetails.getUserMail().then((previous_mail) {
+      if(previous_mail!=null){
+        emailCon.text=previous_mail;
+      }
+    });
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    userProfileProvider =
-        Provider.of<UserProfileProvider>(context, listen: false);
+    userProfileProvider = Provider.of<UserProfileProvider>(context, listen: false);
     super.didChangeDependencies();
   }
 
@@ -346,16 +351,13 @@ class _LoginPageState extends State<LoginPage> {
                                                   BorderRadius.circular(10),
                                             )),
                                         onPressed: () async {
-                                          if (_globalKey.currentState!
-                                              .validate()) {
+                                          if (_globalKey.currentState!.validate()) {
                                             EasyLoading.show();
-                                            await userProfileProvider
-                                                .getUserInfoByEmailPassword(
-                                                    emailCon.text, passCon.text)
+                                            await userProfileProvider.getUserInfoByEmailPassword(emailCon.text, passCon.text)
                                                 .then((data) async {
                                               print('RECEIVE DATA $data');
-                                              EasyLoading.dismiss();
                                               if (data == null) {
+                                                EasyLoading.dismiss();
                                                 showServerProblemDialog(
                                                     context);
                                               } else {
@@ -364,16 +366,18 @@ class _LoginPageState extends State<LoginPage> {
                                                   final token = data['user_token'];
                                                   final user_mail = emailCon.text;
 
-                                                  final pref=await SharedPreferences.getInstance();
-                                                  pref.setString("mail", user_mail);
-                                                  pref.setString("token", token);
-
-
-                                                  GetUserDetails.setUserInfo(user)
-                                                      .then((value) {
-
+                                                 await GetUserDetails.setUserMailAndToken(user_mail, token);
+                                                 await GetUserDetails.setUserInfo(user);
+                                                 //get user recipient info
+                                                 await userProfileProvider.getRecipientsByEmailToken(user_mail,token).then((value) {
+                                                    EasyLoading.dismiss();
+                                                    print('RECIPIENTS ${value.length}');
+                                                    Navigator.pushNamed(context, HomePage.routeName);
                                                   });
+
+
                                                 } else {
+                                                  EasyLoading.dismiss();
                                                   showErrorMsgDialog(
                                                       context, data);
                                                 }

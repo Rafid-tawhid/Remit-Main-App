@@ -1,4 +1,6 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
@@ -11,6 +13,7 @@ import '../pages/user_profile_page.dart';
 import 'drawer.dart';
 
 class ReceipientWidget extends StatefulWidget {
+  static const String routeName='/recipient';
   const ReceipientWidget({Key? key}) : super(key: key);
 
   @override
@@ -32,28 +35,50 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
 
 
   bool showPass=true;
-
-  late CalculatorInfoModel calculatorInfo;
+  bool hideBilling=false;
+  //
+  // late CalculatorInfoModel calculatorInfo;
+  final firstNameCon=TextEditingController();
+  final middleNameCon=TextEditingController();
+  final lastNameCon=TextEditingController();
+  final addressCon=TextEditingController();
+  final cityCon=TextEditingController();
+  final phoneCon=TextEditingController();
+  final emailCon=TextEditingController();
+  final countryCon=TextEditingController();
 
 
   @override
+  void dispose() {
+    firstNameCon.dispose();
+    middleNameCon.dispose();
+    lastNameCon.dispose();
+    addressCon.dispose();
+    cityCon.dispose();
+    phoneCon.dispose();
+    emailCon.dispose();
+    countryCon.dispose();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
-    calculatorInfo=ModalRoute.of(context)!.settings.arguments as CalculatorInfoModel;
-    if(calculatorInfo!=null){
-      print(calculatorInfo.toMap());
-      serviceName=calculatorInfo.serviceName;
-      currency=calculatorInfo.currency;
-      sendAmount=calculatorInfo.sendAmount;
-      fees=calculatorInfo.fees;
-      totalPayable=calculatorInfo.totalPayable;
-      rate=calculatorInfo.exchangeRate;
-      recipientGets=calculatorInfo.recipientGets;
-
-
-    }
-    else{
-      print('NOTHIN PHONE');
-    }
+    //calculatorInfo=ModalRoute.of(context)!.settings.arguments as CalculatorInfoModel;
+    // if(calculatorInfo==null){
+    //   hideBilling=true;
+    //   print('NOTHING PHONE');
+    //
+    // }
+    // else{
+    //   print(calculatorInfo.toMap());
+    //   serviceName=calculatorInfo.serviceName;
+    //   currency=calculatorInfo.currency;
+    //   sendAmount=calculatorInfo.sendAmount;
+    //   fees=calculatorInfo.fees;
+    //   totalPayable=calculatorInfo.totalPayable;
+    //   rate=calculatorInfo.exchangeRate;
+    //   recipientGets=calculatorInfo.recipientGets;
+    // }
     super.didChangeDependencies();
   }
 
@@ -86,79 +111,79 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
       body: ListView(
         children: [
 
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 5,
-              child: Container(
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('$serviceName',style: TextStyle(fontSize: 22),),
-                    Align(
-                      alignment: Alignment.topRight,
-                        child: Text('AUD-$currency')),
-                    SizedBox(height: 10,),
-                    Divider(height: 5,color: Colors.black,),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Send Amount'),
-                        Text('$sendAmount AUD')
-                      ],
-                    ),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Fees'),
-                        Text('$fees AUD')
-                      ],
-                    ),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('You pay in total'),
-                        Text('$totalPayable AUD')
-                      ],
-                    ),
-                    SizedBox(height: 5,),
-                    Divider(height: 5,color: Colors.black,),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Exchange Rate',style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text('1 AUD->$rate $currency',style: TextStyle(fontWeight: FontWeight.bold),)
-                      ],
-                    ),
-                    SizedBox(height: 5,),
-                    Divider(height: 5,color: Colors.black,),
-                    SizedBox(height: 5,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Your recipient gets',style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text('$recipientGets $currency',style: TextStyle(fontWeight: FontWeight.bold),)
-                      ],
-                    ),
-                    SizedBox(height: 5,),
-                    Divider(height: 5,color: Colors.black,),
-
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // if(hideBilling)Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Card(
+          //     elevation: 5,
+          //     child: Container(
+          //       margin: EdgeInsets.all(10),
+          //       padding: EdgeInsets.all(10),
+          //       child: Column(
+          //         mainAxisSize: MainAxisSize.min,
+          //         children: [
+          //           Text('$serviceName',style: TextStyle(fontSize: 22),),
+          //           Align(
+          //             alignment: Alignment.topRight,
+          //               child: Text('AUD-$currency')),
+          //           SizedBox(height: 10,),
+          //           Divider(height: 5,color: Colors.black,),
+          //           SizedBox(height: 5,),
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text('Send Amount'),
+          //               Text('$sendAmount AUD')
+          //             ],
+          //           ),
+          //           SizedBox(height: 5,),
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text('Fees'),
+          //               Text('$fees AUD')
+          //             ],
+          //           ),
+          //           SizedBox(height: 5,),
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text('You pay in total'),
+          //               Text('$totalPayable AUD')
+          //             ],
+          //           ),
+          //           SizedBox(height: 5,),
+          //           Divider(height: 5,color: Colors.black,),
+          //           SizedBox(height: 5,),
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text('Exchange Rate',style: TextStyle(fontWeight: FontWeight.bold),),
+          //               Text('1 AUD->$rate $currency',style: TextStyle(fontWeight: FontWeight.bold),)
+          //             ],
+          //           ),
+          //           SizedBox(height: 5,),
+          //           Divider(height: 5,color: Colors.black,),
+          //           SizedBox(height: 5,),
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text('Your recipient gets',style: TextStyle(fontWeight: FontWeight.bold),),
+          //               Text('$recipientGets $currency',style: TextStyle(fontWeight: FontWeight.bold),)
+          //             ],
+          //           ),
+          //           SizedBox(height: 5,),
+          //           Divider(height: 5,color: Colors.black,),
+          //
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           SizedBox(height: 20,),
           Text('Choose your Recipient',style: TextStyle(fontSize: 22),textAlign: TextAlign.center,),
           Consumer<UserProfileProvider>(
             builder: (context,provider,_)=>Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: DropdownButtonFormField<Recipients>(
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.zero,
@@ -174,7 +199,14 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                   onChanged: (value) {
                     setState(() {
                       recipient = value;
-                      print(recipient.toString());
+                      firstNameCon.text=recipient!.firstname??'';
+                      middleNameCon.text=recipient!.middlename??'';
+                      lastNameCon.text=recipient!.lastname??'';
+                      addressCon.text=recipient!.streetName??'';
+                      cityCon.text=recipient!.streetCity??'';
+                      phoneCon.text=recipient!.phone??'';
+                      emailCon.text=recipient!.email??'';
+                      countryCon.text=recipient!.country??'';
                     });
                   },
                   onSaved: (value) {
@@ -191,19 +223,40 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                   },
                   items: provider.recipientsList.map((reciver) => DropdownMenuItem<Recipients>(
                       value: reciver,
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10,),
-                          Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbn0HXI_7p1y9Tp__5xyLaS4HudK-IauKLB8JQSv9h&s',height: 25,width: 40,),
-                          SizedBox(width: 15,),
-                          Text(reciver.firstname!),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Row(
+                          children: [
+                            // Icon(Icons.ac_unit,size: 25,),
+                            Text('${reciver.firstname}, ${reciver.country}'),
+                          ],
+                        ),
                       )
                   )).toList()
 
               ),
             ),
           ),
+
+          // Consumer<UserProfileProvider>(builder: (context,provider,_)=> DropDown<String>(
+          //   items: provider.recipientsNameList,
+          //   icon: Icon(
+          //     Icons.expand_more,
+          //     color: Colors.blue,
+          //   ),
+          //   customWidgets: provider.recipientsList.map((e) => Row(
+          //     children: <Widget>[
+          //       CircleAvatar(
+          //         backgroundImage: NetworkImage(
+          //             "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+          //       ),
+          //       Text(e.firstname!),
+          //
+          //     ],
+          //   ),).toList(),
+          //   hint: Text("Select Gender"),
+          //   onChanged: print,
+          // ),),
 
           SizedBox(height: 20,),
           Row(
@@ -239,6 +292,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: firstNameCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -284,6 +338,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: middleNameCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -333,6 +388,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: lastNameCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -382,6 +438,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: addressCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -431,6 +488,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: countryCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -480,6 +538,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: phoneCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -526,6 +585,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: emailCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -576,6 +636,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
+                    controller: countryCon,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -614,3 +675,34 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
     );
   }
 }
+
+List<Widget> hello=[
+  Row(
+    children: <Widget>[
+      Text("Male"),
+      CircleAvatar(
+        backgroundImage: NetworkImage(
+            "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+      ),
+    ],
+  ),
+  Row(
+    children: <Widget>[
+      Text("Male"),
+      CircleAvatar(
+        backgroundImage: NetworkImage(
+            "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+      ),
+    ],
+  ),
+  Row(
+    children: <Widget>[
+      Text("Male"),
+      CircleAvatar(
+        backgroundImage: NetworkImage(
+            "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+      ),
+    ],
+  ),
+
+];

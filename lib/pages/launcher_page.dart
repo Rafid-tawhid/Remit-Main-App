@@ -40,9 +40,13 @@ class _LauncherPageState extends State<LauncherPage> {
   void didChangeDependencies() {
 
     provider=Provider.of(context,listen: false);
-    provider.getAllCountryInfo().then((value){
 
-      Navigator.pushNamed(context, CalculatorPage2.routeName);
+    provider.getAllCountryInfo().then((value){
+      provider.getserviceChargeofAllCountry("13", "4", "500").then((value) {
+        print('value.length ${value.length}');
+        Navigator.pushNamed(context, LoginPage.routeName);
+      });
+
     });
     super.didChangeDependencies();
   }
@@ -79,9 +83,7 @@ class _LauncherPageState extends State<LauncherPage> {
           if (data['success'] == true) {
             final user = Data.fromJson(data['data']);
             GetUserDetails.setUserInfo(user).then((value) {
-              Navigator.pushNamed(
-                context, HomePage.routeName,
-              );
+              Navigator.pushNamed(context, HomePage.routeName,);
             });
           } else {
             showErrorMsgDialog(context, data);
