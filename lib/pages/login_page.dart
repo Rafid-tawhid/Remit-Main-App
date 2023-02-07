@@ -32,6 +32,8 @@ class _LoginPageState extends State<LoginPage> {
   final passCon = TextEditingController();
   late UserProfileProvider userProfileProvider;
   final _globalKey = GlobalKey<FormState>();
+  List<String> dotedSize=[];
+
 
   @override
   void initState() {
@@ -310,232 +312,22 @@ class _LoginPageState extends State<LoginPage> {
                                                 SizedBox(
                                                   height: 5,
                                                 ),
+
                                                 Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 2,
-                                                    ),
-                                                    Container(
-                                                      height: 2,
-                                                      width: 2,
-                                                      color: MyColor.blue,
-                                                    ),
-                                                  ],
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: List.generate(26, (index) => Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        height: 2,
+                                                        width: 2,
+                                                        color: MyColor.blue,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 2,
+                                                      ),
+                                                    ],
+                                                  )),
                                                 )
                                               ],
                                             ),
@@ -568,23 +360,18 @@ class _LoginPageState extends State<LoginPage> {
                                                     context);
                                               } else {
                                                 if (data['success'] == true) {
-                                                  // final prefs = await SharedPreferences.getInstance();
-                                                  // prefs.setString("email", emailCon.text);
-                                                  // prefs.setString("pass", passCon.text);
-                                                  // prefs.setString("token", get);
-                                                  final user =
-                                                      await Data.fromJson(
-                                                          data['data']);
-                                                  print('USER DATAS ${user.toString()}');
+                                                  final user = await Data.fromJson(data['data']);
+                                                  final token = data['user_token'];
+                                                  final user_mail = emailCon.text;
 
-                                                  print('MY NAME IS  ${user.email!}');
-                                                  GetUserDetails.setUserInfo(
-                                                          user)
+                                                  final pref=await SharedPreferences.getInstance();
+                                                  pref.setString("mail", user_mail);
+                                                  pref.setString("token", token);
+
+
+                                                  GetUserDetails.setUserInfo(user)
                                                       .then((value) {
-                                                    Navigator.pushNamed(
-                                                      context,
-                                                      HomePage.routeName,
-                                                    );
+
                                                   });
                                                 } else {
                                                   showErrorMsgDialog(

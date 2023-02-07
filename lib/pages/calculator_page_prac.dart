@@ -6,11 +6,13 @@ import 'package:remit_app/api_calls/calculator_api_calls.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/home_page.dart';
 
+import '../api_calls/user_recipients_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
 import '../providers/calculator_provider.dart';
+import '../providers/user_profile_provider.dart';
 import 'login_page.dart';
 
 class CalculatorPage2 extends StatefulWidget {
@@ -27,6 +29,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   final cuponControler = TextEditingController();
 
   late CalculatorProvider provider;
+  late UserProfileProvider userProfileProvider;
   String? countryName;
   String? img;
   Info? _country;
@@ -35,6 +38,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   bool callOnce = true;
   List<CurrencyDetails> serviceList = [];
   List<CurrencyDetails> currencyList = [];
+  bool isMultipleCurrency=false;
   String? serviceId;
   String? currencyName;
   String? serviceName;
@@ -43,6 +47,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   String? showErrorMsg;
   String? recerversAmount;
   String fees = "0.0";
+  String? cuponFixedRate;
   bool showRateInfo = false;
   bool showSendMoneyBtn = false;
   final _fromKey = GlobalKey<FormState>();
@@ -56,17 +61,22 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       serviceList = provider
           .getAllCountriesInfoList.first.currencyDetails!; //initial service
       currencyList = provider.getAllCountriesInfoList.first.currencyDetails!;
+
       finalRate = _country!.currencyDetails!.first.finalRate;
+      cuponFixedRate = _country!.currencyDetails!.first.finalRate;
       serviceId = _country!.currencyDetails!.first!.serviceId;
       currencyName = _country!.currencyDetails!.first!.currency;
       serviceName = _country!.currencyDetails!.first!.serviceName;
       sendControler.text = '1000';
-      receiveControler.text =
-          (1000 * double.parse(finalRate!)).toStringAsFixed(2);
+      receiveControler.text = (1000 * double.parse(finalRate!)).toStringAsFixed(2);
       currency_details = _country!.currencyDetails!.first;
-      // provider.getServiceCharges("1000",currency_details!.countryTableId,currency_details!.serviceId).then((charge) {
-      //   fees=charge['service_fee'];
-      // });
+
+      //call user recipient
+      userProfileProvider=Provider.of(context,listen: false);
+      userProfileProvider.getRecipientsByMailAndPassword('email','pass').then((value) {
+        print('RECIPIENTS ${value.length}');
+      });
+
     }
     callOnce = false;
     super.didChangeDependencies();
@@ -188,6 +198,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                         value.currencyDetails!.first.serviceId!,
                                         value.currencyDetails!.first.currency!);
                                     finalRate = provider.finalRate!.toString();
+                                    cuponFixedRate = provider.finalRate!.toString();
                                     currency_details =
                                         value.currencyDetails!.first;
                                     serviceName = value
@@ -491,13 +502,14 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                             child:
                                                 Text('${catModel.currency!}')))
                                         .toList(),
-                                    onChanged: (value) async {
+                                    onChanged:currencyList.length!>1? (value) async {
                                       currencyName = value!.currency;
                                       serviceId = value.serviceId;
                                       print(currencyName! + serviceId!);
                                       await provider.getFinalRate(_country!.id!,
                                           serviceId!, currencyName!);
                                       finalRate = provider.finalRate.toString();
+                                      cuponFixedRate = provider.finalRate.toString();
                                       receiveControler.text =
                                           (double.parse(sendControler.text) *
                                                   double.parse(finalRate!))
@@ -510,7 +522,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                         // receiveControler.clear();
                                         // final_rate == 0.0;
                                       });
-                                    },
+                                    }:null,
                                   ),
                                 ),
                               ),
@@ -617,7 +629,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                                       double reduceFees = 0.0;
                                                       if (cupon != null) {
                                                         if (cupon.data!.discountType == "P") {
-                                                          double val = double.parse(cupon.data!.reduceFee!) * double.parse(finalRate!);
+                                                          double val = double.parse(cupon.data!.reduceFee!) * double.parse(cuponFixedRate!);
                                                           reduceFees = double.parse((val / 100).toStringAsFixed(4));
                                                         }
                                                         if (cupon.data!.discountType == "F") {
@@ -928,6 +940,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
 
 
   AlertDialog showCuponCongratulationsDialog(double reduceFees) {
+
     return AlertDialog(
       title: Text('Congratulations'),
       content: Column(
@@ -956,7 +969,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  '1 AUD = ${double.parse(finalRate!) + reduceFees}',
+                  '1 AUD = ${double.parse(cuponFixedRate!) + reduceFees}',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -980,8 +993,9 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      finalRate='${double.parse(finalRate!) + reduceFees}';
-                      receiveControler.text='${double.parse(sendControler.text)*double.parse(finalRate!)}';
+                      finalRate='${double.parse(cuponFixedRate!) + reduceFees}';
+
+                      receiveControler.text='${(double.parse(sendControler.text)*double.parse(cuponFixedRate!)).toStringAsFixed(2)}';
                     });
                     Navigator.pop(context);
                   },

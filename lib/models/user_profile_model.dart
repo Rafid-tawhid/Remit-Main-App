@@ -2,30 +2,37 @@ class UserProfileModel {
   UserProfileModel({
       bool? success, 
       String? message, 
-      Data? data,}){
+      Data? data, 
+      String? userToken,}){
     _success = success;
     _message = message;
     _data = data;
+    _userToken = userToken;
 }
 
   UserProfileModel.fromJson(dynamic json) {
     _success = json['success'];
     _message = json['message'];
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    _userToken = json['user_token'];
   }
   bool? _success;
   String? _message;
   Data? _data;
+  String? _userToken;
 UserProfileModel copyWith({  bool? success,
   String? message,
   Data? data,
+  String? userToken,
 }) => UserProfileModel(  success: success ?? _success,
   message: message ?? _message,
   data: data ?? _data,
+  userToken: userToken ?? _userToken,
 );
   bool? get success => _success;
   String? get message => _message;
   Data? get data => _data;
+  String? get userToken => _userToken;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -34,6 +41,7 @@ UserProfileModel copyWith({  bool? success,
     if (_data != null) {
       map['data'] = _data?.toJson();
     }
+    map['user_token'] = _userToken;
     return map;
   }
 
@@ -56,7 +64,7 @@ class Data {
       String? balance, 
       String? image, 
       String? address, 
-      dynamic occupation, 
+      String? occupation, 
       String? countryOfBirth, 
       dynamic provider, 
       dynamic providerId, 
@@ -75,6 +83,8 @@ class Data {
       String? lastLogin, 
       dynamic lastLoginIp, 
       String? emailVerifiedAt, 
+      String? apiToken, 
+      String? apiTokenCreatedAt, 
       String? createdAt, 
       String? updatedAt, 
       String? fullname, 
@@ -115,6 +125,8 @@ class Data {
     _lastLogin = lastLogin;
     _lastLoginIp = lastLoginIp;
     _emailVerifiedAt = emailVerifiedAt;
+    _apiToken = apiToken;
+    _apiTokenCreatedAt = apiTokenCreatedAt;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
     _fullname = fullname;
@@ -158,6 +170,8 @@ class Data {
     _lastLogin = json['last_login'];
     _lastLoginIp = json['last_login_ip'];
     _emailVerifiedAt = json['email_verified_at'];
+    _apiToken = json['api_token'];
+    _apiTokenCreatedAt = json['api_token_created_at'];
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
     _fullname = json['fullname'];
@@ -180,7 +194,7 @@ class Data {
   String? _balance;
   String? _image;
   String? _address;
-  dynamic _occupation;
+  String? _occupation;
   String? _countryOfBirth;
   dynamic _provider;
   dynamic _providerId;
@@ -199,6 +213,8 @@ class Data {
   String? _lastLogin;
   dynamic _lastLoginIp;
   String? _emailVerifiedAt;
+  String? _apiToken;
+  String? _apiTokenCreatedAt;
   String? _createdAt;
   String? _updatedAt;
   String? _fullname;
@@ -220,7 +236,7 @@ Data copyWith({  num? id,
   String? balance,
   String? image,
   String? address,
-  dynamic occupation,
+  String? occupation,
   String? countryOfBirth,
   dynamic provider,
   dynamic providerId,
@@ -239,6 +255,8 @@ Data copyWith({  num? id,
   String? lastLogin,
   dynamic lastLoginIp,
   String? emailVerifiedAt,
+  String? apiToken,
+  String? apiTokenCreatedAt,
   String? createdAt,
   String? updatedAt,
   String? fullname,
@@ -279,6 +297,8 @@ Data copyWith({  num? id,
   lastLogin: lastLogin ?? _lastLogin,
   lastLoginIp: lastLoginIp ?? _lastLoginIp,
   emailVerifiedAt: emailVerifiedAt ?? _emailVerifiedAt,
+  apiToken: apiToken ?? _apiToken,
+  apiTokenCreatedAt: apiTokenCreatedAt ?? _apiTokenCreatedAt,
   createdAt: createdAt ?? _createdAt,
   updatedAt: updatedAt ?? _updatedAt,
   fullname: fullname ?? _fullname,
@@ -301,7 +321,7 @@ Data copyWith({  num? id,
   String? get balance => _balance;
   String? get image => _image;
   String? get address => _address;
-  dynamic get occupation => _occupation;
+  String? get occupation => _occupation;
   String? get countryOfBirth => _countryOfBirth;
   dynamic get provider => _provider;
   dynamic get providerId => _providerId;
@@ -320,6 +340,8 @@ Data copyWith({  num? id,
   String? get lastLogin => _lastLogin;
   dynamic get lastLoginIp => _lastLoginIp;
   String? get emailVerifiedAt => _emailVerifiedAt;
+  String? get apiToken => _apiToken;
+  String? get apiTokenCreatedAt => _apiTokenCreatedAt;
   String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
   String? get fullname => _fullname;
@@ -363,6 +385,8 @@ Data copyWith({  num? id,
     map['last_login'] = _lastLogin;
     map['last_login_ip'] = _lastLoginIp;
     map['email_verified_at'] = _emailVerifiedAt;
+    map['api_token'] = _apiToken;
+    map['api_token_created_at'] = _apiTokenCreatedAt;
     map['created_at'] = _createdAt;
     map['updated_at'] = _updatedAt;
     map['fullname'] = _fullname;
@@ -372,8 +396,4 @@ Data copyWith({  num? id,
     return map;
   }
 
-  @override
-  String toString() {
-    return 'Data{_id: $_id, _firstname: $_firstname, _middlename: $_middlename, _lastname: $_lastname, _username: $_username, _adminId: $_adminId, _merchantId: $_merchantId, _referralId: $_referralId, _languageId: $_languageId, _email: $_email, _phone: $_phone, _gender: $_gender, _balance: $_balance, _image: $_image, _address: $_address, _occupation: $_occupation, _countryOfBirth: $_countryOfBirth, _provider: $_provider, _providerId: $_providerId, _status: $_status, _blocked: $_blocked, _identityVerify: $_identityVerify, _addressVerify: $_addressVerify, _twoFa: $_twoFa, _twoFaVerify: $_twoFaVerify, _twoFaCode: $_twoFaCode, _emailVerification: $_emailVerification, _smsVerification: $_smsVerification, _documentVerify: $_documentVerify, _verifyCode: $_verifyCode, _sentAt: $_sentAt, _lastLogin: $_lastLogin, _lastLoginIp: $_lastLoginIp, _emailVerifiedAt: $_emailVerifiedAt, _createdAt: $_createdAt, _updatedAt: $_updatedAt, _fullname: $_fullname, _mobile: $_mobile, _profileName: $_profileName, _photo: $_photo}';
-  }
 }

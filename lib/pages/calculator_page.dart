@@ -51,6 +51,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       sendControler.text='1000';
       receiveControler.text= (1000*double.parse(finalRate!)).toStringAsFixed(2);
       currency_details=_country!.currencyDetails!.first;
+
     }
     callOnce = false;
     //initial currency

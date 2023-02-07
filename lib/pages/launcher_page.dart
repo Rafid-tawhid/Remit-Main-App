@@ -38,9 +38,10 @@ class _LauncherPageState extends State<LauncherPage> {
 
   @override
   void didChangeDependencies() {
-    userProfileProvider=Provider.of(context,listen: false);
+
     provider=Provider.of(context,listen: false);
     provider.getAllCountryInfo().then((value){
+
       Navigator.pushNamed(context, CalculatorPage2.routeName);
     });
     super.didChangeDependencies();
