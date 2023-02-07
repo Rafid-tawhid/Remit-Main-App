@@ -52,6 +52,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   String fees = "0.0";
   String? cuponFixedRate;
   bool showRateInfo = false;
+
   bool showSendMoneyBtn = false;
   final _fromKey = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
@@ -356,8 +357,13 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                         },
                         child: TextFormField(
                           controller: sendControler,
+                          onEditingComplete: () {
+                            setState(() {
+                              showSendMoneyBtn = false;
+                            });
+                          },
                           onChanged: (value) {
-                            showSendMoneyBtn = false;
+                            closeSendButton();
                             double receive =
                                 double.parse(value) * double.parse(finalRate!);
                             receiveControler.text = receive.toStringAsFixed(2);
@@ -444,9 +450,15 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                             });
                           },
                           child: TextFormField(
+                            onEditingComplete: () {
+                              setState(() {
+                                showSendMoneyBtn = false;
+                              });
+                            },
                             controller: receiveControler,
                             onChanged: (value) {
-                              showSendMoneyBtn = false;
+
+                              closeSendButton();
                               double receive = double.parse(value) /
                                   double.parse(finalRate!);
                               sendControler.text = receive.toStringAsFixed(2);
@@ -457,8 +469,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               fillColor: Colors.white,
                               filled: true,
                               labelText: 'Recipient Amount',
-                              errorStyle:
-                                  TextStyle(overflow: TextOverflow.ellipsis),
+                              errorStyle: TextStyle(overflow: TextOverflow.ellipsis),
                               suffixIconConstraints:
                                   BoxConstraints(maxHeight: 30, maxWidth: 150),
                               focusedBorder: OutlineInputBorder(
@@ -572,7 +583,9 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                           key: formKey2,
                                           child: TextFormField(
                                             controller: cuponControler,
-                                            onChanged: (value) {},
+                                            onChanged: (value) {
+
+                                            },
                                             keyboardType: TextInputType.text,
                                             decoration: InputDecoration(
                                               fillColor: Colors.white,
@@ -928,23 +941,11 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                 fixedSize: Size.fromHeight(50),
                                 backgroundColor: Color(0xff02A6EB)),
                             onPressed: () {
-                            var serviceCharge= provider.getServiceFeesFromList(_country!.id!,serviceId!,sendControler.text);
 
-                            setState(() {
-                                     fees=serviceCharge;
-                                    showSendMoneyBtn = true;
-                                    showRateInfo = true;
-                            });
-                              // if (_fromKey.currentState!.validate()) {
-                              //   getTheFeesAndTotalAmount(sendControler.text,
-                              //           receiveControler.text)
-                              //       .then((value) {
-                              //     setState(() {
-                              //       showSendMoneyBtn = true;
-                              //       showRateInfo = true;
-                              //     });
-                              //   });
-                              // }
+                              if (_fromKey.currentState!.validate()) {
+                                getTheFeesAndTotalAmount(sendControler.text,
+                                        receiveControler.text);
+                              }
                             },
                             child: Text(
                               'Continue',
@@ -1045,8 +1046,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
     if (double.parse(value) > double.parse(currency_details!.maximumLimit!)) {
       setState(() {
         showError = true;
-        showErrorMsg =
-            'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+        showErrorMsg ='Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
       });
     } else if (double.parse(value) <
         double.parse(currency_details!.minimumLimit!)) {
@@ -1069,29 +1069,48 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       EasyLoading.dismiss();
       setState(() {
         showError = true;
-        showErrorMsg =
-            'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+        showErrorMsg = 'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
       });
+      return;
     } else if (double.parse(receive) >
         double.parse(currency_details!.maximumLimit!)) {
       EasyLoading.dismiss();
       setState(() {
         showError = true;
-        showErrorMsg =
-            'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+        showErrorMsg = 'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
       });
+      return;
     } else {
       print('${sendControler.text},${_country!.id},$serviceId');
+      EasyLoading.dismiss();
+      var serviceCharge= provider.getServiceFeesFromList(_country!.id!,serviceId!,sendControler.text);
 
-      await getRate(sendControler.text, _country!.id, serviceId).then((charge) {
-        print(charge['service_fee']);
-        EasyLoading.dismiss();
+      if(serviceCharge!=null){
         setState(() {
-          fees = charge['service_fee'].toString();
-          // showSendBtn=true;
+          fees=serviceCharge;
+          showSendMoneyBtn = true;
+          showRateInfo = true;
         });
-      });
+      }
+
+      // await getRate(sendControler.text, _country!.id, serviceId).then((charge) {
+      //   print(charge['service_fee']);
+      //   EasyLoading.dismiss();
+      //   setState(() {
+      //     fees = charge['service_fee'].toString();
+      //     // showSendBtn=true;
+      //   });
+      // });
     }
+    EasyLoading.dismiss();
+    return;
+  }
+
+  void closeSendButton() {
+    print('SHOW BUTTON CHANGE CALLING');
+    setState(() {
+      showSendMoneyBtn = false;
+    });
   }
 }
 
