@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
 import '../models/calculator_info_model.dart';
-import '../models/recipient_model.dart';
 import '../pages/user_profile_page.dart';
 import 'drawer.dart';
 

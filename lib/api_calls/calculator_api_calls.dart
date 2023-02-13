@@ -18,7 +18,7 @@ class CalculatorAPICalls{
       print('THIS IS CALCULATOR TOKEN ${auth['token']}');
       try {
         Response response = await get(
-            Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/get_calculator_data'),
+            Uri.parse('${baseUrl}api/calculator/get_calculator_data'),
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
@@ -52,7 +52,7 @@ class CalculatorAPICalls{
       print('THIS IS SERVICE CALCULATION TOKEN ${auth['token']}');
       try {
         Response response = await post(
-          Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/service_charges'),
+          Uri.parse('${baseUrl}api/calculator/service_charges'),
           headers: {
             'Authorization': 'Bearer ${auth['token']}',
           },
@@ -88,7 +88,7 @@ class CalculatorAPICalls{
       print('THIS IS SERVICE Cupon TOKEN ${auth['token']}');
       try {
         Response response = await post(
-            Uri.parse('https://remit.daneshexchange.com/staging/api/get_coupon'),
+            Uri.parse('${baseUrl}api/get_coupon'),
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },
@@ -119,7 +119,7 @@ class CalculatorAPICalls{
       print('THIS IS Submit calculator TOKEN ${auth['token']}');
       try {
         Response response = await post(
-            Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/submit_calculator'),
+            Uri.parse('${baseUrl}api/calculator/submit_calculator'),
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },
@@ -147,7 +147,7 @@ class CalculatorAPICalls{
       print('THIS IS SERVICE Charge TOKEN ${auth['token']}');
       try {
         Response response = await get(
-            Uri.parse('https://remit.daneshexchange.com/staging/api/calculator/get_service_charges'),
+            Uri.parse('${baseUrl}api/calculator/get_service_charges'),
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },

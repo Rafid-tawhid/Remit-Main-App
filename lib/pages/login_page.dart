@@ -353,6 +353,7 @@ class _LoginPageState extends State<LoginPage> {
                                         onPressed: () async {
                                           if (_globalKey.currentState!.validate()) {
                                             EasyLoading.show();
+
                                             await userProfileProvider.getUserInfoByEmailPassword(emailCon.text, passCon.text)
                                                 .then((data) async {
                                               print('RECEIVE DATA $data');
@@ -364,8 +365,8 @@ class _LoginPageState extends State<LoginPage> {
                                                 if (data['success'] == true) {
                                                   final user = await Data.fromJson(data['data']);
                                                   final token = data['user_token'];
+                                                  print('THIS IS USER TOKEN $token');
                                                   final user_mail = emailCon.text;
-
                                                  await GetUserDetails.setUserMailAndToken(user_mail, token);
                                                  await GetUserDetails.setUserInfo(user);
                                                  //get user recipient info
@@ -375,11 +376,9 @@ class _LoginPageState extends State<LoginPage> {
                                                     Navigator.pushNamed(context, HomePage.routeName);
                                                   });
 
-
                                                 } else {
                                                   EasyLoading.dismiss();
-                                                  showErrorMsgDialog(
-                                                      context, data);
+                                                  showErrorMsgDialog(context, data);
                                                 }
                                               }
                                             });

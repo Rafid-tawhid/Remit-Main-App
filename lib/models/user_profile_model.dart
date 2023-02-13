@@ -3,10 +3,12 @@ class UserProfileModel {
       bool? success, 
       String? message, 
       Data? data, 
+      CustomerDetails? customerDetails, 
       String? userToken,}){
     _success = success;
     _message = message;
     _data = data;
+    _customerDetails = customerDetails;
     _userToken = userToken;
 }
 
@@ -14,24 +16,29 @@ class UserProfileModel {
     _success = json['success'];
     _message = json['message'];
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    _customerDetails = json['customer_details'] != null ? CustomerDetails.fromJson(json['customer_details']) : null;
     _userToken = json['user_token'];
   }
   bool? _success;
   String? _message;
   Data? _data;
+  CustomerDetails? _customerDetails;
   String? _userToken;
 UserProfileModel copyWith({  bool? success,
   String? message,
   Data? data,
+  CustomerDetails? customerDetails,
   String? userToken,
 }) => UserProfileModel(  success: success ?? _success,
   message: message ?? _message,
   data: data ?? _data,
+  customerDetails: customerDetails ?? _customerDetails,
   userToken: userToken ?? _userToken,
 );
   bool? get success => _success;
   String? get message => _message;
   Data? get data => _data;
+  CustomerDetails? get customerDetails => _customerDetails;
   String? get userToken => _userToken;
 
   Map<String, dynamic> toJson() {
@@ -41,7 +48,353 @@ UserProfileModel copyWith({  bool? success,
     if (_data != null) {
       map['data'] = _data?.toJson();
     }
+    if (_customerDetails != null) {
+      map['customer_details'] = _customerDetails?.toJson();
+    }
     map['user_token'] = _userToken;
+    return map;
+  }
+
+}
+
+class CustomerDetails {
+  CustomerDetails({
+      String? id, 
+      String? userId, 
+      String? salutation, 
+      String? firstName, 
+      dynamic middleName, 
+      String? lastName, 
+      String? telephone, 
+      String? emailAddress, 
+      String? gender, 
+      String? residentalAddress, 
+      String? unitFlat, 
+      String? state, 
+      String? city, 
+      String? streetName, 
+      String? streetNumber, 
+      String? postalCode, 
+      String? birthDate, 
+      String? country, 
+      String? countryOfBirth, 
+      String? nationality, 
+      String? verificationId, 
+      String? verificationStatus, 
+      String? firstVerificationIdType, 
+      dynamic firstVerificationIdNo, 
+      dynamic firstVerificationIssuingJurisdiction, 
+      String? firstVerificationCountry, 
+      String? firstVerificationCardNo, 
+      String? firstVerificationIssueDate, 
+      String? firstVerificationExpiryDate, 
+      String? secondVerificationIdType, 
+      dynamic thirdVerificationIdType, 
+      dynamic fourthVerificationIdType, 
+      String? secondVerificationIdNo, 
+      dynamic licenceFrontImage, 
+      dynamic licenceBackImage, 
+      String? passportImage, 
+      dynamic browserDetails, 
+      String? overallReverifyStatus, 
+      String? verifyDate, 
+      String? createdAt, 
+      String? updatedAt,}){
+    _id = id;
+    _userId = userId;
+    _salutation = salutation;
+    _firstName = firstName;
+    _middleName = middleName;
+    _lastName = lastName;
+    _telephone = telephone;
+    _emailAddress = emailAddress;
+    _gender = gender;
+    _residentalAddress = residentalAddress;
+    _unitFlat = unitFlat;
+    _state = state;
+    _city = city;
+    _streetName = streetName;
+    _streetNumber = streetNumber;
+    _postalCode = postalCode;
+    _birthDate = birthDate;
+    _country = country;
+    _countryOfBirth = countryOfBirth;
+    _nationality = nationality;
+    _verificationId = verificationId;
+    _verificationStatus = verificationStatus;
+    _firstVerificationIdType = firstVerificationIdType;
+    _firstVerificationIdNo = firstVerificationIdNo;
+    _firstVerificationIssuingJurisdiction = firstVerificationIssuingJurisdiction;
+    _firstVerificationCountry = firstVerificationCountry;
+    _firstVerificationCardNo = firstVerificationCardNo;
+    _firstVerificationIssueDate = firstVerificationIssueDate;
+    _firstVerificationExpiryDate = firstVerificationExpiryDate;
+    _secondVerificationIdType = secondVerificationIdType;
+    _thirdVerificationIdType = thirdVerificationIdType;
+    _fourthVerificationIdType = fourthVerificationIdType;
+    _secondVerificationIdNo = secondVerificationIdNo;
+    _licenceFrontImage = licenceFrontImage;
+    _licenceBackImage = licenceBackImage;
+    _passportImage = passportImage;
+    _browserDetails = browserDetails;
+    _overallReverifyStatus = overallReverifyStatus;
+    _verifyDate = verifyDate;
+    _createdAt = createdAt;
+    _updatedAt = updatedAt;
+}
+
+  CustomerDetails.fromJson(dynamic json) {
+    _id = json['id'];
+    _userId = json['user_id'];
+    _salutation = json['salutation'];
+    _firstName = json['first_name'];
+    _middleName = json['middle_name'];
+    _lastName = json['last_name'];
+    _telephone = json['telephone'];
+    _emailAddress = json['email_address'];
+    _gender = json['gender'];
+    _residentalAddress = json['residental_address'];
+    _unitFlat = json['unit_flat'];
+    _state = json['state'];
+    _city = json['city'];
+    _streetName = json['streetName'];
+    _streetNumber = json['streetNumber'];
+    _postalCode = json['postal_code'];
+    _birthDate = json['birth_date'];
+    _country = json['country'];
+    _countryOfBirth = json['country_of_birth'];
+    _nationality = json['nationality'];
+    _verificationId = json['verification_id'];
+    _verificationStatus = json['verification_status'];
+    _firstVerificationIdType = json['first_verification_id_type'];
+    _firstVerificationIdNo = json['first_verification_id_no'];
+    _firstVerificationIssuingJurisdiction = json['first_verification_issuing_jurisdiction'];
+    _firstVerificationCountry = json['first_verification_country'];
+    _firstVerificationCardNo = json['first_verification_card_no'];
+    _firstVerificationIssueDate = json['first_verification_issue_date'];
+    _firstVerificationExpiryDate = json['first_verification_expiry_date'];
+    _secondVerificationIdType = json['second_verification_id_type'];
+    _thirdVerificationIdType = json['third_verification_id_type'];
+    _fourthVerificationIdType = json['fourth_verification_id_type'];
+    _secondVerificationIdNo = json['second_verification_id_no'];
+    _licenceFrontImage = json['licence_front_image'];
+    _licenceBackImage = json['licence_back_image'];
+    _passportImage = json['passport_image'];
+    _browserDetails = json['browser_details'];
+    _overallReverifyStatus = json['overall_reverify_status'];
+    _verifyDate = json['verify_date'];
+    _createdAt = json['created_at'];
+    _updatedAt = json['updated_at'];
+  }
+  String? _id;
+  String? _userId;
+  String? _salutation;
+  String? _firstName;
+  dynamic _middleName;
+  String? _lastName;
+  String? _telephone;
+  String? _emailAddress;
+  String? _gender;
+  String? _residentalAddress;
+  String? _unitFlat;
+  String? _state;
+  String? _city;
+  String? _streetName;
+  String? _streetNumber;
+  String? _postalCode;
+  String? _birthDate;
+  String? _country;
+  String? _countryOfBirth;
+  String? _nationality;
+  String? _verificationId;
+  String? _verificationStatus;
+  String? _firstVerificationIdType;
+  dynamic _firstVerificationIdNo;
+  dynamic _firstVerificationIssuingJurisdiction;
+  String? _firstVerificationCountry;
+  String? _firstVerificationCardNo;
+  String? _firstVerificationIssueDate;
+  String? _firstVerificationExpiryDate;
+  String? _secondVerificationIdType;
+  dynamic _thirdVerificationIdType;
+  dynamic _fourthVerificationIdType;
+  String? _secondVerificationIdNo;
+  dynamic _licenceFrontImage;
+  dynamic _licenceBackImage;
+  String? _passportImage;
+  dynamic _browserDetails;
+  String? _overallReverifyStatus;
+  String? _verifyDate;
+  String? _createdAt;
+  String? _updatedAt;
+CustomerDetails copyWith({  String? id,
+  String? userId,
+  String? salutation,
+  String? firstName,
+  dynamic middleName,
+  String? lastName,
+  String? telephone,
+  String? emailAddress,
+  String? gender,
+  String? residentalAddress,
+  String? unitFlat,
+  String? state,
+  String? city,
+  String? streetName,
+  String? streetNumber,
+  String? postalCode,
+  String? birthDate,
+  String? country,
+  String? countryOfBirth,
+  String? nationality,
+  String? verificationId,
+  String? verificationStatus,
+  String? firstVerificationIdType,
+  dynamic firstVerificationIdNo,
+  dynamic firstVerificationIssuingJurisdiction,
+  String? firstVerificationCountry,
+  String? firstVerificationCardNo,
+  String? firstVerificationIssueDate,
+  String? firstVerificationExpiryDate,
+  String? secondVerificationIdType,
+  dynamic thirdVerificationIdType,
+  dynamic fourthVerificationIdType,
+  String? secondVerificationIdNo,
+  dynamic licenceFrontImage,
+  dynamic licenceBackImage,
+  String? passportImage,
+  dynamic browserDetails,
+  String? overallReverifyStatus,
+  String? verifyDate,
+  String? createdAt,
+  String? updatedAt,
+}) => CustomerDetails(  id: id ?? _id,
+  userId: userId ?? _userId,
+  salutation: salutation ?? _salutation,
+  firstName: firstName ?? _firstName,
+  middleName: middleName ?? _middleName,
+  lastName: lastName ?? _lastName,
+  telephone: telephone ?? _telephone,
+  emailAddress: emailAddress ?? _emailAddress,
+  gender: gender ?? _gender,
+  residentalAddress: residentalAddress ?? _residentalAddress,
+  unitFlat: unitFlat ?? _unitFlat,
+  state: state ?? _state,
+  city: city ?? _city,
+  streetName: streetName ?? _streetName,
+  streetNumber: streetNumber ?? _streetNumber,
+  postalCode: postalCode ?? _postalCode,
+  birthDate: birthDate ?? _birthDate,
+  country: country ?? _country,
+  countryOfBirth: countryOfBirth ?? _countryOfBirth,
+  nationality: nationality ?? _nationality,
+  verificationId: verificationId ?? _verificationId,
+  verificationStatus: verificationStatus ?? _verificationStatus,
+  firstVerificationIdType: firstVerificationIdType ?? _firstVerificationIdType,
+  firstVerificationIdNo: firstVerificationIdNo ?? _firstVerificationIdNo,
+  firstVerificationIssuingJurisdiction: firstVerificationIssuingJurisdiction ?? _firstVerificationIssuingJurisdiction,
+  firstVerificationCountry: firstVerificationCountry ?? _firstVerificationCountry,
+  firstVerificationCardNo: firstVerificationCardNo ?? _firstVerificationCardNo,
+  firstVerificationIssueDate: firstVerificationIssueDate ?? _firstVerificationIssueDate,
+  firstVerificationExpiryDate: firstVerificationExpiryDate ?? _firstVerificationExpiryDate,
+  secondVerificationIdType: secondVerificationIdType ?? _secondVerificationIdType,
+  thirdVerificationIdType: thirdVerificationIdType ?? _thirdVerificationIdType,
+  fourthVerificationIdType: fourthVerificationIdType ?? _fourthVerificationIdType,
+  secondVerificationIdNo: secondVerificationIdNo ?? _secondVerificationIdNo,
+  licenceFrontImage: licenceFrontImage ?? _licenceFrontImage,
+  licenceBackImage: licenceBackImage ?? _licenceBackImage,
+  passportImage: passportImage ?? _passportImage,
+  browserDetails: browserDetails ?? _browserDetails,
+  overallReverifyStatus: overallReverifyStatus ?? _overallReverifyStatus,
+  verifyDate: verifyDate ?? _verifyDate,
+  createdAt: createdAt ?? _createdAt,
+  updatedAt: updatedAt ?? _updatedAt,
+);
+  String? get id => _id;
+  String? get userId => _userId;
+  String? get salutation => _salutation;
+  String? get firstName => _firstName;
+  dynamic get middleName => _middleName;
+  String? get lastName => _lastName;
+  String? get telephone => _telephone;
+  String? get emailAddress => _emailAddress;
+  String? get gender => _gender;
+  String? get residentalAddress => _residentalAddress;
+  String? get unitFlat => _unitFlat;
+  String? get state => _state;
+  String? get city => _city;
+  String? get streetName => _streetName;
+  String? get streetNumber => _streetNumber;
+  String? get postalCode => _postalCode;
+  String? get birthDate => _birthDate;
+  String? get country => _country;
+  String? get countryOfBirth => _countryOfBirth;
+  String? get nationality => _nationality;
+  String? get verificationId => _verificationId;
+  String? get verificationStatus => _verificationStatus;
+  String? get firstVerificationIdType => _firstVerificationIdType;
+  dynamic get firstVerificationIdNo => _firstVerificationIdNo;
+  dynamic get firstVerificationIssuingJurisdiction => _firstVerificationIssuingJurisdiction;
+  String? get firstVerificationCountry => _firstVerificationCountry;
+  String? get firstVerificationCardNo => _firstVerificationCardNo;
+  String? get firstVerificationIssueDate => _firstVerificationIssueDate;
+  String? get firstVerificationExpiryDate => _firstVerificationExpiryDate;
+  String? get secondVerificationIdType => _secondVerificationIdType;
+  dynamic get thirdVerificationIdType => _thirdVerificationIdType;
+  dynamic get fourthVerificationIdType => _fourthVerificationIdType;
+  String? get secondVerificationIdNo => _secondVerificationIdNo;
+  dynamic get licenceFrontImage => _licenceFrontImage;
+  dynamic get licenceBackImage => _licenceBackImage;
+  String? get passportImage => _passportImage;
+  dynamic get browserDetails => _browserDetails;
+  String? get overallReverifyStatus => _overallReverifyStatus;
+  String? get verifyDate => _verifyDate;
+  String? get createdAt => _createdAt;
+  String? get updatedAt => _updatedAt;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = _id;
+    map['user_id'] = _userId;
+    map['salutation'] = _salutation;
+    map['first_name'] = _firstName;
+    map['middle_name'] = _middleName;
+    map['last_name'] = _lastName;
+    map['telephone'] = _telephone;
+    map['email_address'] = _emailAddress;
+    map['gender'] = _gender;
+    map['residental_address'] = _residentalAddress;
+    map['unit_flat'] = _unitFlat;
+    map['state'] = _state;
+    map['city'] = _city;
+    map['streetName'] = _streetName;
+    map['streetNumber'] = _streetNumber;
+    map['postal_code'] = _postalCode;
+    map['birth_date'] = _birthDate;
+    map['country'] = _country;
+    map['country_of_birth'] = _countryOfBirth;
+    map['nationality'] = _nationality;
+    map['verification_id'] = _verificationId;
+    map['verification_status'] = _verificationStatus;
+    map['first_verification_id_type'] = _firstVerificationIdType;
+    map['first_verification_id_no'] = _firstVerificationIdNo;
+    map['first_verification_issuing_jurisdiction'] = _firstVerificationIssuingJurisdiction;
+    map['first_verification_country'] = _firstVerificationCountry;
+    map['first_verification_card_no'] = _firstVerificationCardNo;
+    map['first_verification_issue_date'] = _firstVerificationIssueDate;
+    map['first_verification_expiry_date'] = _firstVerificationExpiryDate;
+    map['second_verification_id_type'] = _secondVerificationIdType;
+    map['third_verification_id_type'] = _thirdVerificationIdType;
+    map['fourth_verification_id_type'] = _fourthVerificationIdType;
+    map['second_verification_id_no'] = _secondVerificationIdNo;
+    map['licence_front_image'] = _licenceFrontImage;
+    map['licence_back_image'] = _licenceBackImage;
+    map['passport_image'] = _passportImage;
+    map['browser_details'] = _browserDetails;
+    map['overall_reverify_status'] = _overallReverifyStatus;
+    map['verify_date'] = _verifyDate;
+    map['created_at'] = _createdAt;
+    map['updated_at'] = _updatedAt;
     return map;
   }
 

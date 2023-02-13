@@ -11,7 +11,7 @@ class UserRecipientCalls{
     await LoginApiCalls.getAuthToken().then((auth) async {
       try {
         Response response = await post(
-            Uri.parse('https://remit.daneshexchange.com/staging/api/get_recipients'),
+            Uri.parse('${baseUrl}api/get_recipients'),
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },

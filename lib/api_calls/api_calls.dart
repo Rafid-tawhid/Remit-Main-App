@@ -4,6 +4,8 @@ import 'package:http/http.dart';
 
 import '../helper_method/admin_config.dart';
 
+String baseUrl='https://remit.daneshexchange.com/staging/';
+
 class LoginApiCalls {
 
    static Future<dynamic> getUserInfoByEmailPassword(email,pass)  async {
@@ -12,7 +14,7 @@ class LoginApiCalls {
        print('THIS IS REAL TOKEN ${auth['token']}');
        try {
          Response response = await post(
-             Uri.parse('https://remit.daneshexchange.com/staging/api/user_login'),
+             Uri.parse('${baseUrl}api/user_login'),
              headers: {
                'Authorization': 'Bearer ${auth['token']}',
              },
@@ -48,7 +50,7 @@ class LoginApiCalls {
      var data;
      try {
        Response response = await post(
-           Uri.parse('https://remit.daneshexchange.com/staging/api/get_token'),
+           Uri.parse('${baseUrl}api/get_token'),
            body: {
              "email": AdminAccessConfig.email,
              "password": AdminAccessConfig.password,
@@ -64,7 +66,6 @@ class LoginApiCalls {
        } else {
         data =jsonDecode(response.body.toString());
          return data;
-
        }
      } catch (e) {
        print(e.toString());

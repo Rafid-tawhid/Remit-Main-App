@@ -82,6 +82,8 @@ class _LauncherPageState extends State<LauncherPage> {
         } else {
           if (data['success'] == true) {
             final user = Data.fromJson(data['data']);
+            final customerDetails = CustomerDetails.fromJson(data['customer_details']);
+            await GetUserDetails.setCustomerInfo(customerDetails);
             GetUserDetails.setUserInfo(user).then((value) {
               Navigator.pushNamed(context, HomePage.routeName,);
             });

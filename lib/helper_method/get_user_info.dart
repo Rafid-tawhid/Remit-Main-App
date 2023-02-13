@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GetUserDetails {
   static Data? userProfileModel;
+  static CustomerDetails? customerDetailsModel;
   static String? token;
   static String? email;
 
@@ -14,6 +15,16 @@ class GetUserDetails {
   static getUserInfo(){
     print('get user ${userProfileModel!.username}');
     return userProfileModel;
+  }
+
+  static Future<void> setCustomerInfo(CustomerDetails customer)async {
+    customerDetailsModel=customer;
+    print('set customer ${customerDetailsModel!.residentalAddress}');
+  }
+
+  static getCustomerInfo(){
+    print('get customer${customerDetailsModel!.streetName}');
+    return customerDetailsModel;
   }
 
   static Future<void> setUserMailAndToken(String email,String token)async {

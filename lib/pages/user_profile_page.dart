@@ -310,7 +310,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     borderRadius: BorderRadius.circular(6)
                 ),
                 child: ListTile(
-                  title: Text('${GetUserDetails.userProfileModel!.countryOfBirth}'),
+                  title: Text('{GetUserDetails.userProfileModel!.countryOfBirth}'),
                 ),
               )
             ],
@@ -339,7 +339,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     borderRadius: BorderRadius.circular(6)
                 ),
                 child: ListTile(
-                  title: Text('${GetUserDetails.userProfileModel!.address}'),
+                  title: Text('{GetUserDetails.userProfileModel!.address}'),
                 ),
               )
             ],

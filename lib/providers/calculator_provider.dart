@@ -90,7 +90,6 @@ class CalculatorProvider extends ChangeNotifier{
             print('finalRate $finalRate');
           }
         });
-
       }
     });
     return finalRate;
@@ -98,8 +97,6 @@ class CalculatorProvider extends ChangeNotifier{
 
   Future<dynamic> getServiceCharges(amount,country_id,service_id)=>
       CalculatorAPICalls.getServiceCharges(amount, country_id, service_id);
-
-
 
   String? getAllServicesIdByCurrencyDts(CurrencyDetails currencyDetails) {
 
@@ -247,6 +244,7 @@ class CalculatorProvider extends ChangeNotifier{
 //get Service Charge
   String getServiceFeesFromList(String countryId,String serviceId,String amount) {
     var serviceCharge='0.0';
+    getserviceChargeList.clear();
     getserviceChargeListofAllCountry.forEach((element) {
       if(element.countryId==countryId&&element.serviceId==serviceId){
         getserviceChargeList.add(element);
@@ -256,13 +254,38 @@ class CalculatorProvider extends ChangeNotifier{
     for(int i=0;i<getserviceChargeList.length;i++){
       if(double.parse(amount)>double.parse(getserviceChargeList[i].amount!) &&
           double.parse(amount)<=double.parse(getserviceChargeList[i+1].amount!)){
-        serviceCharge=getserviceChargeList[i+1].charge!;
+        if(getserviceChargeList[i+1].type=='1'){
+          serviceCharge=getserviceChargeList[i+1].charge!;
+        }
+        if(getserviceChargeList[i+1].type=='2'){
+          serviceCharge=((double.parse(getserviceChargeList[i+1].charge!)/100)*double.parse(amount)).toString();
+        }
+
         print('My amount is ${getserviceChargeList[i+1].charge!}');
       }
     }
+    // getserviceChargeList.forEach((element) {
+    //   print(element.amount);
+    // });
     if(double.parse(amount)>=double.parse(getserviceChargeList.last.amount!)){
+      if(getserviceChargeList.last.type=='2'){
+        serviceCharge=((double.parse(getserviceChargeList.last.charge!)/100)*double.parse(amount)).toString();
+      }
+      else{
+        serviceCharge=getserviceChargeList.last.charge!;
+      }
       serviceCharge=getserviceChargeList.last.charge!;
       print('My Last amount is ${getserviceChargeList.last.charge!}');
+    }
+    if(double.parse(amount)<=double.parse(getserviceChargeList.first.amount!)){
+      if(getserviceChargeList.first.type=='2'){
+        serviceCharge=((double.parse(getserviceChargeList.first.charge!)/100)*double.parse(amount)).toString();
+      }
+      else{
+        serviceCharge=getserviceChargeList.first.charge!;
+      }
+
+      print('My First amount is ${getserviceChargeList.first.charge!}');
     }
 
     return serviceCharge;
