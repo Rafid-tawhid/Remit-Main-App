@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
+import 'package:remit_app/pages/chose_recipient_type.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
@@ -11,6 +12,7 @@ import 'package:remit_app/pages/first_tab_page.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 import 'package:remit_app/pages/login_page.dart';
 import 'package:remit_app/pages/manual_upload_step3.dart';
+import 'package:remit_app/pages/recipient_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/pages/registration_step2.dart';
 import 'package:remit_app/pages/registration_step3.dart';
@@ -64,7 +66,8 @@ class MyApp extends StatelessWidget {
           UserIdentityVerification.routeName:(context)=>UserIdentityVerification(),
           CalculatorPage.routeName:(context)=>CalculatorPage(),
           CalculatorPage2.routeName:(context)=>CalculatorPage2(),
-          ReceipientWidget.routeName:(context)=>ReceipientWidget(),
+          ReceipientPage.routeName:(context)=>ReceipientPage(),
+          ChooseRecipientType.routeName:(context)=>ChooseRecipientType(),
 
         },
       ),

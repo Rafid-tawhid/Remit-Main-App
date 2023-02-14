@@ -7,6 +7,7 @@ import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/models/submit_calculator_model.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/home_page.dart';
+import 'package:remit_app/pages/recipient_page.dart';
 
 import '../api_calls/user_recipients_calls.dart';
 import '../colors.dart';
@@ -258,12 +259,9 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                       showSearchBox: true,
                                       itemBuilder: (context, item, isSelected) {
                                         return ListTile(
+                                          contentPadding: EdgeInsets.only(left: 10),
                                           title: Text(item.name!),
-                                          leading: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 4.0, bottom: 4),
-                                            child: Image.network(item.image!),
-                                          ),
+                                          leading: FadeInImage(image: NetworkImage(item.image!), placeholder: AssetImage('images/placeholder.jpeg'),height: 30,width: 40,fit: BoxFit.fill,)
                                         );
                                       },
                                       showSelectedItems: false,
@@ -559,7 +557,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                           .map((catModel) => DropdownMenuItem(
                                               value: catModel,
                                               child:
-                                                  Text('${catModel.currency!}')))
+                                                  Text('  ${catModel.currency!}',style: TextStyle(fontSize: 13),)))
                                           .toList(),
                                       onChanged:currencyList.length!>1? (value) async {
                                         currencyName = value!.currency;
@@ -927,48 +925,53 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (showSendMoneyBtn)
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  fixedSize: Size.fromHeight(50),
-                                  backgroundColor: Color(0xff02A6EB)),
-                              onPressed: () async {
-                                EasyLoading.show();
-                                final submitModel=SubmitCalculatorModel(
-                                    email: userMail,
-                                    user_token: userToken,
-                                    getCountry: _country!.id,
-                                    service_id: serviceId,
-                                    receive_currency_code: currencyName,
-                                    input_aud_currency: sendControler.text,
-                                    input_receiver_currency: receiveControler.text,
-                                    currency_rate: finalRate,
-                                    service_charge: fees,
-                                    );
-                                final model = CalculatorInfoModel(
-                                    countryName: _country!.name,
-                                    countryId: _country!.id,
-                                    serviceName: serviceName,
-                                    serviceId: serviceId,
-                                    currency: currencyName,
-                                    sendAmount: sendControler.text,
-                                    fees: fees,
-                                    totalPayable:
-                                    (double.parse(sendControler.text) +
-                                        double.parse(fees!))
-                                        .toString(),
-                                    exchangeRate: finalRate,
-                                    recipientGets: receiveControler.text);
-                                await submitCalculatorForInvoice(submitModel);
-                                EasyLoading.dismiss();
-                                Navigator.pushNamed(context, ReceipientWidget.routeName, arguments: model);
-                              },
-                              child: Text(
-                                'Send',
-                                style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                          Column(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      fixedSize: Size.fromHeight(50),
+                                      backgroundColor: Color(0xff02A6EB)),
+                                  onPressed: () async {
+                                    EasyLoading.show();
+                                    final submitModel=SubmitCalculatorModel(
+                                        email: userMail,
+                                        user_token: userToken,
+                                        getCountry: _country!.id,
+                                        service_id: serviceId,
+                                        receive_currency_code: currencyName,
+                                        input_aud_currency: sendControler.text,
+                                        input_receiver_currency: receiveControler.text,
+                                        currency_rate: finalRate,
+                                        service_charge: fees,
+                                        );
+                                    final model = CalculatorInfoModel(
+                                        countryName: _country!.name,
+                                        countryId: _country!.id,
+                                        serviceName: serviceName,
+                                        serviceId: serviceId,
+                                        currency: currencyName,
+                                        sendAmount: sendControler.text,
+                                        fees: fees,
+                                        totalPayable:
+                                        (double.parse(sendControler.text) +
+                                            double.parse(fees!))
+                                            .toString(),
+                                        exchangeRate: finalRate,
+                                        recipientGets: receiveControler.text);
+                                    await submitCalculatorForInvoice(submitModel);
+                                    EasyLoading.dismiss();
+                                    Navigator.pushNamed(context, ReceipientPage.routeName, arguments: model);
+                                  },
+                                  child: Text(
+                                    'Send',
+                                    style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(height: 40,)
+                            ],
                           ),
                         if (!showSendMoneyBtn)
                           Container(

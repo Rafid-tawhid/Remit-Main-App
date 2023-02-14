@@ -40,4 +40,31 @@ class UserRecipientCalls{
     print('THIS IS RETURN DATA ${data}');
     return data;
   }
+
+  static Future<dynamic> getBankAgentData(token,country_id,service_id)  async {
+    print('THIS IS Bank agent DATA API $token, $country_id,$service_id');
+    var data;
+    await LoginApiCalls.getAuthToken().then((auth) async {
+      try {
+        Response response = await post(
+            Uri.parse('${baseUrl}api/get_bank_agent_data'),
+            headers: {
+              'Authorization': 'Bearer ${auth['token']}',
+            },
+            body: {
+              "user_token":token,
+              "country_id": country_id,
+              "service_id": service_id,
+            });
+          data =await jsonDecode(response.body.toString());
+          return data;
+
+      } catch (e) {
+        print(e.toString());
+      }
+    });
+
+    // print('THIS IS Bank agent DATA ${data}');
+    return data;
+  }
 }

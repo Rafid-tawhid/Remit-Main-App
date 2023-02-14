@@ -12,7 +12,7 @@ import '../pages/user_profile_page.dart';
 import 'drawer.dart';
 
 class ReceipientWidget extends StatefulWidget {
-  static const String routeName='/recipient';
+  // static const String routeName='/recipient';
   const ReceipientWidget({Key? key}) : super(key: key);
 
   @override
