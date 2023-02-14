@@ -29,6 +29,7 @@ class UserProfileProvider extends ChangeNotifier{
 
   Future<List<Recipients>> getRecipientsByEmailToken(String email,String pass) async{
 
+     recipientsList.clear();
    await UserRecipientCalls.getRecipientsByEmailToken(email,pass).then((data) {
 
       if(data['status']==true){

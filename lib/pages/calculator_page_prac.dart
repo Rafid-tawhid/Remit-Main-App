@@ -12,8 +12,10 @@ import '../api_calls/user_recipients_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
 import '../custom_widgits/receiver.dart';
+import '../helper_method/helper_class.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
+import '../models/get_sent_money_model.dart';
 import '../providers/calculator_provider.dart';
 import '../providers/user_profile_provider.dart';
 import 'login_page.dart';
@@ -51,6 +53,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   String? recerversAmount;
   String fees = "0.0";
   String? cuponFixedRate;
+  String? userMail;
+  String? userToken;
   bool showRateInfo = false;
 
   bool showSendMoneyBtn = false;
@@ -76,9 +80,14 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       sendControler.text = '1000';
       receiveControler.text = (1000 * double.parse(finalRate!)).toStringAsFixed(2);
       currency_details = _country!.currencyDetails!.first;
-
       //call user recipient
       userProfileProvider=Provider.of(context,listen: false);
+      GetUserDetails.getUserMail().then((value) {
+        userMail=value;
+      });
+      GetUserDetails.getUserToken().then((value) {
+        userToken=value;
+      });
 
 
     }
@@ -366,10 +375,18 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                             focusNode: sendFocus,
                             onEditingComplete: () {
                               FocusScope.of(context).requestFocus(new FocusNode());
-                              print('COMPLETE..........');
-                              setState(() {
-                                showSendMoneyBtn = false;
-                              });
+                              if (_fromKey.currentState!.validate()) {
+
+                                //called same method twice for unfocus textfield
+                                getTheFeesAndTotalAmount(sendControler.text,
+                                    receiveControler.text).then((value){
+                                  Future.delayed(Duration.zero,(){
+                                    getTheFeesAndTotalAmount(sendControler.text,
+                                        receiveControler.text);
+                                  });
+                                });
+
+                              }
                             },
                             onChanged: (value) {
 
@@ -462,9 +479,18 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               focusNode: receiveFocus,
                               onEditingComplete: () {
                                 FocusScope.of(context).requestFocus(new FocusNode());
-                                setState(() {
-                                  showSendMoneyBtn = false;
-                                });
+                                if (_fromKey.currentState!.validate()) {
+
+                                  //called same method twice for unfocus textfield
+                                  getTheFeesAndTotalAmount(sendControler.text,
+                                      receiveControler.text).then((value){
+                                    Future.delayed(Duration.zero,(){
+                                      getTheFeesAndTotalAmount(sendControler.text,
+                                          receiveControler.text);
+                                    });
+                                  });
+
+                                }
                               },
                               controller: receiveControler,
                               onChanged: (value) {
@@ -677,7 +703,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                                           showDialog(
                                                               context: context,
                                                               builder: (context) =>
-                                                                  showCuponCongratulationsDialog(reduceFees));
+                                                                  showCuponCongratulationsDialog(reduceFees,cupon.data!.discountType));
                                                         } else {
                                                           setState(() {
                                                             showCuponMsg = 'Invalid Cupon Code';
@@ -907,20 +933,19 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               style: ElevatedButton.styleFrom(
                                   fixedSize: Size.fromHeight(50),
                                   backgroundColor: Color(0xff02A6EB)),
-                              onPressed: () {
+                              onPressed: () async {
+                                EasyLoading.show();
                                 final submitModel=SubmitCalculatorModel(
-                                    email: GetUserDetails.email,
-                                    user_token: GetUserDetails.token,
+                                    email: userMail,
+                                    user_token: userToken,
                                     getCountry: _country!.id,
                                     service_id: serviceId,
                                     receive_currency_code: currencyName,
                                     input_aud_currency: sendControler.text,
+                                    input_receiver_currency: receiveControler.text,
                                     currency_rate: finalRate,
                                     service_charge: fees,
-                                    input_receiver_currency: receiveControler.text,
                                     );
-
-
                                 final model = CalculatorInfoModel(
                                     countryName: _country!.name,
                                     countryId: _country!.id,
@@ -930,14 +955,14 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                     sendAmount: sendControler.text,
                                     fees: fees,
                                     totalPayable:
-                                        (double.parse(sendControler.text) +
-                                                double.parse(fees!))
-                                            .toString(),
+                                    (double.parse(sendControler.text) +
+                                        double.parse(fees!))
+                                        .toString(),
                                     exchangeRate: finalRate,
                                     recipientGets: receiveControler.text);
-
-                                Navigator.pushNamed(context, ReceipientWidget.routeName,
-                                    arguments: model);
+                                await submitCalculatorForInvoice(submitModel);
+                                EasyLoading.dismiss();
+                                Navigator.pushNamed(context, ReceipientWidget.routeName, arguments: model);
                               },
                               child: Text(
                                 'Send',
@@ -987,27 +1012,29 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
 
 
 
-  AlertDialog showCuponCongratulationsDialog(double reduceFees) {
+  AlertDialog showCuponCongratulationsDialog(double reduceFees, String? discountType) {
 
     return AlertDialog(
       title: Text('Congratulations'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Exchange Rate : 1 AUD ='),
-              Text(' $finalRate',
-                  style: TextStyle(decoration: TextDecoration.lineThrough)),
-            ],
+          FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Exchange Rate : 1 AUD ='),
+                Text(' $cuponFixedRate $currencyName',
+                    style: TextStyle(decoration: TextDecoration.lineThrough)),
+              ],
+            ),
           ),
           Wrap(
             children: [
               Align(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 14, bottom: 8),
-                  child: Text('Discount rate $reduceFees (%) :'),
+                  child: discountType=='P'?Text('Discount rate $reduceFees (%) :'):Text('Discount Fixed ${reduceFees*100} $currencyName'),
                 ),
                 alignment: Alignment.center,
               ),
@@ -1042,8 +1069,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                   onPressed: () {
                     setState(() {
                       finalRate='${double.parse(cuponFixedRate!) + reduceFees}';
-                      receiveControler.text='${(double.parse(sendControler.text)*double.parse(cuponFixedRate!)).toStringAsFixed(2)}';
-                      print('receiveControler $receiveControler');
+                      receiveControler.text='${(double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2)}';
+                      print('receiveControler ${receiveControler.text}');
                     });
                     Navigator.pop(context);
                   },
@@ -1128,12 +1155,32 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
     return;
   }
 
-  // void closeSendButton() {
-  //   print('SHOW BUTTON CHANGE CALLING');
-  //   setState(() {
-  //     showSendMoneyBtn = false;
-  //   });
-  // }
+  Future<void> submitCalculatorForInvoice(SubmitCalculatorModel submitModel) async {
+    SendMoney sendMoney;
+   await CalculatorAPICalls.sendCalculatorSubmitInfo(submitModel).then((value) {
+      if(value['status']==true){
+        var invoice=value['invoice'];
+        print('Invoice : $invoice');
+        //call send money data
+        CalculatorAPICalls.getSendMoneyDataAfterSubmit(userToken!, invoice).then((value) {
+          if(value['status']==true){
+            sendMoney=SendMoney.fromJson(value['sendMoney']);
+            print('sendMoney.itemId ${sendMoney.itemId}');
+          }
+          if(value['status']==false){
+            var message=value['errors'];
+            MyDialog.showErrorMsgDialog(context, value);
+          }
+
+        });
+      }
+      if(value['status']==false){
+        var message=value['errors'];
+        MyDialog.showErrorMsgDialog(context, value);
+      }
+    });
+  }
+
 }
 
 class MyDrawer extends StatelessWidget {

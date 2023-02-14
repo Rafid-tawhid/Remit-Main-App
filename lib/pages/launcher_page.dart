@@ -63,11 +63,7 @@ class _LauncherPageState extends State<LauncherPage> {
 
   getValueFromSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
-    //
-    //
-    // LoginApiCalls.getAuthToken().then((auth) {
-    //   print(auth.toString());
-    // });
+
 
     if (prefs.getString("email") != null && prefs.getString("pass") != null&&prefs.getString("token")!=null) {
       EasyLoading.show();
@@ -78,7 +74,7 @@ class _LauncherPageState extends State<LauncherPage> {
         EasyLoading.dismiss();
 
         if (data == null) {
-          showServerProblemDialog(context);
+          MyDialog.showServerProblemDialog(context);
         } else {
           if (data['success'] == true) {
             final user = Data.fromJson(data['data']);
@@ -88,7 +84,7 @@ class _LauncherPageState extends State<LauncherPage> {
               Navigator.pushNamed(context, HomePage.routeName,);
             });
           } else {
-            showErrorMsgDialog(context, data);
+            MyDialog.showErrorMsgDialog(context, data);
           }
         }
       });

@@ -113,30 +113,56 @@ class CalculatorAPICalls{
     return cuponRateModel;
   }
 
-  static Future<void> sendCalculatorSubmitInfo(SubmitCalculatorModel model) async {
+  static Future<dynamic> sendCalculatorSubmitInfo(SubmitCalculatorModel model) async {
+    print(model.toMap());
     var data;
     await LoginApiCalls.getAuthToken().then((auth) async {
       print('THIS IS Submit calculator TOKEN ${auth['token']}');
       try {
         Response response = await post(
-            Uri.parse('${baseUrl}api/calculator/submit_calculator'),
+            Uri.parse('${baseUrl}api/submit_calculator'),
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },
-            body: model.toMap()
-        );
-        if (response.statusCode == 200) {
-          data =await jsonDecode(response.body.toString());
+            body: model.toMap());
+            data =await jsonDecode(response.body.toString());
+            print(data.toString());
+            return data;
 
-        }
-        else {
-          print('Failed........');
-
-        }
       } catch (e) {
         print(e.toString());
       }
     });
+
+    return data;
+  }
+
+
+  static Future<dynamic> getSendMoneyDataAfterSubmit(String token,String invoice) async {
+
+    var data;
+    await LoginApiCalls.getAuthToken().then((auth) async {
+      print('THIS IS SendMoney calculator TOKEN ${auth['token']}');
+      try {
+        Response response = await post(
+            Uri.parse('${baseUrl}api/get_sendMoney_data'),
+            headers: {
+              'Authorization': 'Bearer ${auth['token']}',
+            },
+            body: {
+              "user_token":token,
+              "sendMoney_invoice":invoice
+            });
+        data =await jsonDecode(response.body.toString());
+        print(data.toString());
+        return data;
+
+      } catch (e) {
+        print(e.toString());
+      }
+    });
+
+    return data;
   }
 
 

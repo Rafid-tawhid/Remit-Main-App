@@ -636,6 +636,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                   padding: const EdgeInsets.only(left: 4.0),
                   child: TextFormField(
                     controller: countryCon,
+                    enabled: false,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: Colors.white,

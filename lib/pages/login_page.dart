@@ -344,6 +344,7 @@ class _LoginPageState extends State<LoginPage> {
                                       height: 20,
                                     ),
                                     ElevatedButton(
+                                        onLongPress: null,
                                         style: ElevatedButton.styleFrom(
                                             primary: MyColor.blue,
                                             shape: RoundedRectangleBorder(
@@ -353,13 +354,12 @@ class _LoginPageState extends State<LoginPage> {
                                         onPressed: () async {
                                           if (_globalKey.currentState!.validate()) {
                                             EasyLoading.show();
-
                                             await userProfileProvider.getUserInfoByEmailPassword(emailCon.text, passCon.text)
                                                 .then((data) async {
                                               print('RECEIVE DATA $data');
                                               if (data == null) {
                                                 EasyLoading.dismiss();
-                                                showServerProblemDialog(
+                                                MyDialog.showServerProblemDialog(
                                                     context);
                                               } else {
                                                 if (data['success'] == true) {
@@ -378,7 +378,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                                 } else {
                                                   EasyLoading.dismiss();
-                                                  showErrorMsgDialog(context, data);
+                                                  MyDialog.showErrorMsgDialog(context, data);
                                                 }
                                               }
                                             });
