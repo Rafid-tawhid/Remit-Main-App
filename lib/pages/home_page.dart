@@ -7,6 +7,7 @@ import '../custom_widgits/home.dart';
 import '../custom_widgits/receiver.dart';
 import '../custom_widgits/send.dart';
 import '../custom_widgits/send_money.dart';
+import '../custom_widgits/tab_widgits_list.dart';
 import '../helper_method/helper_class.dart';
 import '../models/user_profile_model.dart';
 
@@ -20,33 +21,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  List<Widget> _widgetOptions = [
 
-    HomeWidget(),
-    ReceipientWidget(),
-    CalculatorPage2(),
-    SendWidget(),
-
-  ];
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(selectedIndex),
       ),
       bottomNavigationBar: CustomLineIndicatorBottomNavbar(
         selectedColor: Colors.blue,
         unSelectedColor: Colors.black54,
         backgroundColor: Colors.white,
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         unselectedIconSize: 20,
         selectedIconSize: 25,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            selectedIndex = index;
           });
         },
         enableLineIndicator: true,

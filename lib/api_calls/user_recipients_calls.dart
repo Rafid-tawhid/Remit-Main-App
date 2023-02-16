@@ -8,7 +8,7 @@ import 'api_calls.dart';
 class UserRecipientCalls{
   static Future<dynamic> getRecipientsByEmailToken(email,token)  async {
     var data;
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       try {
         Response response = await post(
             Uri.parse('${baseUrl}api/get_recipients'),
@@ -44,7 +44,7 @@ class UserRecipientCalls{
   static Future<dynamic> getBankAgentData(token,country_id,service_id)  async {
     print('THIS IS Bank agent DATA API $token, $country_id,$service_id');
     var data;
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       try {
         Response response = await post(
             Uri.parse('${baseUrl}api/get_bank_agent_data'),

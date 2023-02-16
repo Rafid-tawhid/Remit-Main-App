@@ -80,7 +80,7 @@ class _OtpPageState extends State<OtpPage> {
               controller: phnCon,
             ),
             SizedBox(height: 80,),
-            MainButton(title: 'Continue',route: HomePage.routeName,)
+            MainButton(title: 'Continue',)
           ],
         ),
       ),

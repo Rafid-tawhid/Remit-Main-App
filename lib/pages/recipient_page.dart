@@ -783,8 +783,9 @@ class _ReceipientPageState extends State<ReceipientPage> {
                   onPressed: () async {
                     EasyLoading.show();
                      await provider.getBankAgentData(token!,calculatorInfo.countryId!,calculatorInfo.serviceId!).then((value) {
-                     EasyLoading.dismiss();
+                       EasyLoading.dismiss();
                    });
+
                    Navigator.pushNamed(context, ChooseRecipientType.routeName,arguments: [calculatorInfo, recipient]);
                   },
                   child: Padding(

@@ -6,7 +6,8 @@ class MainButton extends StatefulWidget {
   String? route;
 
 
-  MainButton({required this.title,this.route});
+
+  MainButton({required this.title, this.route});
 
   @override
   State<MainButton> createState() => _MainButtonState();

@@ -1,7 +1,9 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/models/bank_agent_data_model.dart';
+import 'package:remit_app/models/get_branch_data_model.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
 
@@ -23,6 +25,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
 
   Recipients? recipient;
   LocalAgent? localAgent;
+  BranchInfo? branchInfo;
   BankInfo? bankInfo;
   String? serviceName;
   String? currency;
@@ -253,7 +256,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                 child: Row(
                   children: [
                     Text(
-                      'Bank Info / Agent',
+                      'Agent/Bank Name',
                       style: TextStyle(color: MyColor.grey, fontSize: 16),
                     ),
                     const Icon(
@@ -279,7 +282,8 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                       ),
                       isExpanded: true,
                       onChanged: (value) {
-
+                        localAgent=value;
+                        print(localAgent!.agentCountry);
                       },
 
                       validator: (value) {
@@ -314,7 +318,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                 child: Row(
                   children: [
                     Text(
-                      'Bank Info / Agent',
+                      'Agent/Bank Name',
                       style: TextStyle(color: MyColor.grey, fontSize: 16),
                     ),
                     const Icon(
@@ -346,6 +350,16 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                           onChanged: (value) {
                             setState(() {
                               bankInfo=value;
+                              print(bankInfo!.agent);
+                              EasyLoading.show();
+                              branchInfo=null;
+
+                              provider.getBranchDataByBankName(
+                                calculatorInfo.countryId,
+                                calculatorInfo.
+                                serviceId,bankInfo!.agent,recipient!.streetName).then((value) {
+                                  EasyLoading.dismiss();
+                              });
                             });
                           },
 
@@ -391,32 +405,48 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: agentbankNameCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Select Name',
-                      suffixIconConstraints:
-                      BoxConstraints(maxHeight: 30, maxWidth: 38),
-                      hintStyle: TextStyle(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              Consumer<UserProfileProvider>(
+                builder: (context, provider, _) => Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black,width: 1),
+                        borderRadius: BorderRadius.circular(6)
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2<BranchInfo>(
+                        //  menuMaxHeight: 300,
+                          dropdownMaxHeight: 300,
+                          value: branchInfo,
+                          hint: Text(
+                            '  Select One',
+                            style: TextStyle(color: Colors.black,overflow: TextOverflow.ellipsis),
+                          ),
+                          isExpanded: true,
+                          onChanged: (value) {
+                            setState(() {
+                              branchInfo=value;
+                              print(bankInfo!.agent);
+
+                            });
+                          },
+
+                          items: provider.branchInfoList
+                              .map((bankInfo) => DropdownMenuItem<BranchInfo>(
+
+                              value: bankInfo,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 14.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Icon(Icons.ac_unit,size: 25,),
+                                    Text(bankInfo.branch!,style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),),
+                                  ],
+                                ),
+                              )))
+                              .toList()),
                     ),
                   ),
                 ),
@@ -532,8 +562,10 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
             builder: (context, provider, _) => Padding(
               padding: const EdgeInsets.all(12.0),
               child: ElevatedButton(
-                  onPressed: () {
-                    // provider.getBankAgentData(token!,calculatorInfo.countryId!,calculatorInfo.serviceId!);
+                  onPressed: () async {
+                    EasyLoading.show();
+                    await provider.getSenderRelationshipData();
+
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(12),

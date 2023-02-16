@@ -14,7 +14,7 @@ class CalculatorAPICalls{
 
   static Future<dynamic> getAllCountriesInfo()  async {
     var data;
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS CALCULATOR TOKEN ${auth['token']}');
       try {
         Response response = await get(
@@ -48,7 +48,7 @@ class CalculatorAPICalls{
   static Future<dynamic> getServiceCharges(amountS,country_idS,service_idS)  async {
     var data;
     print(amountS+country_idS+service_idS);
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS SERVICE CALCULATION TOKEN ${auth['token']}');
       try {
         Response response = await post(
@@ -84,7 +84,7 @@ class CalculatorAPICalls{
   static Future<CuponRateModel?> getCuponDetails(String cuponCode) async {
     var data;
     CuponRateModel? cuponRateModel;
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS SERVICE Cupon TOKEN ${auth['token']}');
       try {
         Response response = await post(
@@ -116,7 +116,7 @@ class CalculatorAPICalls{
   static Future<dynamic> sendCalculatorSubmitInfo(SubmitCalculatorModel model) async {
     print(model.toMap());
     var data;
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS Submit calculator TOKEN ${auth['token']}');
       try {
         Response response = await post(
@@ -141,7 +141,7 @@ class CalculatorAPICalls{
   static Future<dynamic> getSendMoneyDataAfterSubmit(String token,String invoice) async {
 
     var data;
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS SendMoney calculator TOKEN ${auth['token']}');
       try {
         Response response = await post(
@@ -169,7 +169,7 @@ class CalculatorAPICalls{
   static Future<dynamic?> getServiceChargeofAllCountry() async {
     var data;
 
-    await LoginApiCalls.getAuthToken().then((auth) async {
+    await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS SERVICE Charge TOKEN ${auth['token']}');
       try {
         Response response = await get(

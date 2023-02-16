@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:remit_app/api_calls/api_calls.dart';
 import 'package:remit_app/colors.dart';
+import 'package:remit_app/custom_widgits/receiver.dart';
+import 'package:remit_app/custom_widgits/send.dart';
+import 'package:remit_app/custom_widgits/tab_widgits_list.dart';
 import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/home_page.dart';
 
 
 import '../helper_method/get_user_info.dart';
+import '../pages/calculator_page_prac.dart';
 import '../pages/user_profile_page.dart';
 import 'button1.dart';
 import 'drawer.dart';
@@ -22,7 +26,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: MyDrawer(),
+      // drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: MyColor.blue,size: 25),
@@ -60,17 +64,19 @@ class _HomeWidgetState extends State<HomeWidget> {
               ),
             ),
             SizedBox(height: 30,),
-            Container(
-              width: double.infinity,
-              child: InkWell(
-                onTap: (){
 
-                },
-                child: MainButton(
-                  title: 'Send Money Now',
-                ),
-              ),
-            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: Size.fromHeight(50),
+                      backgroundColor: Color(0xff02A6EB)
+                  ),
+                  onPressed: (){
+                    selectedIndex=2;
+                    Navigator.pushNamed(context, HomePage.routeName);
+                  }, child: Text('Send Money Now',style: TextStyle(fontSize: 16),)),
+            )
 
           ],
         ),

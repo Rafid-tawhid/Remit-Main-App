@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:remit_app/helper_method/get_user_info.dart';
 
 import '../helper_method/admin_config.dart';
 
 String baseUrl='https://remit.daneshexchange.com/staging/';
 
-class LoginApiCalls {
+class UserApiCalls {
 
    static Future<dynamic> getUserInfoByEmailPassword(email,pass)  async {
      var data;
@@ -72,25 +73,71 @@ class LoginApiCalls {
      }
      return data;
    }
+
+   static Future<dynamic> getSenderRelationshipData()  async {
+     // print('THIS IS Bank agent DATA API $token, $country_id,$service_id');
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/get_sender_relationship_data'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: {
+               "user_token":user_token,
+             });
+         data =await jsonDecode(response.body.toString());
+
+         return data;
+
+       } catch (e) {
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
+
+   static Future<dynamic> getBranchData(country_id,service_id,bank_name,agent_city)  async {
+     // print('THIS IS Bank agent DATA API $token, $country_id,$service_id');
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/get_branch_data'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: {
+               "user_token":user_token,
+               "country_id":country_id,
+               "service_id":service_id,
+               "bank_name":bank_name,
+               "agent_city":agent_city,
+             });
+         data =await jsonDecode(response.body.toString());
+
+         return data;
+
+       } catch (e) {
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
 }
 
-// Response responses=await post(
-//     Uri.parse('http://192.168.95.29/staging/api/user-detail'),
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer ${data['token']}',
-//     }
-// );
-// if(responses.statusCode==200){
-//   data=jsonDecode(responses.body.toString());
-//   return data;
-//   print(data.toString());
-// data=data2;
-// print('MY VALUE $data');
-//Navigator.pushNamed(context, ShowDataPage.routeName,arguments: data2);
-// }
-// else{
-//   print('Failed........2');
-//   return jsonDecode(responses.body.toString());
-// }
+
