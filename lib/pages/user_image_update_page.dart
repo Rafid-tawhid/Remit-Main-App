@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/colors.dart';
+import 'package:remit_app/models/update_user_profile_model.dart';
 
 class UserImageUpdatePage extends StatefulWidget {
   static const String routeName='/image';
@@ -61,7 +64,32 @@ class _UserImageUpdatePageState extends State<UserImageUpdatePage> {
               style: ElevatedButton.styleFrom(
                   primary: MyColor.blue
               ),
-              onPressed: (){
+              onPressed: ()async{
+
+
+                String imagepath = _imagePath!;
+
+                File imagefile = File(imagepath);
+                //convert Path to File
+                Uint8List imagebytes = await imagefile.readAsBytes();
+
+                String base64string = base64.encode(imagebytes); //convert bytes to base64 string
+                // //print(base64string);
+                // final userProfile=UpdateUserProfile(
+                //     phone_number: "0467680966",
+                // );
+                // UserApiCalls.update_user_profile(userProfile).then((value) {
+                //   print('value ${value.toString()}');
+                // });
+
+                if(_imagePath==null){
+
+                }
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Please select an image'),
+                  ));
+                }
 
               },
               child: Text('Update Image'))
@@ -72,7 +100,7 @@ class _UserImageUpdatePageState extends State<UserImageUpdatePage> {
 
   void _getImage() async {
     final selectedImage = await ImagePicker().pickImage(source: _imageSource);
-
+    print('selectedImage $selectedImage');
     if (selectedImage != null) {
       setState(() {
         file = File(selectedImage!.path);

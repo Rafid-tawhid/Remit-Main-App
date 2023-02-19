@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
+import 'package:remit_app/models/update_user_profile_model.dart';
+import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/user_password_update_page.dart';
+
+import '../api_calls/user_api_calls.dart';
 
 class UserProfilePage extends StatefulWidget {
   static const String routeName='/user_info';
@@ -14,6 +19,18 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
 
   String selectedItem='';
+  final occupationCon=TextEditingController();
+  final addressCon=TextEditingController();
+  final phoneCon=TextEditingController();
+
+  @override
+  void dispose() {
+
+    occupationCon.dispose();
+    addressCon.dispose();
+    phoneCon.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +40,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
         actions: [
               PopupMenuButton(
                   icon: Icon(Icons.edit_calendar_sharp),
-                  initialValue: '/profile',
+                  // initialValue: '/profile',
                   onSelected: (value) {
-
                 print(value);
                 Navigator.pushNamed(context, value.toString());
               }, itemBuilder: (BuildContext bc) {
@@ -34,46 +50,46 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.person,color: MyColor.blue,),
+                        Icon(Icons.edit,color: MyColor.blue,),
                         SizedBox(width: 10,),
-                        Text("Profile Update"),
+                        Text("Edit Profile"),
                       ],
                     ),
                     value: '/profile',
                   ),
-                  PopupMenuItem(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.password,color: MyColor.blue,),
-                        SizedBox(width: 10,),
-                        Text("Password Setting"),
-                      ],
-                    ),
-                    value: UserUpdatePasswordPage.routeName,
-                  ),
-                  PopupMenuItem(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.image,color: MyColor.blue,),
-                        SizedBox(width: 10,),
-                        Text("Image Update"),
-                      ],
-                    ),
-                    value: '/image',
-                  ),
-                  PopupMenuItem(
-                    child: Row(
-                      children: [
-                        Icon(Icons.verified_user_outlined,color: MyColor.blue,),
-                        SizedBox(width: 10,),
-                        Text("Identity Verification"),
-                      ],
-                      mainAxisSize: MainAxisSize.min,
-                    ),
-                    value: '/verificition',
-                  )
+                  // PopupMenuItem(
+                  //   child: Row(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       Icon(Icons.password,color: MyColor.blue,),
+                  //       SizedBox(width: 10,),
+                  //       Text("Password Setting"),
+                  //     ],
+                  //   ),
+                  //   value: UserUpdatePasswordPage.routeName,
+                  // ),
+                  // PopupMenuItem(
+                  //   child: Row(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       Icon(Icons.image,color: MyColor.blue,),
+                  //       SizedBox(width: 10,),
+                  //       Text("Image Update"),
+                  //     ],
+                  //   ),
+                  //   value: '/image',
+                  // ),
+                  // PopupMenuItem(
+                  //   child: Row(
+                  //     children: [
+                  //       Icon(Icons.verified_user_outlined,color: MyColor.blue,),
+                  //       SizedBox(width: 10,),
+                  //       Text("Identity Verification"),
+                  //     ],
+                  //     mainAxisSize: MainAxisSize.min,
+                  //   ),
+                  //   value: '/verificition',
+                  // )
                 ];
               })
 
@@ -253,6 +269,42 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
                 child: ListTile(
                   title: Text('${GetUserDetails.userProfileModel!.phone}'),
+                  trailing: TextButton(
+                    onPressed: (){
+                      showDialog(context: context, builder: (context){
+                        phoneCon.text=GetUserDetails.userProfileModel!.phone!;
+                        return AlertDialog(
+                          title: Text('Update Info'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                decoration: InputDecoration(
+                                    hintText: 'Address',
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                            color: MyColor.grey,
+                                            width: 1
+                                        )
+                                    )
+                                ),
+                                controller: phoneCon,
+                                keyboardType: TextInputType.phone,
+                              ),
+                              SizedBox(height: 20,),
+                              ElevatedButton(onPressed: (){
+                                updatePhoneNumber();
+
+                              }, child: Text('Update'))
+                            ],
+                          ),
+                        );
+                      }
+                      );
+                    },
+                    child: Icon(Icons.edit,color: MyColor.grey,),
+                  ),
                 ),
               )
             ],
@@ -281,40 +333,47 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     borderRadius: BorderRadius.circular(6)
                 ),
                 child: ListTile(
-                  title: Text(''),
+                  title: Text('${GetUserDetails.userProfileModel!.occupation}'),
+                  trailing: TextButton(
+                    onPressed: (){
+                      showDialog(context: context, builder: (context){
+                        occupationCon.text=GetUserDetails.userProfileModel!.occupation!;
+                        return AlertDialog(
+                          title: Text('Update Info'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                decoration: InputDecoration(
+                                    hintText: 'Occupation',
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                            color: MyColor.grey,
+                                            width: 1
+                                        )
+                                    )
+                                ),
+                                controller: occupationCon,
+                              ),
+                              SizedBox(height: 20,),
+                              ElevatedButton(onPressed: (){
+                                updateOccupation();
+
+                              }, child: Text('Update'))
+                            ],
+                          ),
+                        );
+                      }
+                      );
+                    },
+                    child: Icon(Icons.edit,color: MyColor.grey,),
+                  ),
                 ),
               )
             ],
           ),
-          SizedBox(height: 10,),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0,top: 8,bottom: 8),
-                child: Text(
-                  'Country of birth ',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 8,right: 8),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey,
-                        width: .2
-                    ),
-                    borderRadius: BorderRadius.circular(6)
-                ),
-                child: ListTile(
-                  title: Text('{GetUserDetails.userProfileModel!.countryOfBirth}'),
-                ),
-              )
-            ],
-          ),
+
           SizedBox(height: 10,),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -339,7 +398,42 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     borderRadius: BorderRadius.circular(6)
                 ),
                 child: ListTile(
-                  title: Text('{GetUserDetails.userProfileModel!.address}'),
+                  title: Text('${GetUserDetails.userProfileModel!.address!}'),
+                  trailing: TextButton(
+                    onPressed: (){
+                      showDialog(context: context, builder: (context){
+                        addressCon.text=GetUserDetails.userProfileModel!.address!;
+                        return AlertDialog(
+                          title: Text('Update Info'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                decoration: InputDecoration(
+                                    hintText: 'Address',
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                            color: MyColor.grey,
+                                            width: 1
+                                        )
+                                    )
+                                ),
+                                controller: addressCon,
+                              ),
+                              SizedBox(height: 20,),
+                              ElevatedButton(onPressed: (){
+                                updateAddress();
+
+                              }, child: Text('Update'))
+                            ],
+                          ),
+                        );
+                      }
+                      );
+                    },
+                    child: Icon(Icons.edit,color: MyColor.grey,),
+                  ),
                 ),
               )
             ],
@@ -355,5 +449,83 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
+  void updateOccupation() {
+    EasyLoading.show();
+    UserApiCalls.update_user_profile(UpdateUserProfile(
+        occupation: occupationCon.text
+    )).then((value) {
+      UserApiCalls.getUserInfo().then((data) async {
+        final user = await Data.fromJson(data['data']);
+        await GetUserDetails.setUserInfo(user);
+        EasyLoading.dismiss();
+        Navigator.pop(context);
+        setState(() {
+        });
+        if(value['status']==true){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+      });
+
+    });
+  }
+
+  void updateAddress() {
+    EasyLoading.show();
+    UserApiCalls.update_user_profile(UpdateUserProfile(
+        address: addressCon.text
+    )).then((value) {
+      UserApiCalls.getUserInfo().then((data) async {
+        final user = await Data.fromJson(data['data']);
+        await GetUserDetails.setUserInfo(user);
+        EasyLoading.dismiss();
+        Navigator.pop(context);
+        setState(() {
+        });
+        if(value['status']==true){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+      });
+    });
+  }
+
+  void updatePhoneNumber() {
+    EasyLoading.show();
+    UserApiCalls.update_user_profile(UpdateUserProfile(
+        phone_number: phoneCon.text
+    )).then((value) {
+      UserApiCalls.getUserInfo().then((data) async {
+        final user = await Data.fromJson(data['data']);
+        await GetUserDetails.setUserInfo(user);
+        EasyLoading.dismiss();
+        Navigator.pop(context);
+        setState(() {
+        });
+        if(value['status']==true){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+      });
+    });
+  }
 
 }

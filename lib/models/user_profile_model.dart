@@ -2,56 +2,185 @@ class UserProfileModel {
   UserProfileModel({
       bool? success, 
       String? message, 
+      String? userToken, 
       Data? data, 
       CustomerDetails? customerDetails, 
-      String? userToken,}){
+      SecondaryId? secondaryId,}){
     _success = success;
     _message = message;
+    _userToken = userToken;
     _data = data;
     _customerDetails = customerDetails;
-    _userToken = userToken;
+    _secondaryId = secondaryId;
 }
 
   UserProfileModel.fromJson(dynamic json) {
     _success = json['success'];
     _message = json['message'];
+    _userToken = json['user_token'];
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
     _customerDetails = json['customer_details'] != null ? CustomerDetails.fromJson(json['customer_details']) : null;
-    _userToken = json['user_token'];
+    _secondaryId = json['secondary_id'] != null ? SecondaryId.fromJson(json['secondary_id']) : null;
   }
   bool? _success;
   String? _message;
+  String? _userToken;
   Data? _data;
   CustomerDetails? _customerDetails;
-  String? _userToken;
+  SecondaryId? _secondaryId;
 UserProfileModel copyWith({  bool? success,
   String? message,
+  String? userToken,
   Data? data,
   CustomerDetails? customerDetails,
-  String? userToken,
+  SecondaryId? secondaryId,
 }) => UserProfileModel(  success: success ?? _success,
   message: message ?? _message,
+  userToken: userToken ?? _userToken,
   data: data ?? _data,
   customerDetails: customerDetails ?? _customerDetails,
-  userToken: userToken ?? _userToken,
+  secondaryId: secondaryId ?? _secondaryId,
 );
   bool? get success => _success;
   String? get message => _message;
+  String? get userToken => _userToken;
   Data? get data => _data;
   CustomerDetails? get customerDetails => _customerDetails;
-  String? get userToken => _userToken;
+  SecondaryId? get secondaryId => _secondaryId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['success'] = _success;
     map['message'] = _message;
+    map['user_token'] = _userToken;
     if (_data != null) {
       map['data'] = _data?.toJson();
     }
     if (_customerDetails != null) {
       map['customer_details'] = _customerDetails?.toJson();
     }
-    map['user_token'] = _userToken;
+    if (_secondaryId != null) {
+      map['secondary_id'] = _secondaryId?.toJson();
+    }
+    return map;
+  }
+
+}
+
+class SecondaryId {
+  SecondaryId({
+      String? id, 
+      String? verificationId, 
+      String? customerId, 
+      String? drivingLicenseState, 
+      String? drivingLicenseNumber, 
+      dynamic drivingLicenseCardNo, 
+      String? drivingLicenseFrontImage, 
+      String? drivingLicenseBackImage, 
+      String? drivingLicenseIssueDate, 
+      String? drivingLicenseExpiryDate, 
+      String? createdAt, 
+      String? updatedAt, 
+      String? imageUrl,}){
+    _id = id;
+    _verificationId = verificationId;
+    _customerId = customerId;
+    _drivingLicenseState = drivingLicenseState;
+    _drivingLicenseNumber = drivingLicenseNumber;
+    _drivingLicenseCardNo = drivingLicenseCardNo;
+    _drivingLicenseFrontImage = drivingLicenseFrontImage;
+    _drivingLicenseBackImage = drivingLicenseBackImage;
+    _drivingLicenseIssueDate = drivingLicenseIssueDate;
+    _drivingLicenseExpiryDate = drivingLicenseExpiryDate;
+    _createdAt = createdAt;
+    _updatedAt = updatedAt;
+    _imageUrl = imageUrl;
+}
+
+  SecondaryId.fromJson(dynamic json) {
+    _id = json['id'];
+    _verificationId = json['verification_id'];
+    _customerId = json['customer_id'];
+    _drivingLicenseState = json['driving_license_state'];
+    _drivingLicenseNumber = json['driving_license_number'];
+    _drivingLicenseCardNo = json['driving_license_card_no'];
+    _drivingLicenseFrontImage = json['driving_license_front_image'];
+    _drivingLicenseBackImage = json['driving_license_back_image'];
+    _drivingLicenseIssueDate = json['driving_license_issue_date'];
+    _drivingLicenseExpiryDate = json['driving_license_expiry_date'];
+    _createdAt = json['created_at'];
+    _updatedAt = json['updated_at'];
+    _imageUrl = json['image_url'];
+  }
+  String? _id;
+  String? _verificationId;
+  String? _customerId;
+  String? _drivingLicenseState;
+  String? _drivingLicenseNumber;
+  dynamic _drivingLicenseCardNo;
+  String? _drivingLicenseFrontImage;
+  String? _drivingLicenseBackImage;
+  String? _drivingLicenseIssueDate;
+  String? _drivingLicenseExpiryDate;
+  String? _createdAt;
+  String? _updatedAt;
+  String? _imageUrl;
+SecondaryId copyWith({  String? id,
+  String? verificationId,
+  String? customerId,
+  String? drivingLicenseState,
+  String? drivingLicenseNumber,
+  dynamic drivingLicenseCardNo,
+  String? drivingLicenseFrontImage,
+  String? drivingLicenseBackImage,
+  String? drivingLicenseIssueDate,
+  String? drivingLicenseExpiryDate,
+  String? createdAt,
+  String? updatedAt,
+  String? imageUrl,
+}) => SecondaryId(  id: id ?? _id,
+  verificationId: verificationId ?? _verificationId,
+  customerId: customerId ?? _customerId,
+  drivingLicenseState: drivingLicenseState ?? _drivingLicenseState,
+  drivingLicenseNumber: drivingLicenseNumber ?? _drivingLicenseNumber,
+  drivingLicenseCardNo: drivingLicenseCardNo ?? _drivingLicenseCardNo,
+  drivingLicenseFrontImage: drivingLicenseFrontImage ?? _drivingLicenseFrontImage,
+  drivingLicenseBackImage: drivingLicenseBackImage ?? _drivingLicenseBackImage,
+  drivingLicenseIssueDate: drivingLicenseIssueDate ?? _drivingLicenseIssueDate,
+  drivingLicenseExpiryDate: drivingLicenseExpiryDate ?? _drivingLicenseExpiryDate,
+  createdAt: createdAt ?? _createdAt,
+  updatedAt: updatedAt ?? _updatedAt,
+  imageUrl: imageUrl ?? _imageUrl,
+);
+  String? get id => _id;
+  String? get verificationId => _verificationId;
+  String? get customerId => _customerId;
+  String? get drivingLicenseState => _drivingLicenseState;
+  String? get drivingLicenseNumber => _drivingLicenseNumber;
+  dynamic get drivingLicenseCardNo => _drivingLicenseCardNo;
+  String? get drivingLicenseFrontImage => _drivingLicenseFrontImage;
+  String? get drivingLicenseBackImage => _drivingLicenseBackImage;
+  String? get drivingLicenseIssueDate => _drivingLicenseIssueDate;
+  String? get drivingLicenseExpiryDate => _drivingLicenseExpiryDate;
+  String? get createdAt => _createdAt;
+  String? get updatedAt => _updatedAt;
+  String? get imageUrl => _imageUrl;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = _id;
+    map['verification_id'] = _verificationId;
+    map['customer_id'] = _customerId;
+    map['driving_license_state'] = _drivingLicenseState;
+    map['driving_license_number'] = _drivingLicenseNumber;
+    map['driving_license_card_no'] = _drivingLicenseCardNo;
+    map['driving_license_front_image'] = _drivingLicenseFrontImage;
+    map['driving_license_back_image'] = _drivingLicenseBackImage;
+    map['driving_license_issue_date'] = _drivingLicenseIssueDate;
+    map['driving_license_expiry_date'] = _drivingLicenseExpiryDate;
+    map['created_at'] = _createdAt;
+    map['updated_at'] = _updatedAt;
+    map['image_url'] = _imageUrl;
     return map;
   }
 
@@ -82,10 +211,10 @@ class CustomerDetails {
       String? verificationId, 
       String? verificationStatus, 
       String? firstVerificationIdType, 
-      dynamic firstVerificationIdNo, 
+      String? firstVerificationIdNo, 
       dynamic firstVerificationIssuingJurisdiction, 
       String? firstVerificationCountry, 
-      String? firstVerificationCardNo, 
+      dynamic firstVerificationCardNo, 
       String? firstVerificationIssueDate, 
       String? firstVerificationExpiryDate, 
       String? secondVerificationIdType, 
@@ -209,10 +338,10 @@ class CustomerDetails {
   String? _verificationId;
   String? _verificationStatus;
   String? _firstVerificationIdType;
-  dynamic _firstVerificationIdNo;
+  String? _firstVerificationIdNo;
   dynamic _firstVerificationIssuingJurisdiction;
   String? _firstVerificationCountry;
-  String? _firstVerificationCardNo;
+  dynamic _firstVerificationCardNo;
   String? _firstVerificationIssueDate;
   String? _firstVerificationExpiryDate;
   String? _secondVerificationIdType;
@@ -250,10 +379,10 @@ CustomerDetails copyWith({  String? id,
   String? verificationId,
   String? verificationStatus,
   String? firstVerificationIdType,
-  dynamic firstVerificationIdNo,
+  String? firstVerificationIdNo,
   dynamic firstVerificationIssuingJurisdiction,
   String? firstVerificationCountry,
-  String? firstVerificationCardNo,
+  dynamic firstVerificationCardNo,
   String? firstVerificationIssueDate,
   String? firstVerificationExpiryDate,
   String? secondVerificationIdType,
@@ -333,10 +462,10 @@ CustomerDetails copyWith({  String? id,
   String? get verificationId => _verificationId;
   String? get verificationStatus => _verificationStatus;
   String? get firstVerificationIdType => _firstVerificationIdType;
-  dynamic get firstVerificationIdNo => _firstVerificationIdNo;
+  String? get firstVerificationIdNo => _firstVerificationIdNo;
   dynamic get firstVerificationIssuingJurisdiction => _firstVerificationIssuingJurisdiction;
   String? get firstVerificationCountry => _firstVerificationCountry;
-  String? get firstVerificationCardNo => _firstVerificationCardNo;
+  dynamic get firstVerificationCardNo => _firstVerificationCardNo;
   String? get firstVerificationIssueDate => _firstVerificationIssueDate;
   String? get firstVerificationExpiryDate => _firstVerificationExpiryDate;
   String? get secondVerificationIdType => _secondVerificationIdType;

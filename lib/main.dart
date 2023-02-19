@@ -19,9 +19,11 @@ import 'package:remit_app/pages/registration_step3.dart';
 import 'package:remit_app/pages/user_identity_varification.dart';
 import 'package:remit_app/pages/user_password_update_page.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
+import 'package:remit_app/pages/user_transfer_log_page.dart';
 import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'custom_widgits/receiver.dart';
+import 'helper_method/get_user_info.dart';
 import 'pages/user_image_update_page.dart';
 
 
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_)=>UserProfileProvider()),
         ChangeNotifierProvider(create: (_)=>CalculatorProvider()),
+
       ],
       child: MaterialApp(
         title: 'Remit App',
@@ -68,6 +71,7 @@ class MyApp extends StatelessWidget {
           CalculatorPage2.routeName:(context)=>CalculatorPage2(),
           ReceipientPage.routeName:(context)=>ReceipientPage(),
           ChooseRecipientType.routeName:(context)=>ChooseRecipientType(),
+          TransferLogPage.routeName:(context)=>TransferLogPage(),
 
         },
       ),

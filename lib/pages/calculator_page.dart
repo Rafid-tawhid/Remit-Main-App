@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:remit_app/pages/login_page.dart';
 import '../api_calls/calculator_api_calls.dart';
 import '../colors.dart';
+import '../custom_widgits/drawer.dart';
 import '../models/country_models.dart';
 import '../providers/calculator_provider.dart';
 
@@ -748,293 +749,293 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 }
 
-class MyDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      width: MediaQuery.of(context).size.width / 2,
-      child: Container(
-        color: Color(0xff26A6DE),
-        child: ListView(
-          primary: true,
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              height: 150,
-              child: DrawerHeader(
-                margin: EdgeInsets.all(0),
-                decoration: const BoxDecoration(
-                  color: Color(0xff26A6DE),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                border:
-                                    Border.all(color: Colors.white, width: 2)),
-                            child: Icon(Icons.person)))
-                  ],
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.calendar_month,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Calculator',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'About us',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.add_card_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Send Money',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.add_card_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Receiving',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, CalculatorPage.routeName);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.transfer_within_a_station_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Track a Transfer',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.help_outline,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Help Center',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.headset_mic_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Contact us',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, LoginPage.routeName);
-              },
-              child: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.white, width: 1)),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.login,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.white, width: 1)),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class MyDrawer extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Drawer(
+//       width: MediaQuery.of(context).size.width / 2,
+//       child: Container(
+//         color: Color(0xff26A6DE),
+//         child: ListView(
+//           primary: true,
+//           // Important: Remove any padding from the ListView.
+//           padding: EdgeInsets.zero,
+//           children: [
+//             Container(
+//               height: 150,
+//               child: DrawerHeader(
+//                 margin: EdgeInsets.all(0),
+//                 decoration: const BoxDecoration(
+//                   color: Color(0xff26A6DE),
+//                 ),
+//                 child: Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: [
+//                     Align(
+//                       alignment: Alignment.topRight,
+//                       child: InkWell(
+//                         onTap: () {
+//                           Navigator.pop(context);
+//                         },
+//                         child: Icon(
+//                           Icons.arrow_back,
+//                           color: Colors.white,
+//                           size: 30,
+//                         ),
+//                       ),
+//                     ),
+//                     Align(
+//                         alignment: Alignment.topLeft,
+//                         child: Container(
+//                             decoration: BoxDecoration(
+//                                 borderRadius: BorderRadius.circular(50),
+//                                 border:
+//                                     Border.all(color: Colors.white, width: 2)),
+//                             child: Icon(Icons.person)))
+//                   ],
+//                 ),
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: const [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.calendar_month,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   Text(
+//                     'Calculator',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.info_outline,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   const Text(
+//                     'About us',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.add_card_outlined,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   const Text(
+//                     'Send Money',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.add_card_outlined,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   const Text(
+//                     'Receiving',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pushNamed(context, CalculatorPage.routeName);
+//               },
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.transfer_within_a_station_outlined,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   const Text(
+//                     'Track a Transfer',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.help_outline,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   const Text(
+//                     'Help Center',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: 20,
+//                   ),
+//                   Icon(
+//                     Icons.headset_mic_outlined,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   const Text(
+//                     'Contact us',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pushNamed(context, LoginPage.routeName);
+//               },
+//               child: Container(
+//                 padding: EdgeInsets.all(8),
+//                 decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(4),
+//                     border: Border.all(color: Colors.white, width: 1)),
+//                 child: Align(
+//                   alignment: Alignment.topLeft,
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       SizedBox(
+//                         width: 10,
+//                       ),
+//                       Icon(
+//                         Icons.login,
+//                         color: Colors.white,
+//                       ),
+//                       SizedBox(
+//                         width: 10,
+//                       ),
+//                       const Text(
+//                         'Sign In',
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Container(
+//                 padding: EdgeInsets.all(8),
+//                 decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(4),
+//                     border: Border.all(color: Colors.white, width: 1)),
+//                 child: Align(
+//                   alignment: Alignment.centerLeft,
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: [
+//                       Icon(
+//                         Icons.person,
+//                         color: Colors.white,
+//                       ),
+//                       SizedBox(
+//                         width: 10,
+//                       ),
+//                       const Text(
+//                         'Sign Up',
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -10,10 +10,11 @@ import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api_calls/api_calls.dart';
+import '../api_calls/user_api_calls.dart';
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
 import '../custom_widgits/button_2.dart';
+import '../custom_widgits/dialog_widgits.dart';
 import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import 'enter_otp_page.dart';
@@ -369,11 +370,12 @@ class _LoginPageState extends State<LoginPage> {
                                                   final user_mail = emailCon.text;
                                                  await GetUserDetails.setUserMailAndToken(user_mail, token);
                                                  await GetUserDetails.setUserInfo(user);
+
                                                  //get user recipient info
                                                  await userProfileProvider.getRecipientsByEmailToken(user_mail,token).then((value) {
                                                     EasyLoading.dismiss();
                                                     print('RECIPIENTS ${value.length}');
-                                                    Navigator.pushNamed(context, HomePage.routeName);
+                                                    Navigator.pushReplacementNamed(context, HomePage.routeName);
                                                   });
 
                                                 } else {

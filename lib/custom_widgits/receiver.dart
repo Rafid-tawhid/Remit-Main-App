@@ -1,4 +1,6 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
 import '../models/calculator_info_model.dart';
+import '../models/country_models.dart';
 import '../pages/user_profile_page.dart';
+import '../providers/calculator_provider.dart';
 import 'drawer.dart';
 
 class ReceipientWidget extends StatefulWidget {
@@ -22,6 +26,7 @@ class ReceipientWidget extends StatefulWidget {
 
 class _ReceipientWidgetState extends State<ReceipientWidget> {
   Recipients? recipient;
+  Info? countryInfo;
   String? serviceName;
   String? currency;
   String? sendAmount;
@@ -31,10 +36,9 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
   String? recipientGets;
   String? mail;
   String? token;
-
-
   bool showPass=true;
-  bool hideBilling=false;
+  bool showRecipientInfo=true;
+  final _formKey=GlobalKey<FormState>();
   //
   // late CalculatorInfoModel calculatorInfo;
   final firstNameCon=TextEditingController();
@@ -179,7 +183,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
           //   ),
           // ),
           SizedBox(height: 20,),
-          Text('Choose your Recipient',style: TextStyle(fontSize: 22),textAlign: TextAlign.center,),
+          Text('Recipient Info',style: TextStyle(fontSize: 22),textAlign: TextAlign.center,),
           Consumer<UserProfileProvider>(
             builder: (context,provider,_)=>Padding(
               padding: const EdgeInsets.all(16.0),
@@ -196,17 +200,17 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                   ),
                   isExpanded: true,
                   onChanged: (value) {
-                    setState(() {
-                      recipient = value;
-                      firstNameCon.text=recipient!.firstname??'';
-                      middleNameCon.text=recipient!.middlename??'';
-                      lastNameCon.text=recipient!.lastname??'';
-                      addressCon.text=recipient!.streetName??'';
-                      cityCon.text=recipient!.streetCity??'';
-                      phoneCon.text=recipient!.phone??'';
-                      emailCon.text=recipient!.email??'';
-                      countryCon.text=recipient!.country??'';
-                    });
+                    // setState(() {
+                    //   recipient = value;
+                    //   firstNameCon.text=recipient!.firstname??'';
+                    //   middleNameCon.text=recipient!.middlename??'';
+                    //   lastNameCon.text=recipient!.lastname??'';
+                    //   addressCon.text=recipient!.streetName??'';
+                    //   cityCon.text=recipient!.streetCity??'';
+                    //   phoneCon.text=recipient!.phone??'';
+                    //   emailCon.text=recipient!.email??'';
+                    //   countryCon.text=recipient!.country??'';
+                    // });
                   },
                   onSaved: (value) {
                     setState(() {
@@ -237,472 +241,553 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
             ),
           ),
 
-          // Consumer<UserProfileProvider>(builder: (context,provider,_)=> DropDown<String>(
-          //   items: provider.recipientsNameList,
-          //   icon: Icon(
-          //     Icons.expand_more,
-          //     color: Colors.blue,
-          //   ),
-          //   customWidgets: provider.recipientsList.map((e) => Row(
-          //     children: <Widget>[
-          //       CircleAvatar(
-          //         backgroundImage: NetworkImage(
-          //             "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-          //       ),
-          //       Text(e.firstname!),
-          //
-          //     ],
-          //   ),).toList(),
-          //   hint: Text("Select Gender"),
-          //   onChanged: print,
-          // ),),
 
           SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(Icons.add,color: Colors.blue,),
-              SizedBox(width: 10,),
-              Text('Add Recepint',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)
-            ],
+          Align(
+            alignment: Alignment.center,
+            child: InkWell(
+              onTap: (){
+                setState(() {
+                  showRecipientInfo=!showRecipientInfo;
+                });
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(Icons.add,color: Colors.blue,),
+                  SizedBox(width: 10,),
+                  Text('Add Recepint',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)
+                ],
+              ),
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
+          if(showRecipientInfo)Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'First Name ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'First Name ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
+                          const Icon(
+                            Icons.star,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                        ],
+                      ),
                     ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: firstNameCon,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'First Name',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (val){
+                            if(val==null||val.isEmpty){
+                              return 'First name is required';
+                            }
+                            if(val.length>10){
+                              return 'First name must be in 10 charecter';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: firstNameCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'First Name',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Middle Name ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
 
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
+                        ],
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: middleNameCon,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Middle Name',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Last Name ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
+                          const Icon(
+                            Icons.star,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: lastNameCon,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Last Name',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (val){
+                            if(val==null||val.isEmpty){
+                              return 'Last name is required';
+                            }
+                            if(val.length>10){
+                              return 'First name must be in 10 charecter';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Address ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
+                          const Icon(
+                            Icons.star,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: addressCon,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Enter Your Address',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (val){
+                            if(val==null||val.isEmpty){
+                              return 'Address is required';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Suburb/town/city ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
+                          const Icon(
+                            Icons.star,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: cityCon,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Suburb/town/city',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (val){
+                            if(val==null||val.isEmpty){
+                              return 'Town/City is required';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                        ),
+
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Phone ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
+                          const Icon(
+                            Icons.star,
+                            color: Colors.red,
+                            size: 12,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: phoneCon,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Phone',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (val){
+                            if(val==null||val.isEmpty){
+                              return 'Number is required';
+                            }
+                            if(val.length!=10){
+                              return 'Number must be 10 charecter';
+                            }
+                            if(!val.startsWith('04')){
+                              return 'Number must be valid';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Email ',
+                            style: TextStyle(
+                                color: MyColor.grey, fontSize: 16),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextFormField(
+                          controller: emailCon,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Email',
+                            suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
+                            hintStyle: TextStyle(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.blue),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: .5, color: Colors.grey),
+                              //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (val){
+                            if(val==null||val.isEmpty){
+                              return 'Email is required';
+                            }
+                            if(!EmailValidator.validate(val)){
+                              return 'Please give a valid email';
+                            }
+                            else {
+                              return null;
+                            }
+                          },
+
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Country ',
+                        style: TextStyle(
+                            color: MyColor.grey, fontSize: 16),
+                      ),
+
+                    ],
+                  ),
+                ),
+                Consumer<CalculatorProvider>(
+                  builder: (context,provider,_)=>Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      child: DropdownButtonFormField2<Info>(
+                          dropdownMaxHeight: 300,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 18,horizontal: 5),
+                              enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10,),
+                              borderSide: BorderSide(
+                              width: .5,
+                              color: Colors.grey
+                          )
+                      ),
+                              focusedBorder: OutlineInputBorder()
+                          ),
+                          value: countryInfo,
+                          hint: Text(
+                            '  Select your country',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          isExpanded: true,
+                          onChanged: (value) {
+                            // setState(() {
+                            //   recipient = value;
+                            //   firstNameCon.text=recipient!.firstname??'';
+                            //   middleNameCon.text=recipient!.middlename??'';
+                            //   lastNameCon.text=recipient!.lastname??'';
+                            //   addressCon.text=recipient!.streetName??'';
+                            //   cityCon.text=recipient!.streetCity??'';
+                            //   phoneCon.text=recipient!.phone??'';
+                            //   emailCon.text=recipient!.email??'';
+                            //   countryCon.text=recipient!.country??'';
+                            // });
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              countryInfo = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value==null) {
+                              return "can't empty";
+                            } else {
+                              return null;
+                            }
+                          },
+                          items: provider.getAllCountriesInfoList.map((country) => DropdownMenuItem<Info>(
+                              value: country,
+
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: Row(
+                                  children: [
+                                    FadeInImage(
+                                      height: 25,
+                                      width: 30,
+                                      image:NetworkImage(country.image!),
+                                      placeholder: const AssetImage('images/placeholder.jpeg'),
+                                      imageErrorBuilder:(context, error, stackTrace) {
+                                        return Image.asset('images/placeholder.jpeg',
+                                            fit: BoxFit.fill,height: 25,width: 30,
+                                        );
+                                      },
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Text(country.name!),
+                                  ],
+                                ),
+                              )
+                          )).toList()
+
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Middle Name ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: middleNameCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Middle Name',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
+                SizedBox(height: 20,),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: Size.fromHeight(50),
+                            backgroundColor: Color(0xff02A6EB)
+                        ),
+                        onPressed: (){
+                          if(_formKey.currentState!.validate()){
+                            print('ALLL OKKKKKKKK');
+                          }
+                        }, child: Text('Next')),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Last Name ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: lastNameCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Last Name',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Address ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: addressCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Enter Your Address',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Suburb/town/city ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: countryCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Suburb/town/city',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Phone ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: phoneCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Phone',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Email ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: emailCon,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Email',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Country ',
-                      style: TextStyle(
-                          color: MyColor.grey, fontSize: 16),
-                    ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: countryCon,
-                    enabled: false,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Country',
-                      suffixIconConstraints: BoxConstraints(maxHeight: 30,maxWidth: 38),
-                      hintStyle: TextStyle(),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-
-          SizedBox(height: 20,),
-          Container(
-            width: 200,
-            child: ElevatedButton(
-                onPressed: (){}, child: Text('Next')),
-          ),
-          SizedBox(height: 20,),
+                SizedBox(height: 20,),
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 }
 
-List<Widget> hello=[
-  Row(
-    children: <Widget>[
-      Text("Male"),
-      CircleAvatar(
-        backgroundImage: NetworkImage(
-            "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-      ),
-    ],
-  ),
-  Row(
-    children: <Widget>[
-      Text("Male"),
-      CircleAvatar(
-        backgroundImage: NetworkImage(
-            "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-      ),
-    ],
-  ),
-  Row(
-    children: <Widget>[
-      Text("Male"),
-      CircleAvatar(
-        backgroundImage: NetworkImage(
-            "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-      ),
-    ],
-  ),
 
-];

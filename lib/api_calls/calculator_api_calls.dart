@@ -5,7 +5,7 @@ import 'package:remit_app/models/service_charge_model.dart';
 import 'package:remit_app/models/submit_calculator_model.dart';
 import '../models/country_models.dart';
 import '../models/cupon_rate_model.dart';
-import 'api_calls.dart';
+import 'user_api_calls.dart';
 
 class CalculatorAPICalls{
 

@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
 
 import '../helper_method/admin_config.dart';
+import '../models/update_user_profile_model.dart';
 
 String baseUrl='https://remit.daneshexchange.com/staging/';
 
@@ -124,7 +125,7 @@ class UserApiCalls {
                "country_id":country_id,
                "service_id":service_id,
                "bank_name":bank_name,
-               "agent_city":agent_city,
+               // "agent_city":agent_city,
              });
          data =await jsonDecode(response.body.toString());
 
@@ -138,6 +139,104 @@ class UserApiCalls {
      // print('THIS IS Bank agent DATA ${data}');
      return data;
    }
+
+
+   static Future<dynamic> update_user_profile(UpdateUserProfile userProfile)  async {
+     var data;
+     var user_token;
+
+
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+       print('userProfile.toMap() ${userProfile.toMap()}');
+     });
+
+     userProfile.user_token=user_token;
+     print(userProfile.toString());
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/update_user_profile'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: userProfile.toMap()
+         );
+         data =await jsonDecode(response.body.toString());
+         print(data);
+         return data;
+
+       } catch (e) {
+         print('Failed.....');
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
+   static Future<dynamic> getTransferLog()  async {
+
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/get_transferLog'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: {
+               "user_token":user_token,
+             });
+         data =await jsonDecode(response.body.toString());
+
+         return data;
+
+       } catch (e) {
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
+
+   static Future<dynamic> getUserInfo()  async {
+
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/get_user_data'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: {
+               "user_token":user_token,
+             });
+         data =await jsonDecode(response.body.toString());
+
+         return data;
+
+       } catch (e) {
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
 }
 
 

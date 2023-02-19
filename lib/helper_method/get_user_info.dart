@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:remit_app/models/user_profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GetUserDetails {
+class GetUserDetails{
   static Data? userProfileModel;
   static CustomerDetails? customerDetailsModel;
   static String? token;
@@ -11,6 +12,7 @@ class GetUserDetails {
   static Future<void> setUserInfo(Data user)async {
     userProfileModel=user;
     print('set user ${userProfileModel!.username}');
+
   }
   static getUserInfo(){
     print('get user ${userProfileModel!.username}');
@@ -35,6 +37,7 @@ class GetUserDetails {
     email=pref.getString("mail")!;
     token=pref.getString("token")!;
   }
+
   static Future<String?> getUserMail()async{
     final pref=await SharedPreferences.getInstance();
     return pref.getString("mail");

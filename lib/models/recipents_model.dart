@@ -55,7 +55,8 @@ class Recipients {
       String? email, 
       String? streetName, 
       String? streetCity, 
-      String? country,}){
+      String? country,
+  }){
     _id = id;
     _userId = userId;
     _firstname = firstname;

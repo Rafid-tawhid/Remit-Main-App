@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:remit_app/api_calls/api_calls.dart';
+import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/custom_widgits/receiver.dart';
 import 'package:remit_app/custom_widgits/send.dart';
@@ -26,7 +26,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // drawer: MyDrawer(),
+      drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: MyColor.blue,size: 25),
@@ -47,6 +47,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         ),
         ],
       ),
+
       body: Center(
         child: ListView(
           shrinkWrap: true,

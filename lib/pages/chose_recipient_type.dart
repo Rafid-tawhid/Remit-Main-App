@@ -38,6 +38,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
   String? token;
   String? countryName;
   bool showAgentInfo=false;
+  bool branchFound=true;
   List<dynamic>? reciveTwoObject;
   late CalculatorInfoModel calculatorInfo;
 
@@ -284,6 +285,12 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                       onChanged: (value) {
                         localAgent=value;
                         print(localAgent!.agentCountry);
+                        provider.getBranchDataByBankName(
+                            calculatorInfo.countryId,
+                            calculatorInfo.
+                            serviceId,bankInfo!.agent,recipient!.streetName).then((value) {
+                          EasyLoading.dismiss();
+                        });
                       },
 
                       validator: (value) {
@@ -353,14 +360,28 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                               print(bankInfo!.agent);
                               EasyLoading.show();
                               branchInfo=null;
-
-                              provider.getBranchDataByBankName(
+                            });
+                            provider.getBranchDataByBankName(
                                 calculatorInfo.countryId,
                                 calculatorInfo.
                                 serviceId,bankInfo!.agent,recipient!.streetName).then((value) {
-                                  EasyLoading.dismiss();
+                              EasyLoading.dismiss();
+                              provider.branchInfoList.forEach((element) {
+                                if(element.branch==""){
+                                  print('No Branch Found');
+                                  setState(() {
+                                    branchFound=false;
+                                  });
+                                }
+                                else {
+                                  print(element.branch);
+                                  setState(() {
+                                    branchFound=true;
+                                  });
+                                }
                               });
                             });
+
                           },
 
                           items: provider.bankInfoList
@@ -406,7 +427,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                 ),
               ),
               Consumer<UserProfileProvider>(
-                builder: (context, provider, _) => Padding(
+                builder: (context, provider, _) => branchFound?Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Container(
                     decoration: BoxDecoration(
@@ -427,7 +448,6 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                             setState(() {
                               branchInfo=value;
                               print(bankInfo!.agent);
-
                             });
                           },
 
@@ -449,10 +469,41 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                               .toList()),
                     ),
                   ),
+                ):Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: TextFormField(
+                      // controller: agentbankNameCon,
+
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'Enter Branch Name',
+                        suffixIconConstraints:
+                        BoxConstraints(maxHeight: 30, maxWidth: 38),
+                        hintStyle: TextStyle(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(width: 1, color: Colors.blue),
+                          //<-- SEE HERE
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(width: .5, color: Colors.grey),
+                          //<-- SEE HERE
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              )
             ],
           ),
+
+          SizedBox(height: 10,),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -563,8 +614,8 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
               padding: const EdgeInsets.all(12.0),
               child: ElevatedButton(
                   onPressed: () async {
-                    EasyLoading.show();
-                    await provider.getSenderRelationshipData();
+                    // EasyLoading.show();
+                    // await provider.getSenderRelationshipData();
 
                   },
                   child: Padding(

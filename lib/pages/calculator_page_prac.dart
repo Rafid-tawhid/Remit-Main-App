@@ -8,9 +8,11 @@ import 'package:remit_app/models/submit_calculator_model.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/recipient_page.dart';
+import 'package:remit_app/pages/user_profile_page.dart';
 
 import '../api_calls/user_recipients_calls.dart';
 import '../colors.dart';
+import '../custom_widgits/dialog_widgits.dart';
 import '../custom_widgits/drawer.dart';
 import '../custom_widgits/receiver.dart';
 import '../helper_method/helper_class.dart';
@@ -107,25 +109,27 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       drawer: MyDrawer(),
       appBar: AppBar(
-        centerTitle: true,
-        primary: true,
-        iconTheme: IconThemeData(color: Colors.blue),
         backgroundColor: Colors.white,
-        title: Padding(
-          padding: const EdgeInsets.all(3.0),
-          child: Image.asset(
-            "images/top_icon.png",
-            height: 45,
-          ),
-        ),
-        // leading: Icon(
-        //   Icons.menu,
-        //   color: Colors.blue,
-        // ),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
+        title: Image.asset('images/logo.png',width: 120,),
+        centerTitle: true,
+        actions: [
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, UserProfilePage.routeName);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',),
+              ),
+            ),
+          ),
+        ],
       ),
-      drawer: MyDrawer(),
       body: GestureDetector(
         onTap: (){
           FocusScope.of(context).requestFocus(new FocusNode());
@@ -182,7 +186,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               Container(
                                 width: 46,
                                 padding: const EdgeInsets.only(
-                                    top: 10.0, bottom: 10, left: 6, right: 6),
+                                    top: 10.0, bottom: 10, left: 10, right: 6),
                                 decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(8),
@@ -261,7 +265,15 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                         return ListTile(
                                           contentPadding: EdgeInsets.only(left: 10),
                                           title: Text(item.name!),
-                                          leading: FadeInImage(image: NetworkImage(item.image!), placeholder: AssetImage('images/placeholder.jpeg'),height: 30,width: 40,fit: BoxFit.fill,)
+                                          leading: FadeInImage(
+                                            image: NetworkImage(item.image!),
+                                            placeholder: AssetImage('images/placeholder.jpeg'),
+                                            imageErrorBuilder:(context, error, stackTrace) {
+                                              return Image.asset('images/placeholder.jpeg',
+                                                fit: BoxFit.fitWidth,height: 30,width: 40,
+                                              );
+                                            },
+                                            height: 30,width: 40,fit: BoxFit.fill,)
                                         );
                                       },
                                       showSelectedItems: false,
@@ -292,9 +304,6 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                         //     Border.all(color: Colors.black, width: 2)
                       ),
                       child: DropdownButtonFormField<CurrencyDetails>(
-                        // decoration: const InputDecoration.collapsed(
-                        //   hintText: '',
-                        // ),
                         decoration: InputDecoration(
                           focusColor: Colors.grey,
                           focusedBorder: OutlineInputBorder(
@@ -1116,7 +1125,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   Future<void> getTheFeesAndTotalAmount(String send, String receive) async {
     EasyLoading.show();
     print('Final Rate of total are ${send} and ${receive}');
-    if (double.parse(send) <= double.parse(currency_details!.minimumLimit!)) {
+    if (double.parse(receive) <= double.parse(currency_details!.minimumLimit!)) {
       EasyLoading.dismiss();
       setState(() {
         showError = true;
@@ -1186,295 +1195,4 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
 
 }
 
-class MyDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      width: MediaQuery.of(context).size.width / 2,
-      child: Container(
-        color: Color(0xff26A6DE),
-        child: ListView(
-          primary: true,
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              height: 150,
-              child: DrawerHeader(
-                margin: EdgeInsets.all(0),
-                decoration: const BoxDecoration(
-                  color: Color(0xff26A6DE),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                border:
-                                    Border.all(color: Colors.white, width: 2)),
-                            child: Icon(Icons.person)))
-                  ],
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.calendar_month,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Calculator',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'About us',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.add_card_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Send Money',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.add_card_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Receiving',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, CalculatorPage.routeName);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.transfer_within_a_station_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Track a Transfer',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, CalculatorPage.routeName);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.help_outline,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Help Center',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.headset_mic_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Contact us',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, LoginPage.routeName);
-              },
-              child: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.white, width: 1)),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.login,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.white, width: 1)),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+

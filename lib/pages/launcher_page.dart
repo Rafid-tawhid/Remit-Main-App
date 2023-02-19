@@ -7,6 +7,7 @@ import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../custom_widgits/dialog_widgits.dart';
 import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import '../models/user_profile_model.dart';

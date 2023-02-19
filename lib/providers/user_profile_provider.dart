@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:remit_app/api_calls/api_calls.dart';
+import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/models/bank_agent_data_model.dart';
 import 'package:remit_app/models/get_branch_data_model.dart';
 import 'package:remit_app/models/recipents_model.dart';
 
 import '../api_calls/user_recipients_calls.dart';
 import '../models/sender_relationship_model.dart';
+import '../models/user_transfer_log_model.dart';
 
 class UserProfileProvider extends ChangeNotifier{
 
@@ -22,6 +23,10 @@ class UserProfileProvider extends ChangeNotifier{
   List<BranchInfo> branchInfoList=[];
   List<LocalAgentBranch> localagentBranchList=[];
   Data? senderRelationshipdata;
+
+
+  List<TransferList> transferLogList=[];
+
 
    Future<dynamic> getUserInfoByEmailPassword(email,pass){
     return UserApiCalls.getUserInfoByEmailPassword(email, pass);
@@ -122,5 +127,27 @@ class UserProfileProvider extends ChangeNotifier{
       }
 
     });
+  }
+
+
+  Future<List<TransferList>> getUserTransferLog() async {
+    await  UserApiCalls.getTransferLog().then((data) {
+
+      transferLogList.clear();
+      if(data['status']==true){
+        for(Map i in data['transfer_list']){
+          transferLogList.add(TransferList.fromJson(i));
+        }
+        print('transferLogList.length ${transferLogList.length}');
+
+        return transferLogList;
+      }
+      else {
+        return transferLogList;
+      }
+
+    });
+
+    return transferLogList;
   }
 }
