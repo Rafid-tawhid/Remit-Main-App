@@ -88,9 +88,36 @@ class MyDrawer extends StatelessWidget {
               TextButton(
                 onPressed: () {
 
-                  Navigator.pushNamed(context, UserProfilePage.routeName).then((value) {
-                    Navigator.pop(context);
-                  });
+                  Navigator.pop(context);
+                  selectedIndex=0;
+                  Navigator.pushNamed(context, HomePage.routeName);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Icon(
+                      Icons.home,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    const Text(
+                      'Home',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, UserProfilePage.routeName);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -117,9 +144,8 @@ class MyDrawer extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   selectedIndex=2;
-                  Navigator.pushNamed(context, HomePage.routeName).then((value) {
-                    Navigator.pop(context);
-                  });
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, HomePage.routeName);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -169,8 +195,8 @@ class MyDrawer extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, TransferLogPage.routeName).then((value) =>
-                      Navigator.pop(context));
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, TransferLogPage.routeName);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,

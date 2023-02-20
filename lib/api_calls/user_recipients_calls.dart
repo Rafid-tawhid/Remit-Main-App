@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
+import '../models/create_recipient_model.dart';
 import '../models/recipents_model.dart';
 import 'user_api_calls.dart';
 
@@ -68,21 +69,18 @@ class UserRecipientCalls{
     return data;
   }
 
-  static Future<dynamic> createNewRecipient(token,country_id,service_id)  async {
-    print('THIS IS Bank agent DATA API $token, $country_id,$service_id');
+  static Future<dynamic> createNewRecipient(RecipientCreateModel recipient)  async {
+
     var data;
     await UserApiCalls.getAuthToken().then((auth) async {
       try {
         Response response = await post(
-            Uri.parse('${baseUrl}api/get_bank_agent_data'),
+            Uri.parse('${baseUrl}api/add_recipient'),
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },
-            body: {
-              "user_token":token,
-              "country_id": country_id,
-              "service_id": service_id,
-            });
+            body: recipient.toMap()
+        );
         data =await jsonDecode(response.body.toString());
         return data;
 

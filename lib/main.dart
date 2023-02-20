@@ -24,6 +24,7 @@ import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'custom_widgits/receiver.dart';
 import 'helper_method/get_user_info.dart';
+import 'models/recipient_relationship_page.dart';
 import 'pages/user_image_update_page.dart';
 
 
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
           ReceipientPage.routeName:(context)=>ReceipientPage(),
           ChooseRecipientType.routeName:(context)=>ChooseRecipientType(),
           TransferLogPage.routeName:(context)=>TransferLogPage(),
+          RecipientRelationShipPage.routeName:(context)=>RecipientRelationShipPage(),
 
         },
       ),

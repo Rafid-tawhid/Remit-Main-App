@@ -18,6 +18,7 @@ import '../custom_widgits/receiver.dart';
 import '../helper_method/helper_class.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
+import '../models/cupon_model.dart';
 import '../models/get_sent_money_model.dart';
 import '../providers/calculator_provider.dart';
 import '../providers/user_profile_provider.dart';
@@ -698,6 +699,13 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                                         EasyLoading.dismiss();
                                                         double reduceFees = 0.0;
                                                         if (cupon != null) {
+                                                          // promoCode=cuponControler.text;
+                                                          // cuponDiscount=cupon.data!.reduceFee;
+                                                          // discountType=cupon.data!.discountType;
+                                                          // calculateWith=cupon.data.calculateWith;
+                                                          // discountValue=cuponFixedRate;
+                                                          // discountPrice=cupon.data.reduceFee;
+
                                                           if (cupon.data!.discountType == "P") {
                                                             double val = double.parse(cupon.data!.reduceFee!) * double.parse(cuponFixedRate!);
                                                             reduceFees = double.parse((val / 100).toStringAsFixed(4));
@@ -1079,6 +1087,10 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    // final cuponInfo=CuponModel(
+                    //   promocode: cuponControler.text,
+                    //   discount:
+                    // );
                     setState(() {
                       finalRate='${double.parse(cuponFixedRate!) + reduceFees}';
                       receiveControler.text='${(double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2)}';

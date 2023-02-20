@@ -46,4 +46,21 @@ class MyDialog{
           ],
         ));
   }
+
+  static Future<dynamic> showMsgDialog(BuildContext context,title,message) {
+
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Close'))
+          ],
+        ));
+  }
 }

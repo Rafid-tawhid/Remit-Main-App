@@ -3,7 +3,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/api_calls/user_recipients_calls.dart';
+import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,8 +14,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../colors.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
+import '../models/create_recipient_model.dart';
 import '../pages/user_profile_page.dart';
 import '../providers/calculator_provider.dart';
+import 'dialog_widgits.dart';
 import 'drawer.dart';
 
 class ReceipientWidget extends StatefulWidget {
@@ -37,10 +42,10 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
   String? mail;
   String? token;
   bool showPass=true;
-  bool showRecipientInfo=true;
+  bool showRecipientInfo=false;
   final _formKey=GlobalKey<FormState>();
   //
-  // late CalculatorInfoModel calculatorInfo;
+  late UserProfileProvider provider;
   final firstNameCon=TextEditingController();
   final middleNameCon=TextEditingController();
   final lastNameCon=TextEditingController();
@@ -66,6 +71,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
 
   @override
   void didChangeDependencies() {
+    provider=Provider.of(context,listen: false);
     //calculatorInfo=ModalRoute.of(context)!.settings.arguments as CalculatorInfoModel;
     // if(calculatorInfo==null){
     //   hideBilling=true;
@@ -114,85 +120,25 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
       body: ListView(
         children: [
 
-          // if(hideBilling)Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: Card(
-          //     elevation: 5,
-          //     child: Container(
-          //       margin: EdgeInsets.all(10),
-          //       padding: EdgeInsets.all(10),
-          //       child: Column(
-          //         mainAxisSize: MainAxisSize.min,
-          //         children: [
-          //           Text('$serviceName',style: TextStyle(fontSize: 22),),
-          //           Align(
-          //             alignment: Alignment.topRight,
-          //               child: Text('AUD-$currency')),
-          //           SizedBox(height: 10,),
-          //           Divider(height: 5,color: Colors.black,),
-          //           SizedBox(height: 5,),
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text('Send Amount'),
-          //               Text('$sendAmount AUD')
-          //             ],
-          //           ),
-          //           SizedBox(height: 5,),
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text('Fees'),
-          //               Text('$fees AUD')
-          //             ],
-          //           ),
-          //           SizedBox(height: 5,),
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text('You pay in total'),
-          //               Text('$totalPayable AUD')
-          //             ],
-          //           ),
-          //           SizedBox(height: 5,),
-          //           Divider(height: 5,color: Colors.black,),
-          //           SizedBox(height: 5,),
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text('Exchange Rate',style: TextStyle(fontWeight: FontWeight.bold),),
-          //               Text('1 AUD->$rate $currency',style: TextStyle(fontWeight: FontWeight.bold),)
-          //             ],
-          //           ),
-          //           SizedBox(height: 5,),
-          //           Divider(height: 5,color: Colors.black,),
-          //           SizedBox(height: 5,),
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text('Your recipient gets',style: TextStyle(fontWeight: FontWeight.bold),),
-          //               Text('$recipientGets $currency',style: TextStyle(fontWeight: FontWeight.bold),)
-          //             ],
-          //           ),
-          //           SizedBox(height: 5,),
-          //           Divider(height: 5,color: Colors.black,),
-          //
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
           SizedBox(height: 20,),
           Text('Recipient Info',style: TextStyle(fontSize: 22),textAlign: TextAlign.center,),
           Consumer<UserProfileProvider>(
             builder: (context,provider,_)=>Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DropdownButtonFormField<Recipients>(
+              child: DropdownButtonFormField2<Recipients>(
+                dropdownMaxHeight: 300,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.zero,
-                      enabledBorder: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 16,horizontal: 5),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10,),
+                          borderSide: BorderSide(
+                              width: .5,
+                              color: Colors.grey
+                          )
+                      ),
                       focusedBorder: OutlineInputBorder()
                   ),
+
                   value: recipient,
                   hint: Text(
                     '  Existing Receipient',
@@ -687,12 +633,12 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                 ),
                 Consumer<CalculatorProvider>(
                   builder: (context,provider,_)=>Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.only(left: 16.0,right: 16),
                     child: Container(
                       child: DropdownButtonFormField2<Info>(
                           dropdownMaxHeight: 300,
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(vertical: 18,horizontal: 5),
+                            contentPadding: EdgeInsets.symmetric(vertical: 16,horizontal: 5),
                               enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10,),
                               borderSide: BorderSide(
@@ -709,17 +655,9 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                           ),
                           isExpanded: true,
                           onChanged: (value) {
-                            // setState(() {
-                            //   recipient = value;
-                            //   firstNameCon.text=recipient!.firstname??'';
-                            //   middleNameCon.text=recipient!.middlename??'';
-                            //   lastNameCon.text=recipient!.lastname??'';
-                            //   addressCon.text=recipient!.streetName??'';
-                            //   cityCon.text=recipient!.streetCity??'';
-                            //   phoneCon.text=recipient!.phone??'';
-                            //   emailCon.text=recipient!.email??'';
-                            //   countryCon.text=recipient!.country??'';
-                            // });
+                            setState(() {
+                              countryInfo = value;
+                            });
                           },
                           onSaved: (value) {
                             setState(() {
@@ -773,9 +711,9 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                             fixedSize: Size.fromHeight(50),
                             backgroundColor: Color(0xff02A6EB)
                         ),
-                        onPressed: (){
+                        onPressed: () async {
                           if(_formKey.currentState!.validate()){
-                            print('ALLL OKKKKKKKK');
+                            addRecipient();
                           }
                         }, child: Text('Next')),
                   ),
@@ -787,7 +725,65 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
         ],
       ),
     );
+
   }
+
+
+
+
+  Future<void> addRecipient() async {
+    var userToken;
+    EasyLoading.show(status: 'Adding...');
+    await GetUserDetails.getUserToken().then((value) {
+      userToken=value;
+    });
+    final recipient=RecipientCreateModel(
+        token: userToken,
+        firstName: firstNameCon.text,
+        middleName: middleNameCon.text,
+        lastName: lastNameCon.text,
+        phone: phoneCon.text,
+        email: emailCon.text,
+        street: addressCon.text,
+        city: cityCon.text,
+        country: countryInfo!.name!
+    );
+    UserRecipientCalls.createNewRecipient(recipient).then((value) async {
+
+     await provider.getRecipientsByEmailToken('',userToken).then((value) {
+        EasyLoading.dismiss();
+        clearField();
+        print('RECIPIENTS ${value.length}');
+      });
+      EasyLoading.dismiss();
+      if(value!=null){
+        MyDialog.showMsgDialog(
+            context,
+            'Sucessfull',
+            '${value['message']}'
+        );
+      }
+      else {
+        MyDialog.showServerProblemDialog(context);
+      }
+    });
+  }
+
+  void clearField() {
+    setState(() {
+      firstNameCon.text='';
+      middleNameCon.text='';
+      lastNameCon.text='';
+      addressCon.text='';
+      cityCon.text='';
+      phoneCon.text='';
+      emailCon.text='';
+      addressCon.text='';
+      cityCon.text='';
+    });
+  }
+
+
 }
 
 

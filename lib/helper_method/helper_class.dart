@@ -20,5 +20,8 @@ class MyIcons2 {
   static const IconData person=IconData(0XE800,fontFamily: _kFonts2);
 
 }
+class MyList{
+  static var myList=['Banker','Developer','Nothing'];
+}
 
 

@@ -1,7 +1,10 @@
 import 'package:custom_line_indicator_bottom_navbar/custom_line_indicator_bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:remit_app/colors.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
+import 'package:remit_app/providers/user_profile_provider.dart';
 
 import '../custom_widgits/home.dart';
 import '../custom_widgits/receiver.dart';
@@ -21,7 +24,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late UserProfileProvider provider;
+  bool callOnce=true;
 
+  @override
+  void didChangeDependencies() {
+
+    provider=Provider.of(context,listen: false);
+    if(callOnce){
+      provider.getSenderRelationshipData();
+      callOnce=false;
+    }
+    super.didChangeDependencies();
+  }
 
 
   @override
@@ -31,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         child: widgetOptions.elementAt(selectedIndex),
       ),
       bottomNavigationBar: CustomLineIndicatorBottomNavbar(
-        selectedColor: Colors.blue,
+        selectedColor: MyColor.blue,
         unSelectedColor: Colors.black54,
         backgroundColor: Colors.white,
         currentIndex: selectedIndex,

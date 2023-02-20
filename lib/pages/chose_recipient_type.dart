@@ -11,6 +11,7 @@ import '../colors.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_user_info.dart';
 import '../models/calculator_info_model.dart';
+import '../models/recipient_relationship_page.dart';
 import '../providers/user_profile_provider.dart';
 
 class ChooseRecipientType extends StatefulWidget {
@@ -608,7 +609,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
               ),
             ],
           ),
-
+          SizedBox(height: 30,),
           Consumer<UserProfileProvider>(
             builder: (context, provider, _) => Padding(
               padding: const EdgeInsets.all(12.0),
@@ -616,17 +617,19 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                   onPressed: () async {
                     // EasyLoading.show();
                     // await provider.getSenderRelationshipData();
-
+                    Navigator.pushNamed(context, RecipientRelationShipPage.routeName,arguments: reciveTwoObject);
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      'Next',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )),
+                child: Text(
+                  'Next',
+                  style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                ),
+                style: ElevatedButton.styleFrom(
+                    fixedSize: Size.fromHeight(50),
+                    backgroundColor: Color(0xff02A6EB)),
+              ),
             ),
           ),
+          SizedBox(height: 30,),
 
           SizedBox(
             height: 20,

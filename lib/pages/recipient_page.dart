@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
@@ -69,8 +70,7 @@ class _ReceipientPageState extends State<ReceipientPage> {
     GetUserDetails.getUserToken().then((value) {
       token = value;
     });
-    calculatorInfo =
-        ModalRoute.of(context)!.settings.arguments as CalculatorInfoModel;
+    calculatorInfo = ModalRoute.of(context)!.settings.arguments as CalculatorInfoModel;
     if (calculatorInfo == null) {
       hideBilling = true;
       print('NOTHING PHONE');
@@ -241,11 +241,19 @@ class _ReceipientPageState extends State<ReceipientPage> {
           Consumer<UserProfileProvider>(
             builder: (context, provider, _) => Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DropdownButtonFormField<Recipients>(
+              child: DropdownButtonFormField2<Recipients>(
+                  dropdownMaxHeight: 300,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.zero,
-                      enabledBorder: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder()),
+                      contentPadding: EdgeInsets.symmetric(vertical: 16,horizontal: 5),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10,),
+                          borderSide: BorderSide(
+                              width: .5,
+                              color: Colors.grey
+                          )
+                      ),
+                      focusedBorder: OutlineInputBorder()
+                  ),
                   value: recipient,
                   hint: Text(
                     '  Existing Receipient',
@@ -254,7 +262,8 @@ class _ReceipientPageState extends State<ReceipientPage> {
                   isExpanded: true,
                   onChanged: (value) {
                     recipient = value;
-                    if (countryName == recipient!.country) {
+
+                    if (countryName!.toLowerCase() == recipient!.country!.toLowerCase()) {
                       setState(() {
                         showErrorMsg = false;
                         showRecipientInfo = true;
@@ -271,8 +280,7 @@ class _ReceipientPageState extends State<ReceipientPage> {
                       setState(() {
                         showErrorMsg = true;
                         showRecipientInfo = false;
-                        errorMsg =
-                            'This recipient is not eligible to get recieve money from $countryName';
+                        errorMsg = 'This recipient is not eligible to get recieve money from $countryName';
                       });
                     }
                   },
@@ -788,13 +796,14 @@ class _ReceipientPageState extends State<ReceipientPage> {
 
                    Navigator.pushNamed(context, ChooseRecipientType.routeName,arguments: [calculatorInfo, recipient]);
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      'Next',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )),
+                  child: Text(
+                    'Next',
+                    style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                  ),
+                    style: ElevatedButton.styleFrom(
+                    fixedSize: Size.fromHeight(50),
+                    backgroundColor: Color(0xff02A6EB)),
+              ),
             ),
           ),
 

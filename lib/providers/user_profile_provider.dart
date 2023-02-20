@@ -35,14 +35,16 @@ class UserProfileProvider extends ChangeNotifier{
   Future<List<Recipients>> getRecipientsByEmailToken(String email,String pass) async{
 
      recipientsList.clear();
-   await UserRecipientCalls.getRecipientsByEmailToken(email,pass).then((data) {
+      await UserRecipientCalls.getRecipientsByEmailToken(email,pass).then((data) {
 
       if(data['status']==true){
         for(Map i in data['recipients']){
           recipientsList.add(Recipients.fromJson(i));
+          notifyListeners();
         }
         recipientsList.forEach((element) {
           recipientsNameList.add(element.firstname!);
+          notifyListeners();
         });
         return recipientsList;
       }
@@ -83,6 +85,10 @@ class UserProfileProvider extends ChangeNotifier{
   Future<void> getSenderRelationshipData() async {
     await  UserApiCalls.getSenderRelationshipData().then((data) {
 
+      senderRelationshipOccupationList.clear();
+      senderRelationshipBeneficiaryList.clear();
+      senderRelationshipSourceOfFundList.clear();
+      senderRelationshipSendingPurposeList.clear();
       if(data['status']==true){
        senderRelationshipdata=Data.fromJson(data['data']);
 

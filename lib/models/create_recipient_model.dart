@@ -31,6 +31,7 @@ class RecipientCreateModel{
             map['recipient_phone']=phone;
             map['recipient_email']=email;
             map['recipient_street_name']=street;
+            map['recipient_street_city']=city;
             map['recipient_country']=country;
 
             return map;
