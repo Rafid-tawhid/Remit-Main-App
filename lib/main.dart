@@ -8,6 +8,7 @@ import 'package:remit_app/pages/calculator_page_prac.dart';
 import 'package:remit_app/pages/cash_pickup_page.dart';
 import 'package:remit_app/pages/checkout_page.dart';
 import 'package:remit_app/pages/chose_recipient_type.dart';
+import 'package:remit_app/pages/contact_us_page.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
 import 'package:remit_app/pages/home_page.dart';
@@ -80,7 +81,7 @@ class MyApp extends StatelessWidget {
           BankTransferPage.routeName:(context)=>BankTransferPage(),
           CashPickupPage.routeName:(context)=>CashPickupPage(),
           CheckoutPage.routeName:(context)=>CheckoutPage(),
-
+          ContactPage.routeName:(context)=>ContactPage(),
         },
       ),
     );

@@ -15,7 +15,7 @@ class CalculatorProvider extends ChangeNotifier{
   List<ServiceChargeModel> getserviceChargeListofAllCountry=[];
   List<ServiceChargeModel> getserviceChargeList=[];
   double? finalRate;
-
+  static String? invoice;
 
   //
   Future<List<Info>> getAllCountryInfo() async{
@@ -290,4 +290,10 @@ class CalculatorProvider extends ChangeNotifier{
 
     return serviceCharge;
   }
+
+
+   void setUserInvoice(String invoiceUser){
+    invoice=invoiceUser;
+  }
+   String? getUserInvoice()=>invoice;
 }

@@ -937,7 +937,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                       style: TextStyle(color: Colors.black)),
                                   TextSpan(
                                       text:
-                                          '${double.parse(sendControler.text) + double.parse(fees)} ',
+                                          '${(double.parse(sendControler.text) + double.parse(fees)).toStringAsFixed(2)} ',
                                       style: TextStyle(color: Colors.grey)),
                                   TextSpan(
                                       text: ' ${currencyName}',
@@ -1200,6 +1200,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       if(value['status']==true){
         var invoice=value['invoice'];
         print('Invoice : $invoice');
+        //set invoice
+        provider.setUserInvoice(invoice);
         //call send money data
         CalculatorAPICalls.getSendMoneyDataAfterSubmit(userToken!, invoice).then((value) {
           if(value['status']==true){

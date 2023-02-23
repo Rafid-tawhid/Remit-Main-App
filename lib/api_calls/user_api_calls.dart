@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
+import 'package:remit_app/pages/launcher_page.dart';
 
 import '../helper_method/admin_config.dart';
 import '../models/update_user_profile_model.dart';
@@ -49,30 +50,39 @@ class UserApiCalls {
 
    static Future<dynamic> getAuthToken()  async {
      print('CALLED TOKEN');
-     var data;
-     try {
-       Response response = await post(
-           Uri.parse('${baseUrl}api/get_token'),
-           body: {
-             "email": AdminAccessConfig.email,
-             "password": AdminAccessConfig.password,
-             "vendor_name": AdminAccessConfig.vendor_name,
-             "name": AdminAccessConfig.name,
-             "secret_key": AdminAccessConfig.secret_key,
-             "app_id": AdminAccessConfig.app_id
-           });
-       if (response.statusCode == 200) {
-         data =jsonDecode(response.body.toString());
-         print(data['message']);
-         print(data['token']);
-       } else {
-        data =jsonDecode(response.body.toString());
-         return data;
-       }
-     } catch (e) {
-       print(e.toString());
-     }
-     return data;
+    if(AdminAccessConfig.getTokenInfo()==null){
+      var data;
+      try {
+        Response response = await post(
+            Uri.parse('${baseUrl}api/get_token'),
+            body: {
+              "email": AdminAccessConfig.email,
+              "password": AdminAccessConfig.password,
+              "vendor_name": AdminAccessConfig.vendor_name,
+              "name": AdminAccessConfig.name,
+              "secret_key": AdminAccessConfig.secret_key,
+              "app_id": AdminAccessConfig.app_id
+            });
+        if (response.statusCode == 200) {
+          print('Token called again....');
+          data =jsonDecode(response.body.toString());
+         //set token for next use fo 40 minutes
+          AdminAccessConfig.setTokenInfo(data);
+          print(data['message']);
+          print(data['token']);
+
+        } else {
+          data =jsonDecode(response.body.toString());
+          return data;
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+      return data;
+    }
+    else {
+      return AdminAccessConfig.getTokenInfo();
+    }
    }
 
    static Future<dynamic> getSenderRelationshipData()  async {
@@ -236,6 +246,7 @@ class UserApiCalls {
      // print('THIS IS Bank agent DATA ${data}');
      return data;
    }
+
 
 }
 

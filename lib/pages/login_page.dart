@@ -18,6 +18,7 @@ import '../custom_widgits/dialog_widgits.dart';
 import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import 'enter_otp_page.dart';
+import 'launcher_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -353,6 +354,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   BorderRadius.circular(10),
                                             )),
                                         onPressed: () async {
+
                                           if (_globalKey.currentState!.validate()) {
                                             EasyLoading.show();
                                             await userProfileProvider.getUserInfoByEmailPassword(emailCon.text, passCon.text)

@@ -52,7 +52,10 @@ class _CashPickupPageState extends State<CashPickupPage> {
 
     provider=Provider.of(context,listen: true);
    if(callOnce){
-     exceptionCountryCalllocalAgent();
+   //  exceptionCountryCalllocalAgent();
+     if(provider.localAgentList.length>0){
+       provider.bankInfoList.insert(0, BankInfo(agent: 'Local Agent',totalBranch: '000'));
+     }
    }
    callOnce=false;
     super.didChangeDependencies();
@@ -224,12 +227,11 @@ class _CashPickupPageState extends State<CashPickupPage> {
           SizedBox(
             height: 10,
           ),
-          if(showExceptionCountryWidgets)ShowBankInfoListException(),
-          if(!showExceptionCountryWidgets)ShowCashPickupInfoWidgets(),
-          if(!showExceptionCountryWidgets)ShowBranchNameForCashPickupInfo(),
-          // showAgentListAsBankinfo?
-          //    ShowBankBranchForException()
-          //     :ShowBranchNameForCashPickupInfo(),
+          // if(showExceptionCountryWidgets)ShowBankInfoListException(),
+          // if(!showExceptionCountryWidgets)ShowCashPickupBankAgentName(),
+          // if(!showExceptionCountryWidgets)ShowBranchNameForCashPickupInfo(),
+          ShowBankInfoListException(),
+
         ],
       ),
 
@@ -369,6 +371,25 @@ class _CashPickupPageState extends State<CashPickupPage> {
                 ),
               ),
             )
+        ),
+
+        //BUTTON AND VALIDATION
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              onPressed: () async {
+              },
+              child: Text(
+                'Next',
+                style: MyStyle.mytext(TextStyle(fontSize: 16)),
+              ),
+              style: ElevatedButton.styleFrom(
+                  fixedSize: Size.fromHeight(50),
+                  backgroundColor: Color(0xff02A6EB)),
+            ),
+          ),
         ),
       ],
     );
@@ -737,7 +758,6 @@ class _CashPickupPageState extends State<CashPickupPage> {
             ),
           ],
         ),
-
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -791,7 +811,6 @@ class _CashPickupPageState extends State<CashPickupPage> {
             ),
           ],
         ),
-
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: ElevatedButton(
@@ -809,11 +828,27 @@ class _CashPickupPageState extends State<CashPickupPage> {
                 backgroundColor: Color(0xff02A6EB)),
           ),
         ),
+
+       //BUTTON AND VALIDATION
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            onPressed: () async {
+            },
+            child: Text(
+              'Next',
+              style: MyStyle.mytext(TextStyle(fontSize: 16)),
+            ),
+            style: ElevatedButton.styleFrom(
+                fixedSize: Size.fromHeight(50),
+                backgroundColor: Color(0xff02A6EB)),
+          ),
+        ),
       ],
     );
   }
 
-  Column ShowCashPickupInfoWidgets() {
+  Column ShowCashPickupBankAgentName() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -921,6 +956,11 @@ class _CashPickupPageState extends State<CashPickupPage> {
       });
       provider.bankInfoList.insert(0, BankInfo(agent: 'Local Agent',totalBranch: '000'));
     }
+
+    print('provider.localAgentList.length ${provider.localAgentList.length}');
+    // if(provider.localAgentList.length>0){
+    //   provider.bankInfoList.insert(0, BankInfo(agent: 'Local Agent',totalBranch: '000'));
+    // }
   }
 }
 

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../colors.dart';
 import '../helper_method/get_user_info.dart';
 import '../pages/calculator_page.dart';
+import '../pages/contact_us_page.dart';
 import '../pages/user_profile_page.dart';
 import '../pages/user_transfer_log_page.dart';
 
@@ -272,7 +273,9 @@ class MyDrawer extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, ContactPage.routeName);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

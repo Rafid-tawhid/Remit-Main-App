@@ -9,6 +9,7 @@ class GetUserDetails{
   static String? email;
 
 
+
   static Future<void> setUserInfo(Data user)async {
     userProfileModel=user;
     print('set user ${userProfileModel!.username}');
@@ -46,5 +47,6 @@ class GetUserDetails{
     final pref=await SharedPreferences.getInstance();
     return pref.getString("token");
   }
+
 
 }
