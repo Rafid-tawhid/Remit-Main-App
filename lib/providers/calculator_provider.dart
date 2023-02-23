@@ -1,5 +1,7 @@
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:remit_app/models/service_charge_model.dart';
 import '../api_calls/calculator_api_calls.dart';
 import '../models/country_models.dart';
@@ -17,10 +19,11 @@ class CalculatorProvider extends ChangeNotifier{
   double? finalRate;
   static String? invoice;
 
-  //
-  Future<List<Info>> getAllCountryInfo() async{
 
-    print('CALLED PROVIDER');
+
+  //
+  Future<List<Info?>> getAllCountryInfo(BuildContext context) async{
+
     getAllCountriesInfoList.clear();
   await CalculatorAPICalls.getAllCountriesInfo().then((value) {
     if(value['status']==true){
@@ -30,13 +33,6 @@ class CalculatorProvider extends ChangeNotifier{
     }
   });
       print('getAllCountriesInfo ${getAllCountriesInfoList.length}');
-      // countryInfoList.forEach((element) {
-      //   if(element.status=='1'){
-      //     countryNameList.add(element.name!);
-      //     countryInfoList2.add(element);
-      //   }
-      // });
-
 
     return getAllCountriesInfoList;
     // print(countryNameList.length);
@@ -121,13 +117,15 @@ class CalculatorProvider extends ChangeNotifier{
     // getServiceList.clear();
     getserviceChargeListofAllCountry.clear();
     await CalculatorAPICalls.getServiceChargeofAllCountry().then((value) {
-        for(Map i in value){
-          getserviceChargeListofAllCountry.add(ServiceChargeModel.fromJson(i));
-        }
 
+       if(value!=null){
+         for(Map i in value){
+           getserviceChargeListofAllCountry.add(ServiceChargeModel.fromJson(i));
+         }
+       }else {
+         print('VALUE RETURN HTML');
+       }
         //get the final service charge
-
-
     });
     print('getserviceChargeListofAllCountry ${getserviceChargeListofAllCountry.length}');
 
@@ -135,84 +133,6 @@ class CalculatorProvider extends ChangeNotifier{
     return getserviceChargeListofAllCountry;
     // print(countryNameList.length);
   }
-
-
-  //
-  // Future<List<CountryMarginRate>> getCurrencyByCountryName(String name) async{
-  //
-  //   countryCurrencyList.clear();
-  //   countryCurrencyList2.clear();
-  //   countryCurrencyList=await CalculatorAPICalls.getAllCountriesCurrency();
-  //   countryCurrencyList.forEach((element) {
-  //     if(element.country==name&&!doesCurrencyExists(element.currency!)){
-  //       countryCurrencyList2.add(element);
-  //     }
-  //   });
-  //   notifyListeners();
-  //   print('countryCurrencyList ${countryCurrencyList.length}');
-  //   return countryCurrencyList;
-  // }
-  //
-  // Future<List<CountryMarginRate>> getFirstCallInfo(String name) async{
-  //
-  //   firstCountryList.clear();
-  //   firstCountryList2.clear();
-  //   firstCountryList=await CalculatorAPICalls.getAllCountriesCurrency();
-  //   firstCountryList.forEach((element) {
-  //     if(element.country==name){
-  //       firstCountryList2.add(element);
-  //     }
-  //   });
-  //   notifyListeners();
-  //
-  //   return firstCountryList2;
-  // }
-  //
-  //
-  //
-  // Future<CountryMarginRate?> getMinAndMaxRateByCountryTblId(String country_id,String service) async{
-  //
-  //   var allCountryRate=await CalculatorAPICalls.getAllCountriesCurrency();
-  //   allCountryRate.forEach((element) {
-  //     if(element.countryTableId==country_id&&element.serviceName==service){
-  //       minMaxofCountry=element;
-  //     }
-  //   });
-  //   notifyListeners();
-  //
-  //   return minMaxofCountry;
-  // }
-  //
-  // double getCurrencyRateByCountryNameServiceCurrency(String name,String serviceName,String currency) {
-  //   double currencyRate=0.0;
-  //   countryCurrencyList.forEach((element){
-  //     if(element.country==name&&element.serviceName==serviceName&&element.currency==currency){
-  //       currencyRate=  double.parse(element.finalRate!);
-  //       notifyListeners();
-  //     }
-  //   });
-  //   notifyListeners();
-  //   return currencyRate;
-  // }
-  //
-  // String getCurrencyNameCountryName(String name) {
-  //
-  //   String currencyName='MYR';
-  //   countryCurrencyList.forEach((element){
-  //     if(element.country==name){
-  //       currencyName=element.currency!;
-  //     }
-  //   });
-  //   notifyListeners();
-  //   return currencyName;
-  // }
-  //
-  //
-  //
-  // Future<Map<String, dynamic>> getRateByCountryId(amount,country_id,service_id)=>
-  //     CalculatorAPICalls.getRateByCountryId(amount, country_id, service_id);
-
-
 
 
 

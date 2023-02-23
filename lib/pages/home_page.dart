@@ -1,14 +1,16 @@
 import 'package:custom_line_indicator_bottom_navbar/custom_line_indicator_bottom_navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/colors.dart';
+import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 
 import '../custom_widgits/home.dart';
 import '../custom_widgits/receiver.dart';
-import '../custom_widgits/send.dart';
+import '../custom_widgits/track_transfer.dart';
 import '../custom_widgits/send_money.dart';
 import '../custom_widgits/tab_widgits_list.dart';
 import '../helper_method/helper_class.dart';
@@ -26,13 +28,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late UserProfileProvider provider;
   bool callOnce=true;
+  String? token;
+  String? password;
 
   @override
   void didChangeDependencies() {
 
+    EasyLoading.dismiss();
+
     provider=Provider.of(context,listen: false);
     if(callOnce){
       provider.getSenderRelationshipData();
+      provider.getPaymentMethodList();
+      //get user recipient info
+      GetUserDetails.getUserToken().then((value) {
+        token=value;
+        provider.getRecipientsByEmailToken('',token!).then((value) {
+          print('RECIPIENTS ${value.length}');
+        });
+      });
+
       callOnce=false;
     }
     super.didChangeDependencies();

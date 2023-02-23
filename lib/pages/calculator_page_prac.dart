@@ -15,6 +15,7 @@ import '../colors.dart';
 import '../custom_widgits/dialog_widgits.dart';
 import '../custom_widgits/drawer.dart';
 import '../custom_widgits/receiver.dart';
+import '../custom_widgits/show_error_dialoge.dart';
 import '../helper_method/get_calculator_info.dart';
 import '../helper_method/helper_class.dart';
 import '../models/calculator_info_model.dart';
@@ -1123,10 +1124,10 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
     );
   }
 
-  Future<dynamic> getRate(String text, String? id, String? serviceId) async {
-    return await provider.getServiceCharges(sendControler.text,
-        currency_details!.countryTableId, currency_details!.serviceId!);
-  }
+  // Future<dynamic> getRate(String text, String? id, String? serviceId) async {
+  //   return await provider.getServiceCharges(sendControler.text,
+  //       currency_details!.countryTableId, currency_details!.serviceId!);
+  // }
 
   void showErrorMessage(String value) {
     print(value);
@@ -1212,13 +1213,13 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
             var message=value['errors'];
             MyDialog.showErrorMsgDialog(context, value);
           }
-
         });
       }
       if(value['status']==false){
         var message=value['errors'];
         MyDialog.showErrorMsgDialog(context, value);
       }
+
     });
   }
 

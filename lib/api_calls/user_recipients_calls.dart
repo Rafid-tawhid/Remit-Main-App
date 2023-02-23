@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../models/create_recipient_model.dart';
 import '../models/recipents_model.dart';
 import 'user_api_calls.dart';
 
-class UserRecipientCalls{
+class UserRecipientCalls {
   static Future<dynamic> getRecipientsByEmailToken(email,token)  async {
     var data;
     await UserApiCalls.getAuthToken().then((auth) async {
@@ -92,4 +93,6 @@ class UserRecipientCalls{
     // print('THIS IS Bank agent DATA ${data}');
     return data;
   }
+
+
 }

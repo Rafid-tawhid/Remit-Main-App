@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:remit_app/api_calls/user_api_calls.dart';
-import 'package:remit_app/colors.dart';
-import 'package:remit_app/custom_widgits/receiver.dart';
-import 'package:remit_app/custom_widgits/track_transfer.dart';
-import 'package:remit_app/custom_widgits/tab_widgits_list.dart';
-import 'package:remit_app/models/user_profile_model.dart';
-import 'package:remit_app/pages/home_page.dart';
+import 'package:remit_app/pages/user_profile_page.dart';
 
-
+import '../colors.dart';
+import '../custom_widgits/drawer.dart';
 import '../helper_method/get_user_info.dart';
-import '../pages/calculator_page_prac.dart';
-import '../pages/user_profile_page.dart';
-import 'button1.dart';
-import 'drawer.dart';
 
-class HomeWidget extends StatefulWidget {
+class AboutUsPage extends StatefulWidget {
+  const AboutUsPage({Key? key}) : super(key: key);
+  static const String routeName='/about';
 
   @override
-  State<HomeWidget> createState() => _HomeWidgetState();
+  State<AboutUsPage> createState() => _AboutUsPageState();
 }
 
-class _HomeWidgetState extends State<HomeWidget> {
+class _AboutUsPageState extends State<AboutUsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +27,11 @@ class _HomeWidgetState extends State<HomeWidget> {
         title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
-        InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, UserProfilePage.routeName);
-          },
-          child: Padding(
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, UserProfilePage.routeName);
+            },
+            child: Padding(
               padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
               child: Container(
 
@@ -54,48 +47,47 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
               ),
             ),
-        ),
+          ),
         ],
       ),
-
       body: ListView(
-        shrinkWrap: true,
         children: [
-          SizedBox(height: 20,),
-          Align(
-              alignment: Alignment.center,
-              child: Text('Welcome ${GetUserDetails.userProfileModel!.username}!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
-          SizedBox(height: 20,),
-          SvgPicture.asset('svg/home.svg',width: 300,height: 220,),
-          const Padding(
-            padding:  EdgeInsets.all(16.0),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text('''Send money in a fast, convenient, and safe way.''',style: TextStyle(fontSize: 18,color: Colors.black),textAlign: TextAlign.center,)
-            ),
-          ),
-          const Padding(
-            padding:  EdgeInsets.all(16.0),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text('''If you're looking for a faster and cheaper way to send money to your loved ones, we've got you covered. Our service is the best way to send money quickly and securely. Plus, our low fees make it more affordable than ever''',style: TextStyle(fontSize: 16,color: Colors.grey),textAlign: TextAlign.center,)
-            ),
-          ),
           SizedBox(height: 30,),
-
+          SvgPicture.asset('svg/home.svg',width: 300,height: 220,),
           Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    fixedSize: Size.fromHeight(50),
-                    backgroundColor: Color(0xff02A6EB)
-                ),
-                onPressed: (){
-                  selectedIndex=2;
-                  Navigator.pushNamed(context, HomePage.routeName);
-                }, child: Text('Send Money Now',style: TextStyle(fontSize: 16),)),
+           padding: const EdgeInsets.all(16.0),
+           child: Column(
+             mainAxisSize: MainAxisSize.min,
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               Text('Who we are',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+               Flexible(child: Text(''''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.')'''))
+             ],
+           ),
+         ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Our History',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                Flexible(child: Text('''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.'''))
+              ],
+            ),
           ),
-
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Our Mission',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                Flexible(
+                    child: Text('''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum''',textAlign: TextAlign.start,))
+              ],
+            ),
+          ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [

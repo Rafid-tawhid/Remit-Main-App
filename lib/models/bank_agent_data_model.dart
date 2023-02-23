@@ -127,4 +127,8 @@ BankInfo copyWith({  String? agent,
     return map;
   }
 
+  @override
+  String toString() {
+    return 'BankInfo{_agent: $_agent, _totalBranch: $_totalBranch}';
+  }
 }

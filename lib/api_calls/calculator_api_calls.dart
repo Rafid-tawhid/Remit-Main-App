@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:remit_app/models/service_charge_model.dart';
 import 'package:remit_app/models/submit_calculator_model.dart';
+import 'package:remit_app/models/submit_recipient_relation_agent_info_model.dart';
 import '../models/country_models.dart';
 import '../models/cupon_rate_model.dart';
 import 'user_api_calls.dart';
@@ -177,14 +178,11 @@ class CalculatorAPICalls{
             headers: {
               'Authorization': 'Bearer ${auth['token']}',
             },
-            // body: {
-            //   "promo_code" : cuponCode,
-            // }
+
         );
         print(response.body.toString());
         if (response.statusCode == 200) {
           data =await jsonDecode(response.body.toString());
-
           // cuponRateModel=CuponRateModel.fromJson(data);
           return data;
         }
@@ -192,6 +190,63 @@ class CalculatorAPICalls{
           print('Failed........Here');
           return data;
         }
+      } catch (e) {
+        print(e.toString());
+      }
+    });
+
+    return data;
+  }
+
+
+  //FINAL SUBMIT API
+
+  static Future<dynamic?> submitRecipientRelationAgent(SubmitRecipientRelationAgentInfoModel model) async {
+    var data;
+
+    await UserApiCalls.getAuthToken().then((auth) async {
+      try {
+        Response response = await post(
+          Uri.parse('${baseUrl}api/submit_recipient_relation_agent'),
+          headers: {
+            'Authorization': 'Bearer ${auth['token']}',
+          },
+          body: model.toMap()
+        //   body:{
+        //     'user_token':'dacf8f00-c1a9-4de2-85c7-d896e8431648',
+        //     'sendMoney_invoice':'16774963332296',
+        //     'recipient_id':'63',
+        //     'recipient_firstname':'Md',
+        //     'recipient_middlename':'Akib',
+        //     'recipient_lastname':'Rahman',
+        //     'recipient_phone':'01863331485',
+        //     'recipient_email':'akib@pencilbox.edu.bd',
+        //     'recipient_street_name':'Dhaka',
+        //     'recipient_street_city':'Dhaka',
+        //     'fund_source':'Business Income',
+        //     'purpose':'Accounting services',
+        //     'sender_occupation':'Accountant',
+        //     'beneficiary_relationship':'Boyfriend',
+        //     'bank_info' :'',
+        //     'bank_id':'',
+        //     'location_id':'',
+        //     'branch_info': 'test1',
+        //     'payout_bankcode':'',
+        //     'type_of_account':'',
+        //     'branch_id':'',
+        //     'bank_acc_number':'',
+        //     'agent_name':'Akib',
+        //     'agent_city':'kathmandu',
+        //     'agent_branch':'test1',
+        // }
+
+        );
+
+          data =await jsonDecode(response.body.toString());
+          print(data.toString());
+          // cuponRateModel=CuponRateModel.fromJson(data);
+          return data;
+
       } catch (e) {
         print(e.toString());
       }

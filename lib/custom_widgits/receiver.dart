@@ -763,9 +763,7 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
             '${value['message']}'
         );
       }
-      else {
-        MyDialog.showServerProblemDialog(context);
-      }
+
     });
   }
 

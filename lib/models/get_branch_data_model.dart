@@ -160,4 +160,8 @@ BranchInfo copyWith({  String? branch,
     return map;
   }
 
+  @override
+  String toString() {
+    return 'BranchInfo{_branch: $_branch, _bankbranchid: $_bankbranchid, _locationid: $_locationid, _bankid: $_bankid}';
+  }
 }

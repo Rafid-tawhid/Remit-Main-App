@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:remit_app/models/bank_agent_data_model.dart';
 import 'package:remit_app/models/user_profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,10 +31,11 @@ class GetUserDetails{
     return customerDetailsModel;
   }
 
-  static Future<void> setUserMailAndToken(String email,String token)async {
+  static Future<void> setUserMailAndToken(String mail,String token)async {
+
     final pref=await SharedPreferences.getInstance();
     print('TOKEN : $token');
-    pref.setString("mail", email);
+    pref.setString("mail", mail);
     pref.setString("token", token);
     email=pref.getString("mail")!;
     token=pref.getString("token")!;
@@ -45,8 +47,12 @@ class GetUserDetails{
   }
   static Future<String?> getUserToken()async{
     final pref=await SharedPreferences.getInstance();
+    token=pref.getString("token");
     return pref.getString("token");
   }
+
+
+
 
 
 }

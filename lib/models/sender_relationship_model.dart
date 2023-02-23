@@ -126,6 +126,12 @@ class SendingPurpose {
     _code = code;
 }
 
+
+  @override
+  String toString() {
+    return 'SendingPurpose{_id: $_id, _data: $_data, _value: $_value, _code: $_code}';
+  }
+
   SendingPurpose.fromJson(dynamic json) {
     _id = json['id'];
     _data = json['DATA'];
@@ -173,6 +179,12 @@ class SourceOfFund {
     _code = code;
 }
 
+
+  @override
+  String toString() {
+    return 'SourceOfFund{_id: $_id, _data: $_data, _value: $_value, _code: $_code}';
+  }
+
   SourceOfFund.fromJson(dynamic json) {
     _id = json['id'];
     _data = json['DATA'];
@@ -219,6 +231,12 @@ class BeneficiaryRelationship {
     _value = value;
     _code = code;
 }
+
+
+  @override
+  String toString() {
+    return 'BeneficiaryRelationship{_id: $_id, _data: $_data, _value: $_value, _code: $_code}';
+  }
 
   BeneficiaryRelationship.fromJson(dynamic json) {
     _id = json['id'];
@@ -300,4 +318,8 @@ SenderOccupation copyWith({  String? id,
     return map;
   }
 
+  @override
+  String toString() {
+    return 'SenderOccupation{_id: $_id, _data: $_data, _value: $_value, _code: $_code}';
+  }
 }

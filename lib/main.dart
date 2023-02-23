@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/pages/about_us_page.dart';
 import 'package:remit_app/pages/bank_transfer_page.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
           CashPickupPage.routeName:(context)=>CashPickupPage(),
           CheckoutPage.routeName:(context)=>CheckoutPage(),
           ContactPage.routeName:(context)=>ContactPage(),
+          AboutUsPage.routeName:(context)=>AboutUsPage(),
         },
       ),
     );

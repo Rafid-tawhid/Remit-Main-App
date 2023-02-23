@@ -7,6 +7,7 @@ import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
+import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,7 @@ import '../colors.dart';
 import '../custom_widgits/button1.dart';
 import '../custom_widgits/button_2.dart';
 import '../custom_widgits/dialog_widgits.dart';
+import '../custom_widgits/show_error_dialoge.dart';
 import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import 'enter_otp_page.dart';
@@ -34,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   final emailCon = TextEditingController();
   final passCon = TextEditingController();
   late UserProfileProvider userProfileProvider;
+  late CalculatorProvider provider;
   final _globalKey = GlobalKey<FormState>();
   List<String> dotedSize=[];
 
@@ -51,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void didChangeDependencies() {
     userProfileProvider = Provider.of<UserProfileProvider>(context, listen: false);
+    provider = Provider.of<CalculatorProvider>(context, listen: false);
     super.didChangeDependencies();
   }
 
@@ -356,14 +360,25 @@ class _LoginPageState extends State<LoginPage> {
                                         onPressed: () async {
 
                                           if (_globalKey.currentState!.validate()) {
+
+                                            //call all country full info
                                             EasyLoading.show();
+                                            provider.getAllCountryInfo(context).then((value){
+                                              if(value.length>0){
+                                              }
+                                              else {
+                                                EasyLoading.dismiss();
+                                                ShowErrorDialoge(context);
+                                              }
+                                            });
+
+                                            //get all user info by email and password
                                             await userProfileProvider.getUserInfoByEmailPassword(emailCon.text, passCon.text)
                                                 .then((data) async {
                                               print('RECEIVE DATA $data');
                                               if (data == null) {
                                                 EasyLoading.dismiss();
-                                                MyDialog.showServerProblemDialog(
-                                                    context);
+                                                ShowErrorDialoge(context);
                                               } else {
                                                 if (data['success'] == true) {
                                                   final user = await Data.fromJson(data['data']);
@@ -372,12 +387,8 @@ class _LoginPageState extends State<LoginPage> {
                                                   final user_mail = emailCon.text;
                                                  await GetUserDetails.setUserMailAndToken(user_mail, token);
                                                  await GetUserDetails.setUserInfo(user);
-                                                 //get user recipient info
-                                                 await userProfileProvider.getRecipientsByEmailToken(user_mail,token).then((value) {
-                                                    EasyLoading.dismiss();
-                                                    print('RECIPIENTS ${value.length}');
-                                                    Navigator.pushReplacementNamed(context, HomePage.routeName);
-                                                  });
+                                                  EasyLoading.dismiss();
+                                                  Navigator.pushReplacementNamed(context, HomePage.routeName);
 
                                                 } else {
                                                   EasyLoading.dismiss();

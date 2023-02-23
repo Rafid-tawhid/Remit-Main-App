@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remit_app/custom_widgits/send.dart';
+import 'package:remit_app/custom_widgits/track_transfer.dart';
 import '../colors.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
@@ -222,7 +222,7 @@ class _SendMoneyWidgetState extends State<SendMoneyWidget> {
                 ),
               ),
               SizedBox(height: 50,),
-              MainButton(title: 'Continue',route: SendWidget.routeName,),
+              MainButton(title: 'Continue',route: TrackTransferPage.routeName,),
 
 
             ],

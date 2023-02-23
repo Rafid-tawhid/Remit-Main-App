@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:remit_app/pages/user_profile_page.dart';
+
 import '../colors.dart';
-import '../pages/user_profile_page.dart';
-import 'button1.dart';
-import 'button_2.dart';
-import 'drawer.dart';
+import '../custom_widgits/button1.dart';
+import '../custom_widgits/button_2.dart';
+import '../custom_widgits/drawer.dart';
 
-class SendWidget extends StatefulWidget {
+class CongratulationsPage extends StatelessWidget {
   static const String routeName='/congo';
-  const SendWidget({Key? key}) : super(key: key);
+  const CongratulationsPage({Key? key}) : super(key: key);
 
-  @override
-  State<SendWidget> createState() => _SendWidgetState();
-}
-
-class _SendWidgetState extends State<SendWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

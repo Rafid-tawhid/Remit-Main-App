@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../custom_widgits/dialog_widgits.dart';
+import '../custom_widgits/show_error_dialoge.dart';
 import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import '../helper_method/network_check.dart';
@@ -88,13 +90,26 @@ class _LauncherPageState extends State<LauncherPage> {
           result == ConnectivityResult.mobile) {
         EasyLoading.show();
         provider=Provider.of(context,listen: false);
-        provider.getAllCountryInfo().then((value){
-          provider.getserviceChargeofAllCountry().then((value) {
-            EasyLoading.dismiss();
-            print('value.length ${value.length}');
-            Navigator.pushNamed(context, LoginPage.routeName);
-          });
+        // provider.getAllCountryInfo(context).then((value){
+        //   if(value.length>0){
+        //   }
+        //   else {
+        //     EasyLoading.dismiss();
+        //     ShowErrorDialoge(context);
+        //   }
+        // });
 
+        //CALL All country charges info
+        provider.getserviceChargeofAllCountry().then((value) {
+          EasyLoading.dismiss();
+          if(value.length>0){
+            print('value.length Called.... ${value.length}');
+            Navigator.pushNamed(context, LoginPage.routeName);
+          }
+          else {
+            EasyLoading.dismiss();
+            ShowErrorDialoge(context);
+          }
         });
       } else {
         setState(() {
@@ -106,6 +121,8 @@ class _LauncherPageState extends State<LauncherPage> {
 
     super.didChangeDependencies();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -152,3 +169,4 @@ class _LauncherPageState extends State<LauncherPage> {
         });
   }
 }
+

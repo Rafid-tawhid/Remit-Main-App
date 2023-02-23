@@ -26,7 +26,7 @@ class SubmitRecipientRelationAgentInfoModel{
   String? agentBranch;
 
   SubmitRecipientRelationAgentInfoModel(
-      this.userToken,
+      {this.userToken,
       this.invoice,
       this.recipientId,
       this.firstName,
@@ -50,7 +50,7 @@ class SubmitRecipientRelationAgentInfoModel{
       this.bankAccNumber,
       this.agentName,
       this.agentCity,
-      this.agentBranch);
+      this.agentBranch});
 
   Map<String,dynamic> toMap(){
     final map=<String,dynamic>{};

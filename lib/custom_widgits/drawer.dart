@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
 import '../helper_method/get_user_info.dart';
+import '../pages/about_us_page.dart';
 import '../pages/calculator_page.dart';
 import '../pages/contact_us_page.dart';
 import '../pages/user_profile_page.dart';
@@ -50,33 +51,22 @@ class MyDrawer extends StatelessWidget {
                       ),
                       Align(
                           alignment: Alignment.topLeft,
-                          child: GetUserDetails.userProfileModel!.image==null?Container(
+                          child:Container(
+                              height: 60,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
                                   border: Border.all(
                                       color: Colors.white,
                                       width: 1.5
                                   )
                               ),
-                              child: Image.asset('images/logo_circle.png',height: 50,width: 50,)):
-                          Container(
-                            height: 50,width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 1.5
-                              )
-                            ),
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
-                            ),
-                          ),
+                              child: Image.asset('images/top_icon.png',height: 50))
+
                       ),
                       SizedBox(height: 5,),
                       Align(
-                        alignment: Alignment.centerLeft,
-                          child: Text(GetUserDetails.userProfileModel!.username!,style: TextStyle(color: Colors.white),overflow: TextOverflow.ellipsis,)),
+                        alignment: Alignment.center,
+                          child: Text('Danesh Exchange',style: TextStyle(color: Colors.white),overflow: TextOverflow.ellipsis,)),
                       SizedBox(height: 15,),
                       Divider(
                         color: Colors.white,
@@ -299,7 +289,9 @@ class MyDrawer extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, AboutUsPage.routeName);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

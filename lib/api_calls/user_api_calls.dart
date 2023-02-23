@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
+import 'package:remit_app/custom_widgits/show_error_dialoge.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 
 import '../helper_method/admin_config.dart';
+import '../models/payment_method.dart';
 import '../models/update_user_profile_model.dart';
 
 String baseUrl='https://remit.daneshexchange.com/staging/';
@@ -70,12 +74,14 @@ class UserApiCalls {
           AdminAccessConfig.setTokenInfo(data);
           print(data['message']);
           print(data['token']);
-
         } else {
+          EasyLoading.dismiss();
+
           data =jsonDecode(response.body.toString());
           return data;
         }
       } catch (e) {
+        EasyLoading.dismiss();
         print(e.toString());
       }
       return data;
@@ -241,6 +247,101 @@ class UserApiCalls {
        } catch (e) {
          print(e.toString());
        }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
+
+
+   static Future<dynamic> getPaymentMethodData()  async {
+
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/get_payment_methods_data'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: {
+               "user_token":user_token,
+             });
+          data =await jsonDecode(response.body.toString());
+          return data;
+       } catch (e) {
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
+
+   static Future<dynamic> trackATransfer(String trackId)  async {
+
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       try {
+         Response response = await post(
+             Uri.parse('${baseUrl}api/track_transfer_find'),
+             headers: {
+               'Authorization': 'Bearer ${auth['token']}',
+             },
+             body: {
+               "transfer_id":trackId,
+             });
+         data =await jsonDecode(response.body.toString());
+         return data;
+       } catch (e) {
+         print(e.toString());
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
+
+
+   static Future<dynamic> createHelloZaiItem(String invoice,String transferMethod)  async {
+
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+      if(auth['success']==true){
+        try {
+          Response response = await post(
+              Uri.parse('${baseUrl}api/checkout_payment'),
+              headers: {
+                'Authorization': 'Bearer ${auth['token']}',
+              },
+              body: {
+                "user_token":user_token,
+                "sendMoney_invoice":invoice,
+                "transfer_method":transferMethod,
+              });
+          data =await jsonDecode(response.body.toString());
+          return data;
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+      else{
+        EasyLoading.dismiss();
+      }
      });
 
      // print('THIS IS Bank agent DATA ${data}');

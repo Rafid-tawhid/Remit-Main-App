@@ -11,6 +11,7 @@ import '../custom_widgits/drawer.dart';
 import '../models/bank_agent_data_model.dart';
 import '../models/calculator_info_model.dart';
 import '../models/get_branch_data_model.dart';
+import '../models/recipient_relationship_page.dart';
 import '../providers/user_profile_provider.dart';
 
 class BankTransferPage extends StatefulWidget {
@@ -29,6 +30,20 @@ class _BankTransferPageState extends State<BankTransferPage> {
   BankInfo? bankInfo;
   BranchInfo? branchInfo;
   bool branchFound=true;
+  final bankAccNoCon=TextEditingController();
+  final ifscCon=TextEditingController();
+  final branchNameCon=TextEditingController();
+  BranchInfo? branchName;
+  String? exceptionLocationId;
+  String? exceptionBankId;
+
+  @override
+  void dispose() {
+    bankAccNoCon.dispose();
+    ifscCon.dispose();
+    branchNameCon.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -272,7 +287,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: TextFormField(
-                      // controller: agentbankNameCon,
+                       controller: branchNameCon,
 
                       decoration: InputDecoration(
                         fillColor: Colors.white,
@@ -307,10 +322,32 @@ class _BankTransferPageState extends State<BankTransferPage> {
             builder: (context, provider, _) => Padding(
               padding: const EdgeInsets.all(12.0),
               child: ElevatedButton(
-                onPressed: () async {
-                  // EasyLoading.show();
-                  // await provider.getSenderRelationshipData();
-                //  Navigator.pushNamed(context, RecipientRelationShipPage.routeName,arguments: reciveTwoObject);
+                onPressed: ()  {
+
+                    if(bankInfo==null||bankAccNoCon.text.isEmpty){
+                      print('All filed required');
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
+                    }
+                    else {
+                      if(branchInfo==null){
+                        branchName=BranchInfo(branch: branchNameCon.text,locationid: exceptionLocationId,bankid:exceptionBankId );
+                        branchInfo=branchName;
+                      }
+                      print('Show info Local............');
+                      print(bankInfo.toString());
+                      print(branchInfo.toString());
+
+                      //SET BANK TRANSFER INFO
+                      SetCalculatorAndRecipientInfo.setSubmitInfoBankTransferInfo(bankInfo!, branchInfo!);
+
+                     //SET BANK ACCOUNT
+                      SetCalculatorAndRecipientInfo.setSubmitInfoBankTransferBankAccNo(bankAccNoCon.text);
+
+                      Navigator.pushNamed(context, RecipientRelationShipPage.routeName);
+
+                    }
+
+
                 },
                 child: Text(
                   'Next',
@@ -364,8 +401,10 @@ class _BankTransferPageState extends State<BankTransferPage> {
                 isExpanded: true,
                 onChanged: (value) {
 
+
                   //calling the branch by bank name if doesnt show input field
                   setState(() {
+
                     bankInfo=value;
                     print(bankInfo!.agent);
                     EasyLoading.show();
@@ -377,7 +416,11 @@ class _BankTransferPageState extends State<BankTransferPage> {
                     EasyLoading.dismiss();
                     provider.branchInfoList.forEach((element) {
                       if(element.branch==""){
+                        //IF NO BRANCH FOUND LOCATIONID AND BANK ID SHOULD BE FROM LIST (EXCEPTION)
                         print('No Branch Found');
+                        exceptionLocationId=element.locationid;
+                        exceptionBankId=element.bankid;
+
                         setState(() {
                           branchFound=false;
                         });
@@ -449,6 +492,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 4.0),
                 child: TextFormField(
+                  controller: bankAccNoCon,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     fillColor: Colors.white,
@@ -501,6 +545,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 4.0),
                 child: TextFormField(
+                  controller: ifscCon,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     fillColor: Colors.white,

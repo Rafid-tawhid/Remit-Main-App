@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/models/bank_agent_data_model.dart';
 import 'package:remit_app/models/get_branch_data_model.dart';
+import 'package:remit_app/models/payment_method.dart';
 import 'package:remit_app/models/recipents_model.dart';
 
 import '../api_calls/user_recipients_calls.dart';
 import '../models/sender_relationship_model.dart';
+import '../models/track_transfer_model.dart';
 import '../models/user_transfer_log_model.dart';
 
 class UserProfileProvider extends ChangeNotifier{
@@ -30,6 +32,10 @@ class UserProfileProvider extends ChangeNotifier{
 
 
   List<TransferList> transferLogList=[];
+
+  List<PaymentMethods> paymentMethodList=[];
+
+  TrackTransfer? trackTransfer;
 
 
    Future<dynamic> getUserInfoByEmailPassword(email,pass){
@@ -77,7 +83,7 @@ class UserProfileProvider extends ChangeNotifier{
         }
       }
       else {
-
+        return data;
       }
 
     });
@@ -237,4 +243,44 @@ class UserProfileProvider extends ChangeNotifier{
     print('agentNameListByBranch ${agentNameListByBranch.length}');
     return agentNameListByBranch;
   }
+
+  Future<List<PaymentMethods>> getPaymentMethodList() async {
+    await  UserApiCalls.getPaymentMethodData().then((data) {
+      paymentMethodList.clear();
+      if(data['status']==true){
+        for(Map i in data['payment_methods']){
+          paymentMethodList.add(PaymentMethods.fromJson(i));
+        }
+        print('paymentMethodList.length ${paymentMethodList.length}');
+
+        return paymentMethodList;
+      }
+      else {
+        return paymentMethodList;
+      }
+
+    });
+
+    return paymentMethodList;
+  }
+
+  Future<TrackTransfer?> getTransferInfoByTransferId(String transferId) async {
+    await  UserApiCalls.trackATransfer(transferId).then((data) {
+      if(data['status']==true){
+        print(data['message']);
+        final trackList=data['track_transfer'] as List;
+         trackTransfer=TrackTransfer.fromJson(trackList.first);
+      }
+      else {
+        print('THIS IS CALLING........');
+        trackTransfer=null;
+        return trackTransfer;
+      }
+
+    });
+
+    return trackTransfer;
+  }
+
+
 }

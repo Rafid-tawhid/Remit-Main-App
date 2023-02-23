@@ -55,6 +55,7 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   google_maps_flutter:
   url_launcher:
+  art_sweetalert: ^0.0.5
 
 
 

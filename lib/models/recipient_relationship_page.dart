@@ -49,6 +49,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
   late CalculatorInfoModel? calculatorInfo;
   late Recipients? recipientsInfo;
   late UserProfileProvider provider;
+  final _formKey=GlobalKey<FormState>();
   //
   @override
   void initState() {
@@ -62,33 +63,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
     super.didChangeDependencies();
   }
   // @override
-  // void didChangeDependencies() {
-  //   provider=Provider.of(context,listen: true);
-  //   GetUserDetails.getUserToken().then((value) {
-  //     token = value;
-  //   });
-  //   reciveTwoObject =ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-  //
-  //   if (reciveTwoObject == null) {
-  //     print('NOTHING PHONE');
-  //   } else {
-  //     calculatorInfo = reciveTwoObject![0];
-  //     recipient = reciveTwoObject![1];
-  //     serviceName = calculatorInfo.serviceName;
-  //     print('serviceName $serviceName');
-  //     if(serviceName=='Cash Pickup'){
-  //       showAgentInfo=true;
-  //     }
-  //     currency = calculatorInfo.currency;
-  //     sendAmount = calculatorInfo.sendAmount;
-  //     fees = calculatorInfo.fees;
-  //     totalPayable = calculatorInfo.totalPayable;
-  //     rate = calculatorInfo.exchangeRate;
-  //     recipientGets = calculatorInfo.recipientGets;
-  //     countryName = calculatorInfo.countryName;
-  //   }
-  //   super.didChangeDependencies();
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -255,236 +230,255 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
           SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,),
-            child: Row(
+          Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Sender Occupation',
-                  style: TextStyle(color: MyColor.grey, fontSize: 16),
-                ),
-                const Icon(
-                  Icons.star,
-                  color: Colors.red,
-                  size: 12,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: DropdownButtonFormField2<SenderOccupation>(
-                  dropdownMaxHeight: 300,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 16),
-                      enabledBorder: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder()),
-                  value: senderOccupation,
-                  hint: Text(
-                    '  Select One',
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Sender Occupation',
+                        style: TextStyle(color: MyColor.grey, fontSize: 16),
+                      ),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.red,
+                        size: 12,
+                      ),
+                    ],
                   ),
-                  isExpanded: true,
-                  onChanged: (value) {
-                    senderOccupation=value;
-                  },
-
-                  validator: (value) {
-                    if (value == null) {
-                      return "can't empty";
-                    } else {
-                      return null;
-                    }
-                  },
-                  items: provider.senderRelationshipOccupationList
-                      .map((element) => DropdownMenuItem<SenderOccupation>(
-                      value: element,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 12.0),
-                        child: Row(
-                          children: [
-                            // Icon(Icons.ac_unit,size: 25,),
-                            Text(element.data??'')
-                          ],
-                        ),
-                      )))
-                      .toList()),
-            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0, ),
-            child: Row(
-              children: [
-                Text(
-                  'Beneficiary Relationship',
-                  style: TextStyle(color: MyColor.grey, fontSize: 16),
                 ),
-                const Icon(
-                  Icons.star,
-                  color: Colors.red,
-                  size: 12,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DropdownButtonFormField2<SenderOccupation>(
+                      dropdownMaxHeight: 300,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 16),
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder()),
+                      value: senderOccupation,
+                      hint: Text(
+                        '  Select One',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      isExpanded: true,
+                      onChanged: (value) {
+                        senderOccupation=value;
+                      },
+
+                      validator: (value) {
+                        if (value == null) {
+                          return "can't empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      items: provider.senderRelationshipOccupationList
+                          .map((element) => DropdownMenuItem<SenderOccupation>(
+                          value: element,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Row(
+                              children: [
+                                // Icon(Icons.ac_unit,size: 25,),
+                                Text(element.data??'')
+                              ],
+                            ),
+                          )))
+                          .toList()),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Beneficiary Relationship',
+                        style: TextStyle(color: MyColor.grey, fontSize: 16),
+                      ),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.red,
+                        size: 12,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DropdownButtonFormField2<BeneficiaryRelationship>(
+                      dropdownMaxHeight: 300,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 16),
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder()),
+                      value: beneficiaryRelationship,
+                      hint: Text(
+                        '  Select One',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      isExpanded: true,
+                      onChanged: (value) {
+                        beneficiaryRelationship=value;
+                      },
+
+                      validator: (value) {
+                        if (value == null) {
+                          return "can't empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      items: provider.senderRelationshipBeneficiaryList
+                          .map((element) => DropdownMenuItem<BeneficiaryRelationship>(
+                          value: element,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Row(
+                              children: [
+                                // Icon(Icons.ac_unit,size: 25,),
+                                Text(element.data??'')
+                              ],
+                            ),
+                          )))
+                          .toList()),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Source Of Fund',
+                        style: TextStyle(color: MyColor.grey, fontSize: 16),
+                      ),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.red,
+                        size: 12,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DropdownButtonFormField2<SourceOfFund>(
+                      dropdownMaxHeight: 300,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 16),
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder()),
+                      value: sourceOfFund,
+                      hint: Text(
+                        '  Select One',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      isExpanded: true,
+                      onChanged: (value) {
+                        sourceOfFund=value;
+                      },
+
+                      validator: (value) {
+                        if (value == null) {
+                          return "can't empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      items: provider.senderRelationshipSourceOfFundList
+                          .map((element) => DropdownMenuItem<SourceOfFund>(
+                          value: element,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Row(
+                              children: [
+                                // Icon(Icons.ac_unit,size: 25,),
+                                Text(element.data??'')
+                              ],
+                            ),
+                          )))
+                          .toList()),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Sending Purpose',
+                        style: TextStyle(color: MyColor.grey, fontSize: 16),
+                      ),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.red,
+                        size: 12,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DropdownButtonFormField2<SendingPurpose>(
+                      dropdownMaxHeight: 300,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 16),
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder()),
+                      value: sendingPurpose,
+                      hint: Text(
+                        '  Select One',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      isExpanded: true,
+                      onChanged: (value) {
+                        sendingPurpose=value;
+                      },
+
+                      validator: (value) {
+                        if (value == null) {
+                          return "can't empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      items: provider.senderRelationshipSendingPurposeList
+                          .map((element) => DropdownMenuItem<SendingPurpose>(
+                          value: element,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Row(
+                              children: [
+                                // Icon(Icons.ac_unit,size: 25,),
+                                Text(element.data??'')
+                              ],
+                            ),
+                          )))
+                          .toList()),
                 ),
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DropdownButtonFormField2<BeneficiaryRelationship>(
-                dropdownMaxHeight: 300,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16),
-                    enabledBorder: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder()),
-                value: beneficiaryRelationship,
-                hint: Text(
-                  '  Select One',
-                  style: TextStyle(color: Colors.black),
-                ),
-                isExpanded: true,
-                onChanged: (value) {
-                  beneficiaryRelationship=value;
-                },
-
-                validator: (value) {
-                  if (value == null) {
-                    return "can't empty";
-                  } else {
-                    return null;
-                  }
-                },
-                items: provider.senderRelationshipBeneficiaryList
-                    .map((element) => DropdownMenuItem<BeneficiaryRelationship>(
-                    value: element,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Row(
-                        children: [
-                          // Icon(Icons.ac_unit,size: 25,),
-                          Text(element.data??'')
-                        ],
-                      ),
-                    )))
-                    .toList()),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,),
-            child: Row(
-              children: [
-                Text(
-                  'Source Of Fund',
-                  style: TextStyle(color: MyColor.grey, fontSize: 16),
-                ),
-                const Icon(
-                  Icons.star,
-                  color: Colors.red,
-                  size: 12,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DropdownButtonFormField2<SourceOfFund>(
-                dropdownMaxHeight: 300,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16),
-                    enabledBorder: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder()),
-                value: sourceOfFund,
-                hint: Text(
-                  '  Select One',
-                  style: TextStyle(color: Colors.black),
-                ),
-                isExpanded: true,
-                onChanged: (value) {
-                  sourceOfFund=value;
-                },
-
-                validator: (value) {
-                  if (value == null) {
-                    return "can't empty";
-                  } else {
-                    return null;
-                  }
-                },
-                items: provider.senderRelationshipSourceOfFundList
-                    .map((element) => DropdownMenuItem<SourceOfFund>(
-                    value: element,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Row(
-                        children: [
-                          // Icon(Icons.ac_unit,size: 25,),
-                          Text(element.data??'')
-                        ],
-                      ),
-                    )))
-                    .toList()),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0, ),
-            child: Row(
-              children: [
-                Text(
-                  'Sending Purpose',
-                  style: TextStyle(color: MyColor.grey, fontSize: 16),
-                ),
-                const Icon(
-                  Icons.star,
-                  color: Colors.red,
-                  size: 12,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DropdownButtonFormField2<SendingPurpose>(
-              dropdownMaxHeight: 300,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16),
-                    enabledBorder: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder()),
-                value: sendingPurpose,
-                hint: Text(
-                  '  Select One',
-                  style: TextStyle(color: Colors.black),
-                ),
-                isExpanded: true,
-                onChanged: (value) {
-                  sendingPurpose=value;
-                },
-
-                validator: (value) {
-                  if (value == null) {
-                    return "can't empty";
-                  } else {
-                    return null;
-                  }
-                },
-                items: provider.senderRelationshipSendingPurposeList
-                    .map((element) => DropdownMenuItem<SendingPurpose>(
-                    value: element,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Row(
-                        children: [
-                          // Icon(Icons.ac_unit,size: 25,),
-                          Text(element.data??'')
-                        ],
-                      ),
-                    )))
-                    .toList()),
           ),
 
           SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(onPressed: (){
-              Navigator.pushNamed(context, CheckoutPage.routeName);
+              if(_formKey.currentState!.validate()){
+                print(beneficiaryRelationship);
+                print(senderOccupation);
+                print(sourceOfFund);
+                print(sendingPurpose);
+                SetCalculatorAndRecipientInfo.setRecipientRelationShip(
+                    beneficiaryRelationship!,
+                    senderOccupation!,sourceOfFund!,
+                    sendingPurpose!);
+                Navigator.pushNamed(context, CheckoutPage.routeName);
+              }
+
             },
               child: Text(
                 'Next',
