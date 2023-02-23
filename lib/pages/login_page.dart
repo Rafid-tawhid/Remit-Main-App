@@ -370,7 +370,6 @@ class _LoginPageState extends State<LoginPage> {
                                                   final user_mail = emailCon.text;
                                                  await GetUserDetails.setUserMailAndToken(user_mail, token);
                                                  await GetUserDetails.setUserInfo(user);
-
                                                  //get user recipient info
                                                  await userProfileProvider.getRecipientsByEmailToken(user_mail,token).then((value) {
                                                     EasyLoading.dismiss();

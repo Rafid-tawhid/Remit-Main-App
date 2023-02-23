@@ -62,36 +62,36 @@ class _LauncherPageState extends State<LauncherPage> {
     );
   }
 
-  getValueFromSharedPref() async {
-    final prefs = await SharedPreferences.getInstance();
-
-
-    if (prefs.getString("email") != null && prefs.getString("pass") != null&&prefs.getString("token")!=null) {
-      EasyLoading.show();
-      userProfileProvider
-          .getUserInfoByEmailPassword(
-          prefs.getString("email"), prefs.getString("pass"))
-          .then((data) async {
-        EasyLoading.dismiss();
-
-        if (data == null) {
-          MyDialog.showServerProblemDialog(context);
-        } else {
-          if (data['success'] == true) {
-            final user = Data.fromJson(data['data']);
-            final customerDetails = CustomerDetails.fromJson(data['customer_details']);
-            await GetUserDetails.setCustomerInfo(customerDetails);
-            GetUserDetails.setUserInfo(user).then((value) {
-              Navigator.pushNamed(context, HomePage.routeName,);
-            });
-          } else {
-            MyDialog.showErrorMsgDialog(context, data);
-          }
-        }
-      });
-    }
-    else {
-      Navigator.pushNamed(context, LoginPage.routeName);
-    }
-  }
+  // getValueFromSharedPref() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //
+  //
+  //   if (prefs.getString("email") != null && prefs.getString("pass") != null&&prefs.getString("token")!=null) {
+  //     EasyLoading.show();
+  //     userProfileProvider
+  //         .getUserInfoByEmailPassword(
+  //         prefs.getString("email"), prefs.getString("pass"))
+  //         .then((data) async {
+  //       EasyLoading.dismiss();
+  //
+  //       if (data == null) {
+  //         MyDialog.showServerProblemDialog(context);
+  //       } else {
+  //         if (data['success'] == true) {
+  //           final user = Data.fromJson(data['data']);
+  //           final customerDetails = CustomerDetails.fromJson(data['customer_details']);
+  //           await GetUserDetails.setCustomerInfo(customerDetails);
+  //           GetUserDetails.setUserInfo(user).then((value) {
+  //             Navigator.pushNamed(context, HomePage.routeName,);
+  //           });
+  //         } else {
+  //           MyDialog.showErrorMsgDialog(context, data);
+  //         }
+  //       }
+  //     });
+  //   }
+  //   else {
+  //     Navigator.pushNamed(context, LoginPage.routeName);
+  //   }
+  // }
 }
