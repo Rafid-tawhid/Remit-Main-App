@@ -22,6 +22,10 @@ class UserProfileProvider extends ChangeNotifier{
 
   List<BranchInfo> branchInfoList=[];
   List<LocalAgentBranch> localagentBranchList=[];
+  List<String> localagentNameListByBranchName=[];
+  List<String> branchNameListByLocalAgent=[];
+  List<String> branchNameListByCityName=[];
+  List<String> agentNameListByBranch=[];
   Data? senderRelationshipdata;
 
 
@@ -111,7 +115,7 @@ class UserProfileProvider extends ChangeNotifier{
 
    Future<dynamic> getBranchDataByBankName(country_id,service_id,bank_name,agent_city)async{
      print(country_id+service_id+bank_name+agent_city);
-    await  UserApiCalls.getBranchData(country_id, service_id, bank_name, agent_city).then((data) {
+    await  UserApiCalls.getBranchData(country_id, service_id, bank_name, '').then((data) {
 
       if(data['status']==true){
         print(data.toString());
@@ -125,6 +129,35 @@ class UserProfileProvider extends ChangeNotifier{
         }
         notifyListeners();
 
+      }
+
+      else {
+        print('Fake..........');
+        print(data.toString());
+      }
+
+    });
+  }
+
+
+
+  Future<dynamic> getBranchDataByCityName(country_id,service_id,agent_city)async{
+    print(country_id+service_id+agent_city);
+    await  UserApiCalls.getBranchData(country_id, service_id, '', agent_city).then((data) {
+
+      if(data['status']==true){
+        print(data.toString());
+        branchInfoList.clear();
+        localagentBranchList.clear();
+        for(Map i in data['branch_info']){
+          branchInfoList.add(BranchInfo.fromJson(i));
+        }
+        for(Map i in data['local_agent_branch']){
+          localagentBranchList.add(LocalAgentBranch.fromJson(i));
+        }
+
+        print('localAgentList.length) ${localagentBranchList.length}');
+        notifyListeners();
       }
 
       else {
@@ -155,5 +188,53 @@ class UserProfileProvider extends ChangeNotifier{
     });
 
     return transferLogList;
+  }
+
+
+  List<String?> getLocalAgentNameByBranchName(String branchName){
+    localagentNameListByBranchName.clear();
+     localagentBranchList.forEach((element) {
+       if(element.agentBranch==branchName){
+         localagentNameListByBranchName.add(element.agentName!);
+       }
+     });
+     notifyListeners();
+     return localagentNameListByBranchName;
+  }
+
+
+  List<String?> getBranchNameByLocalAgentName(){
+    branchNameListByLocalAgent.clear();
+    branchInfoList.forEach((element) {
+      branchNameListByLocalAgent.add(element.branch!);
+    });
+    notifyListeners();
+    return branchNameListByLocalAgent;
+  }
+
+  List<String?> getBranchNameByCityName(String agentCity){
+    branchNameListByCityName.clear();
+    localagentBranchList.forEach((element) {
+      if(element.agentCity==agentCity)
+        {
+          branchNameListByCityName.add(element.agentBranch!);
+        }
+    });
+    notifyListeners();
+    print('branchNameListByCityName ${branchNameListByCityName.length}');
+    return branchNameListByCityName;
+  }
+
+  List<String?> getAgentNameByBranchName(String branchName){
+    agentNameListByBranch.clear();
+    localagentBranchList.forEach((element) {
+      if(element.agentBranch==branchName)
+      {
+        agentNameListByBranch.add(element.agentName!);
+      }
+    });
+    notifyListeners();
+    print('agentNameListByBranch ${agentNameListByBranch.length}');
+    return agentNameListByBranch;
   }
 }

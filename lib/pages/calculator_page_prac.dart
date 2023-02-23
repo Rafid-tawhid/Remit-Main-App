@@ -15,6 +15,7 @@ import '../colors.dart';
 import '../custom_widgits/dialog_widgits.dart';
 import '../custom_widgits/drawer.dart';
 import '../custom_widgits/receiver.dart';
+import '../helper_method/get_calculator_info.dart';
 import '../helper_method/helper_class.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
@@ -185,7 +186,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                           child: Row(
                             children: [
                               Container(
-                                width: 46,
+                                width: 50,
                                 padding: const EdgeInsets.only(
                                     top: 10.0, bottom: 10, left: 10, right: 6),
                                 decoration: const BoxDecoration(
@@ -194,15 +195,27 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                         bottomLeft: Radius.circular(8)),
                                     color: Colors.white),
                                 child: countryName == null
-                                    ? Image.network(
-                                        provider
-                                            .getAllCountriesInfoList.first.image!,
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : Image.network(
-                                        img!,
-                                        fit: BoxFit.fitWidth,
-                                      ),
+                                    ? FadeInImage(
+                                  image: NetworkImage(provider
+                                      .getAllCountriesInfoList.first.image!),
+                                  placeholder: AssetImage('images/placeholder.jpeg'),
+                                  imageErrorBuilder:(context, error, stackTrace) {
+                                    return Image.asset('images/placeholder.jpeg',
+                                      fit: BoxFit.fitWidth,height: 30,width: 40,
+                                    );
+                                  },
+                                  fit: BoxFit.fitWidth,
+                                    )
+                                    : FadeInImage(
+                                  image: NetworkImage(img!),
+                                  placeholder: AssetImage('images/placeholder.jpeg'),
+                                  imageErrorBuilder:(context, error, stackTrace) {
+                                    return Image.asset('images/placeholder.jpeg',
+                                      fit: BoxFit.fitWidth,height: 30,width: 40,
+                                    );
+                                  },
+                                  fit: BoxFit.fitWidth,
+                                )
                               ),
                               Expanded(
                                 child: Container(
@@ -971,13 +984,15 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                         currency: currencyName,
                                         sendAmount: sendControler.text,
                                         fees: fees,
-                                        totalPayable:
-                                        (double.parse(sendControler.text) +
-                                            double.parse(fees!))
-                                            .toString(),
+                                        totalPayable: (double.parse(sendControler.text) + double.parse(fees!)).toString(),
                                         exchangeRate: finalRate,
                                         recipientGets: receiveControler.text);
                                     await submitCalculatorForInvoice(submitModel);
+
+                                   //set calculator Info
+
+                                    SetCalculatorAndRecipientInfo.setCalculatorInfo(model);
+
                                     EasyLoading.dismiss();
                                     Navigator.pushNamed(context, ReceipientPage.routeName, arguments: model);
                                   },
@@ -1204,6 +1219,8 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       }
     });
   }
+
+
 
 }
 

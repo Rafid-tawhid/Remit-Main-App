@@ -27,6 +27,8 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
   Recipients? recipient;
   LocalAgent? localAgent;
   BranchInfo? branchInfo;
+  bool branchFound=true;
+  LocalAgentBranch? localAgentbranchInfo;
   BankInfo? bankInfo;
   String? serviceName;
   String? currency;
@@ -38,10 +40,13 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
   String? mail;
   String? token;
   String? countryName;
-  bool showAgentInfo=false;
-  bool branchFound=true;
+  bool showBankTransferAgentInfo=false;
+  bool local_agent_branch_List=false;
+
   List<dynamic>? reciveTwoObject;
   late CalculatorInfoModel calculatorInfo;
+  late UserProfileProvider provider;
+  bool showSomeSpecialFeatures=false;
 
   final agentbankNameCon=TextEditingController();
 
@@ -52,6 +57,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
   }
   @override
   void didChangeDependencies() {
+    provider=Provider.of(context,listen: true);
     GetUserDetails.getUserToken().then((value) {
       token = value;
     });
@@ -65,8 +71,12 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
       serviceName = calculatorInfo.serviceName;
       print('serviceName $serviceName');
       if(serviceName=='Cash Pickup'){
-        showAgentInfo=true;
+        showBankTransferAgentInfo=true;
       }
+
+      //exception for pakistan
+      exceptionCountryCalllocalAgent();
+
       currency = calculatorInfo.currency;
       sendAmount = calculatorInfo.sendAmount;
       fees = calculatorInfo.fees;
@@ -249,7 +259,9 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
             textAlign: TextAlign.center,
           ),
 
-          showAgentInfo?Column(
+          //show bank transfer agent or bank list / show cash pickup agent or city list
+
+          showBankTransferAgentInfo?Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -258,7 +270,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                 child: Row(
                   children: [
                     Text(
-                      'Agent/Bank Name',
+                      'Agent/Bank Name Rafid',
                       style: TextStyle(color: MyColor.grey, fontSize: 16),
                     ),
                     const Icon(
@@ -284,13 +296,32 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                       ),
                       isExpanded: true,
                       onChanged: (value) {
-                        localAgent=value;
-                        print(localAgent!.agentCountry);
-                        provider.getBranchDataByBankName(
+                        setState(() {
+                          localAgent=value;
+                          print(localAgent!.agentCity);
+                          EasyLoading.show();
+                          branchInfo=null;
+                        });
+                        provider.getBranchDataByCityName(
                             calculatorInfo.countryId,
-                            calculatorInfo.
-                            serviceId,bankInfo!.agent,recipient!.streetName).then((value) {
+                            calculatorInfo.serviceId,localAgent!.agentCity).then((value) {
                           EasyLoading.dismiss();
+                          provider.localagentBranchList.forEach((element) {
+
+                            if(element.agentCity==""){
+                              print('No City Found');
+                              setState(() {
+                                branchFound=false;
+                              });
+                            }
+                            else {
+                              print(element.agentCity);
+                              setState(() {
+                                branchFound=true;
+                                local_agent_branch_List=true;
+                              });
+                            }
+                          });
                         });
                       },
 
@@ -317,97 +348,9 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                 ),
               ),
             ],
-          ):Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 8),
-                child: Row(
-                  children: [
-                    Text(
-                      'Agent/Bank Name',
-                      style: TextStyle(color: MyColor.grey, fontSize: 16),
-                    ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-              Consumer<UserProfileProvider>(
-                builder: (context, provider, _) => Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black,width: 1),
-                      borderRadius: BorderRadius.circular(6)
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<BankInfo>(
-                        //  menuMaxHeight: 300,
-                          dropdownMaxHeight: 300,
-                          value: bankInfo,
-                          hint: Text(
-                            '  Select One',
-                            style: TextStyle(color: Colors.black,overflow: TextOverflow.ellipsis),
-                          ),
-                          isExpanded: true,
-                          onChanged: (value) {
-                            setState(() {
-                              bankInfo=value;
-                              print(bankInfo!.agent);
-                              EasyLoading.show();
-                              branchInfo=null;
-                            });
-                            provider.getBranchDataByBankName(
-                                calculatorInfo.countryId,
-                                calculatorInfo.
-                                serviceId,bankInfo!.agent,recipient!.streetName).then((value) {
-                              EasyLoading.dismiss();
-                              provider.branchInfoList.forEach((element) {
-                                if(element.branch==""){
-                                  print('No Branch Found');
-                                  setState(() {
-                                    branchFound=false;
-                                  });
-                                }
-                                else {
-                                  print(element.branch);
-                                  setState(() {
-                                    branchFound=true;
-                                  });
-                                }
-                              });
-                            });
-
-                          },
-
-                          items: provider.bankInfoList
-                              .map((bankInfo) => DropdownMenuItem<BankInfo>(
-
-                              value: bankInfo,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 14.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Icon(Icons.ac_unit,size: 25,),
-                                    Text(bankInfo.agent!,style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),),
-                                  ],
-                                ),
-                              )))
-                              .toList()),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Column(
+          )
+              :ShowCashPickupInfoWidgets(),
+          if(!showSomeSpecialFeatures)Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -427,6 +370,80 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                   ],
                 ),
               ),
+              local_agent_branch_List?Consumer<UserProfileProvider>(
+                builder: (context, provider, _) => branchFound?Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black,width: 1),
+                        borderRadius: BorderRadius.circular(6)
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2<LocalAgentBranch>(
+                        //  menuMaxHeight: 300,
+                          dropdownMaxHeight: 300,
+                          value: localAgentbranchInfo,
+                          hint: Text(
+                            '  Select One',
+                            style: TextStyle(color: Colors.black,overflow: TextOverflow.ellipsis),
+                          ),
+                          isExpanded: true,
+                          onChanged: (value) {
+                            setState(() {
+                              localAgent=null;
+                              localAgentbranchInfo=value;
+                              print(localAgent!.agentCity);
+                            });
+                          },
+
+                          items: provider.localagentBranchList.map((local_branch) =>
+                              DropdownMenuItem<LocalAgentBranch>(
+                                  value: local_branch,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 14.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Icon(Icons.ac_unit,size: 25,),
+                                        Text(local_branch.agentBranch!,style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),),
+                                      ],
+                                    ),
+                                  )))
+                              .toList())
+                    ),
+                  ),
+                ):Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: TextFormField(
+                      // controller: agentbankNameCon,
+
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'Enter Branch Name',
+                        suffixIconConstraints:
+                        BoxConstraints(maxHeight: 30, maxWidth: 38),
+                        hintStyle: TextStyle(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(width: 1, color: Colors.blue),
+                          //<-- SEE HERE
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(width: .5, color: Colors.grey),
+                          //<-- SEE HERE
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ):
               Consumer<UserProfileProvider>(
                 builder: (context, provider, _) => branchFound?Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -452,8 +469,7 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
                             });
                           },
 
-                          items: provider.branchInfoList
-                              .map((bankInfo) => DropdownMenuItem<BranchInfo>(
+                          items: provider.branchInfoList.map((bankInfo) => DropdownMenuItem<BranchInfo>(
 
                               value: bankInfo,
                               child: Padding(
@@ -503,9 +519,33 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
               )
             ],
           ),
+          if(showSomeSpecialFeatures)Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'City ',
+                      style: TextStyle(color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Text('Drop Down')
+
+            ],
+          ),
 
           SizedBox(height: 10,),
-          Column(
+          if(!showSomeSpecialFeatures)Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -557,7 +597,59 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
               ),
             ],
           ),
-          Column(
+          if(showSomeSpecialFeatures) Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Branch ',
+                      style: TextStyle(color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Select Branch',
+                      suffixIconConstraints:
+                      BoxConstraints(maxHeight: 30, maxWidth: 38),
+                      hintStyle: TextStyle(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if(!showSomeSpecialFeatures)Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
@@ -609,6 +701,58 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
               ),
             ],
           ),
+          if(showSomeSpecialFeatures)Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Agent',
+                      style: TextStyle(color: MyColor.grey, fontSize: 16),
+                    ),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 12,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextFormField(
+                    controller: agentbankNameCon,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Select Agent',
+                      suffixIconConstraints:
+                      BoxConstraints(maxHeight: 30, maxWidth: 38),
+                      hintStyle: TextStyle(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(width: 1, color: Colors.blue),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(width: .5, color: Colors.grey),
+                        //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: 30,),
           Consumer<UserProfileProvider>(
             builder: (context, provider, _) => Padding(
@@ -638,4 +782,117 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
       ),
     );
   }
+
+  Column ShowCashPickupInfoWidgets() {
+    return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0, vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    'Agent/Bank Name',
+                    style: TextStyle(color: MyColor.grey, fontSize: 16),
+                  ),
+                  const Icon(
+                    Icons.star,
+                    color: Colors.red,
+                    size: 12,
+                  ),
+                ],
+              ),
+            ),
+            Consumer<UserProfileProvider>(
+              builder: (context, provider, _) => Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black,width: 1),
+                    borderRadius: BorderRadius.circular(6)
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<BankInfo>(
+                      //  menuMaxHeight: 300,
+                        dropdownMaxHeight: 300,
+                        value: bankInfo,
+                        hint: Text(
+                          '  Select One',
+                          style: TextStyle(color: Colors.black,overflow: TextOverflow.ellipsis),
+                        ),
+                        isExpanded: true,
+                        onChanged: (value) {
+                          if(value!.agent=='Local Agent') {
+                            ///some special features for pakistan
+
+                            setState(() {
+                              showSomeSpecialFeatures=true;
+                            });
+
+                          }
+                          else{
+                            setState(() {
+                              showSomeSpecialFeatures=false;
+                              bankInfo=value;
+                              print(bankInfo!.agent);
+                              EasyLoading.show();
+                              branchInfo=null;
+                            });
+                            provider.getBranchDataByBankName(
+                                calculatorInfo.countryId,
+                                calculatorInfo.
+                                serviceId,bankInfo!.agent,recipient!.streetName).then((value) {
+                              EasyLoading.dismiss();
+                              provider.branchInfoList.forEach((element) {
+                                if(element.branch==""){
+                                  print('No Branch Found');
+                                  setState(() {
+                                    branchFound=false;
+                                  });
+                                }
+                                else {
+                                  print(element.branch);
+                                  setState(() {
+                                    branchFound=true;
+                                  });
+                                }
+                              });
+                            });
+                          }
+
+                        },
+
+                        items: provider.bankInfoList
+                            .map((bankInfo) => DropdownMenuItem<BankInfo>(
+
+                            value: bankInfo,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 14.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Icon(Icons.ac_unit,size: 25,),
+                                  Text(bankInfo.agent!,style: TextStyle(fontSize: 12,overflow: TextOverflow.ellipsis),),
+                                ],
+                              ),
+                            )))
+                            .toList()),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+  }
+
+  void exceptionCountryCalllocalAgent() {
+    if(calculatorInfo.countryId=='8'&&serviceName=='Cash Pickup'){
+      provider.bankInfoList.insert(0, BankInfo(agent: 'Local Agent',totalBranch: '000'));
+      showBankTransferAgentInfo=false;
+    }
+  }
+
+
 }

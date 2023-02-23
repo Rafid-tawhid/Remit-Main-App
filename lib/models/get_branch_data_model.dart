@@ -64,10 +64,12 @@ class LocalAgentBranch {
       String? agentCity, 
       String? agentCountry, 
       String? agentBranch, 
+      String? agentName,
       String? total,}){
     _agentCity = agentCity;
     _agentCountry = agentCountry;
     _agentBranch = agentBranch;
+    _agentName = agentName;
     _total = total;
 }
 
@@ -75,24 +77,30 @@ class LocalAgentBranch {
     _agentCity = json['agent_city'];
     _agentCountry = json['agent_country'];
     _agentBranch = json['agent_branch'];
+    _agentName = json['agent_name'];
     _total = json['total'];
   }
   String? _agentCity;
   String? _agentCountry;
+  String? _agentName;
   String? _agentBranch;
   String? _total;
+
 LocalAgentBranch copyWith({  String? agentCity,
   String? agentCountry,
-  String? agentBranch,
+  String? agentBranch,String? agentName,
   String? total,
-}) => LocalAgentBranch(  agentCity: agentCity ?? _agentCity,
+}) => LocalAgentBranch(agentCity: agentCity ?? _agentCity,
   agentCountry: agentCountry ?? _agentCountry,
   agentBranch: agentBranch ?? _agentBranch,
+  agentName: agentName ?? _agentName,
+
   total: total ?? _total,
 );
   String? get agentCity => _agentCity;
   String? get agentCountry => _agentCountry;
   String? get agentBranch => _agentBranch;
+  String? get agentName => _agentName;
   String? get total => _total;
 
   Map<String, dynamic> toJson() {
@@ -100,6 +108,7 @@ LocalAgentBranch copyWith({  String? agentCity,
     map['agent_city'] = _agentCity;
     map['agent_country'] = _agentCountry;
     map['agent_branch'] = _agentBranch;
+    map['agent_name'] = _agentName;
     map['total'] = _total;
     return map;
   }

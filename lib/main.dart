@@ -2,8 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/pages/bank_transfer_page.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
+import 'package:remit_app/pages/cash_pickup_page.dart';
+import 'package:remit_app/pages/checkout_page.dart';
 import 'package:remit_app/pages/chose_recipient_type.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
@@ -74,6 +77,9 @@ class MyApp extends StatelessWidget {
           ChooseRecipientType.routeName:(context)=>ChooseRecipientType(),
           TransferLogPage.routeName:(context)=>TransferLogPage(),
           RecipientRelationShipPage.routeName:(context)=>RecipientRelationShipPage(),
+          BankTransferPage.routeName:(context)=>BankTransferPage(),
+          CashPickupPage.routeName:(context)=>CashPickupPage(),
+          CheckoutPage.routeName:(context)=>CheckoutPage(),
 
         },
       ),

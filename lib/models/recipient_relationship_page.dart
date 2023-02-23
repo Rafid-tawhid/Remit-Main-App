@@ -8,7 +8,9 @@ import 'package:remit_app/providers/user_profile_provider.dart';
 
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
+import '../helper_method/get_calculator_info.dart';
 import '../helper_method/get_user_info.dart';
+import '../pages/checkout_page.dart';
 import '../pages/user_profile_page.dart';
 import 'bank_agent_data_model.dart';
 import 'calculator_info_model.dart';
@@ -44,39 +46,49 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
   bool showAgentInfo=false;
   bool branchFound=true;
   List<dynamic>? reciveTwoObject;
-  late CalculatorInfoModel calculatorInfo;
+  late CalculatorInfoModel? calculatorInfo;
+  late Recipients? recipientsInfo;
   late UserProfileProvider provider;
   //
-
-
+  @override
+  void initState() {
+    calculatorInfo=SetCalculatorAndRecipientInfo.getCalculatorInfo();
+    recipientsInfo=SetCalculatorAndRecipientInfo.getRecipientInfo();
+    super.initState();
+  }
   @override
   void didChangeDependencies() {
     provider=Provider.of(context,listen: true);
-    GetUserDetails.getUserToken().then((value) {
-      token = value;
-    });
-    reciveTwoObject =ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-
-    if (reciveTwoObject == null) {
-      print('NOTHING PHONE');
-    } else {
-      calculatorInfo = reciveTwoObject![0];
-      recipient = reciveTwoObject![1];
-      serviceName = calculatorInfo.serviceName;
-      print('serviceName $serviceName');
-      if(serviceName=='Cash Pickup'){
-        showAgentInfo=true;
-      }
-      currency = calculatorInfo.currency;
-      sendAmount = calculatorInfo.sendAmount;
-      fees = calculatorInfo.fees;
-      totalPayable = calculatorInfo.totalPayable;
-      rate = calculatorInfo.exchangeRate;
-      recipientGets = calculatorInfo.recipientGets;
-      countryName = calculatorInfo.countryName;
-    }
     super.didChangeDependencies();
   }
+  // @override
+  // void didChangeDependencies() {
+  //   provider=Provider.of(context,listen: true);
+  //   GetUserDetails.getUserToken().then((value) {
+  //     token = value;
+  //   });
+  //   reciveTwoObject =ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+  //
+  //   if (reciveTwoObject == null) {
+  //     print('NOTHING PHONE');
+  //   } else {
+  //     calculatorInfo = reciveTwoObject![0];
+  //     recipient = reciveTwoObject![1];
+  //     serviceName = calculatorInfo.serviceName;
+  //     print('serviceName $serviceName');
+  //     if(serviceName=='Cash Pickup'){
+  //       showAgentInfo=true;
+  //     }
+  //     currency = calculatorInfo.currency;
+  //     sendAmount = calculatorInfo.sendAmount;
+  //     fees = calculatorInfo.fees;
+  //     totalPayable = calculatorInfo.totalPayable;
+  //     rate = calculatorInfo.exchangeRate;
+  //     recipientGets = calculatorInfo.recipientGets;
+  //     countryName = calculatorInfo.countryName;
+  //   }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -121,12 +133,12 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '$serviceName',
+                      '${calculatorInfo!.serviceName}',
                       style: TextStyle(fontSize: 22),
                     ),
                     Align(
                         alignment: Alignment.topRight,
-                        child: Text('AUD-$currency')),
+                        child: Text('AUD-${calculatorInfo!.currency}')),
                     SizedBox(
                       height: 10,
                     ),
@@ -141,7 +153,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Send Amount'),
-                        Text('$sendAmount AUD')
+                        Text('${calculatorInfo!.sendAmount} AUD')
                       ],
                     ),
                     SizedBox(
@@ -149,7 +161,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text('Fees'), Text('$fees AUD')],
+                      children: [Text('Fees'), Text('${calculatorInfo!.fees} AUD')],
                     ),
                     SizedBox(
                       height: 5,
@@ -158,7 +170,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('You pay in total'),
-                        Text('$totalPayable AUD')
+                        Text('${calculatorInfo!.totalPayable} AUD')
                       ],
                     ),
                     SizedBox(
@@ -179,7 +191,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          '1 AUD->$rate $currency',
+                          '1 AUD->${calculatorInfo!.exchangeRate} ${calculatorInfo!.currency}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         )
                       ],
@@ -202,7 +214,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          '$recipientGets $currency',
+                          '${calculatorInfo!.recipientGets} ${calculatorInfo!.currency}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         )
                       ],
@@ -218,6 +230,30 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Your Recipient Info',
+            style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Recipient Name : ${recipientsInfo!.firstname} in ${recipientsInfo!.country}',
+                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -447,7 +483,9 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
           SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(onPressed: (){},
+            child: ElevatedButton(onPressed: (){
+              Navigator.pushNamed(context, CheckoutPage.routeName);
+            },
               child: Text(
                 'Next',
                 style: MyStyle.mytext(TextStyle(fontSize: 16)),

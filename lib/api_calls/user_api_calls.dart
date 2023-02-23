@@ -125,7 +125,7 @@ class UserApiCalls {
                "country_id":country_id,
                "service_id":service_id,
                "bank_name":bank_name,
-               // "agent_city":agent_city,
+               "agent_city":agent_city,
              });
          data =await jsonDecode(response.body.toString());
 
