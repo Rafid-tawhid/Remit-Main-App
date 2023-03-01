@@ -1,17 +1,23 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/helper_method/helper_class.dart';
+import 'package:remit_app/models/payment_method.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/models/sender_relationship_model.dart';
+import 'package:remit_app/models/submit_recipient_relation_agent_info_model.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 
+import '../api_calls/calculator_api_calls.dart';
 import '../colors.dart';
+import '../custom_widgits/dialog_widgits.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_calculator_info.dart';
 import '../helper_method/get_user_info.dart';
 import '../pages/checkout_page.dart';
 import '../pages/user_profile_page.dart';
+import '../providers/calculator_provider.dart';
 import 'bank_agent_data_model.dart';
 import 'calculator_info_model.dart';
 import 'get_branch_data_model.dart';
@@ -49,17 +55,26 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
   late CalculatorInfoModel? calculatorInfo;
   late Recipients? recipientsInfo;
   late UserProfileProvider provider;
+
+  late CalculatorProvider calculatorProvider;
+  PaymentMethods? paymentMethods;
+  SubmitRecipientRelationAgentInfoModel? submit_recipient_model;
+
   final _formKey=GlobalKey<FormState>();
   //
   @override
+  @override
   void initState() {
-    calculatorInfo=SetCalculatorAndRecipientInfo.getCalculatorInfo();
-    recipientsInfo=SetCalculatorAndRecipientInfo.getRecipientInfo();
+    calculatorInfo = SetCalculatorAndRecipientInfo.getCalculatorInfo();
+    recipientsInfo = SetCalculatorAndRecipientInfo.getRecipientInfo();
     super.initState();
   }
+
   @override
   void didChangeDependencies() {
     provider=Provider.of(context,listen: true);
+    calculatorProvider=Provider.of(context,listen: true);
+    paymentMethods=provider.paymentMethodList.first;
     super.didChangeDependencies();
   }
   // @override
@@ -468,15 +483,17 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(onPressed: (){
               if(_formKey.currentState!.validate()){
-                print(beneficiaryRelationship);
-                print(senderOccupation);
-                print(sourceOfFund);
-                print(sendingPurpose);
+
+                //set relationship data
                 SetCalculatorAndRecipientInfo.setRecipientRelationShip(
                     beneficiaryRelationship!,
                     senderOccupation!,sourceOfFund!,
                     sendingPurpose!);
-                Navigator.pushNamed(context, CheckoutPage.routeName);
+
+                //main huge api
+                callSubmitRecipientRelationApi();
+
+
               }
 
             },
@@ -494,5 +511,64 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
         ],
       ),
     );
+  }
+
+  void callSubmitRecipientRelationApi() {
+    EasyLoading.show();
+    final recipient= SetCalculatorAndRecipientInfo.recipients;
+    final local= SetCalculatorAndRecipientInfo.localAgent;
+    final branch= SetCalculatorAndRecipientInfo.branchName;
+    final agent= SetCalculatorAndRecipientInfo.agentName;
+    final occupation= SetCalculatorAndRecipientInfo.occupation;
+    final relationship= SetCalculatorAndRecipientInfo.relationship;
+    final purpose= SetCalculatorAndRecipientInfo.purpose;
+    final bankInfo= SetCalculatorAndRecipientInfo.bankInfo;
+    final branchInfo= SetCalculatorAndRecipientInfo.branchInfo;
+    final funds= SetCalculatorAndRecipientInfo.fund;
+    final bankAccNumber= SetCalculatorAndRecipientInfo.bankAccNo;
+
+    //create model
+    submit_recipient_model=SubmitRecipientRelationAgentInfoModel(
+        userToken:GetUserDetails.token,
+        invoice:calculatorProvider.getUserInvoice(),
+        recipientId:recipientsInfo!.userId??'',
+        firstName:recipientsInfo!.firstname??'',
+        middleName:recipientsInfo!.middlename??'',
+        lastName:recipientsInfo!.lastname??'',
+        phone:recipientsInfo!.phone??'',
+        email:recipientsInfo!.email??'',
+        streetName:recipientsInfo!.streetName??'',
+        streetCity:recipientsInfo!.streetCity??'',
+        fundSource:funds!.value??'',
+        purpose:purpose!.value??'',
+        senderOccupation:occupation!.value??null,
+        beneficiaryRelationship:relationship!.value??'',
+        bankInfo:bankInfo==null?'':bankInfo.agent??'',
+        bankId:branchInfo==null?'': branchInfo.bankid??'',
+        locationId:branchInfo==null?'':branchInfo.locationid??'',
+        branchInfo:branch??'',
+        payoutBankCode:branchInfo==null?'':branchInfo.bankid??'',
+        typeOfAccount:'',
+        branchId:branchInfo==null?'':branchInfo.bankid??'',
+        bankAccNumber:bankAccNumber==null?'':bankAccNumber,
+        agentName:agent??'',
+        agentCity:local==null?'':local.agentCity??'',
+        agentBranch:branch==null?'':branch
+    );
+
+    print('final submit_recipient_model ${submit_recipient_model!.toMap()}');
+
+    CalculatorAPICalls.submitRecipientRelationAgent(submit_recipient_model!).then((value) {
+      EasyLoading.dismiss();
+      if(value['status']==true){
+        print(value.toString());
+
+         Navigator.pushNamed(context, CheckoutPage.routeName);
+      }
+      if(value['status']==false){
+        MyDialog.showErrorMsgDialog(context, value);
+      }
+
+    });
   }
 }

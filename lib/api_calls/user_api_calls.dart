@@ -313,7 +313,7 @@ class UserApiCalls {
    }
 
 
-   static Future<dynamic> createHelloZaiItem(String invoice,String transferMethod)  async {
+   static Future<dynamic> checkOutPaymentItem(String invoice,String transferMethod)  async {
 
      var data;
      var user_token;
@@ -348,7 +348,40 @@ class UserApiCalls {
      return data;
    }
 
+   static Future<dynamic> cancelTransfer(String invoice)  async {
 
+     var data;
+     var user_token;
+     await GetUserDetails.getUserToken().then((value) {
+       user_token=value;
+     });
+     await UserApiCalls.getAuthToken().then((auth) async {
+       if(auth['success']==true){
+         try {
+           Response response = await post(
+               Uri.parse('${baseUrl}api/cancel_transfer'),
+               headers: {
+                 'Authorization': 'Bearer ${auth['token']}',
+               },
+               body: {
+                 "user_token":user_token,
+                 "sendMoney_invoice":invoice,
+
+               });
+           data =await jsonDecode(response.body.toString());
+           return data;
+         } catch (e) {
+           print(e.toString());
+         }
+       }
+       else{
+         EasyLoading.dismiss();
+       }
+     });
+
+     // print('THIS IS Bank agent DATA ${data}');
+     return data;
+   }
 }
 
 

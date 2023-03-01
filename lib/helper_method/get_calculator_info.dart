@@ -1,9 +1,13 @@
 import 'package:remit_app/models/get_branch_data_model.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/models/sender_relationship_model.dart';
+import 'package:remit_app/pages/checkout_payments.dart';
 
 import '../models/bank_agent_data_model.dart';
 import '../models/calculator_info_model.dart';
+import '../models/checkout_payment_model.dart';
+
+
 
 class SetCalculatorAndRecipientInfo{
   static CalculatorInfoModel? calculatorInfoModel;
@@ -21,6 +25,8 @@ class SetCalculatorAndRecipientInfo{
   static SenderOccupation? occupation;
   static SourceOfFund? fund;
   static SendingPurpose? purpose;
+  static CheckoutPaymentModel? checkoutPaymentModel;
+
 
   static void setCalculatorInfo(CalculatorInfoModel model) {
 
@@ -68,6 +74,10 @@ class SetCalculatorAndRecipientInfo{
     occupation=occupationA;
     fund=fundA;
     purpose=purposeA;
+  }
+
+  static setCheckOutData(CheckoutPaymentModel model){
+    checkoutPaymentModel=model;
   }
 
 }

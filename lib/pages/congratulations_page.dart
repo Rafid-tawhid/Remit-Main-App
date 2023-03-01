@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
 
 import '../colors.dart';
@@ -59,7 +60,7 @@ class CongratulationsPage extends StatelessWidget {
             Container(
               width: double.infinity,
               child: MainButton(
-                title: 'Back to Home',),
+                title: 'Back to Home',route: HomePage.routeName,),
             ),
             SecondaryButton(title: 'Download Receipt',)
           ],

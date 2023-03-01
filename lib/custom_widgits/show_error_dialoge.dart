@@ -15,3 +15,16 @@ void ShowErrorDialoge(context) {
     ),
   );
 }
+
+void ShowMessageDialoge(context,title,text,btnTxt,function()) {
+  ArtSweetAlert.show(
+    context: context,
+    artDialogArgs: ArtDialogArgs(
+        type: ArtSweetAlertType.info,
+        title: title,
+        text: text,
+        confirmButtonText: btnTxt,
+        onConfirm: function
+    ),
+  );
+}

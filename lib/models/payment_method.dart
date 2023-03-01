@@ -47,11 +47,13 @@ PaymentMethod copyWith({  bool? status,
 class PaymentMethods {
   PaymentMethods({
       String? title, 
+      String? value, 
       String? subTitle, 
       String? currency, 
       String? fees, 
       String? description,}){
     _title = title;
+    _value = value;
     _subTitle = subTitle;
     _currency = currency;
     _fees = fees;
@@ -60,28 +62,33 @@ class PaymentMethods {
 
   PaymentMethods.fromJson(dynamic json) {
     _title = json['title'];
+    _value = json['value'];
     _subTitle = json['sub_title'];
     _currency = json['currency'];
     _fees = json['fees'];
     _description = json['description'];
   }
   String? _title;
+  String? _value;
   String? _subTitle;
   String? _currency;
   String? _fees;
   String? _description;
 PaymentMethods copyWith({  String? title,
+  String? value,
   String? subTitle,
   String? currency,
   String? fees,
   String? description,
 }) => PaymentMethods(  title: title ?? _title,
+  value: value ?? _value,
   subTitle: subTitle ?? _subTitle,
   currency: currency ?? _currency,
   fees: fees ?? _fees,
   description: description ?? _description,
 );
   String? get title => _title;
+  String? get value => _value;
   String? get subTitle => _subTitle;
   String? get currency => _currency;
   String? get fees => _fees;
@@ -90,6 +97,7 @@ PaymentMethods copyWith({  String? title,
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['title'] = _title;
+    map['value'] = _value;
     map['sub_title'] = _subTitle;
     map['currency'] = _currency;
     map['fees'] = _fees;

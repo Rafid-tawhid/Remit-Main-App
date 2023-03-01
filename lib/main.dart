@@ -8,7 +8,9 @@ import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/calculator_page_prac.dart';
 import 'package:remit_app/pages/cash_pickup_page.dart';
 import 'package:remit_app/pages/checkout_page.dart';
+import 'package:remit_app/pages/checkout_payments.dart';
 import 'package:remit_app/pages/chose_recipient_type.dart';
+import 'package:remit_app/pages/congratulations_page.dart';
 import 'package:remit_app/pages/contact_us_page.dart';
 import 'package:remit_app/pages/demo.dart';
 import 'package:remit_app/pages/enter_otp_page.dart';
@@ -84,6 +86,8 @@ class MyApp extends StatelessWidget {
           CheckoutPage.routeName:(context)=>CheckoutPage(),
           ContactPage.routeName:(context)=>ContactPage(),
           AboutUsPage.routeName:(context)=>AboutUsPage(),
+          CheckOutPayment.routeName:(context)=>CheckOutPayment(),
+          CongratulationsPage.routeName:(context)=>CongratulationsPage(),
         },
       ),
     );
