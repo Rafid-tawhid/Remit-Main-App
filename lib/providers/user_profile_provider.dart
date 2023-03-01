@@ -35,7 +35,7 @@ class UserProfileProvider extends ChangeNotifier{
 
   List<PaymentMethods> paymentMethodList=[];
 
-  TrackTransfer? trackTransfer;
+  List<TrackTransfer> trackTransferList=[];
 
 
    Future<dynamic> getUserInfoByEmailPassword(email,pass){
@@ -264,22 +264,24 @@ class UserProfileProvider extends ChangeNotifier{
     return paymentMethodList;
   }
 
-  Future<TrackTransfer?> getTransferInfoByTransferId(String transferId) async {
+  Future<List<TrackTransfer>> getTransferInfoByTransferId(String transferId) async {
     await  UserApiCalls.trackATransfer(transferId).then((data) {
       if(data['status']==true){
         print(data['message']);
-        final trackList=data['track_transfer'] as List;
-         trackTransfer=TrackTransfer.fromJson(trackList.first);
+
+        for(Map i in data['track_transfer']){
+          trackTransferList.add(TrackTransfer.fromJson(i));
+        }
+        notifyListeners();
       }
       else {
         print('THIS IS CALLING........');
-        trackTransfer=null;
-        return trackTransfer;
+        return trackTransferList;
       }
-
+      notifyListeners();
     });
-
-    return trackTransfer;
+    print('THIS IS CALLING........ ${trackTransferList.length}');
+    return trackTransferList;
   }
 
 

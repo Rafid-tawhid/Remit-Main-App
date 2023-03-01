@@ -23,7 +23,7 @@ class _TrackTransferPageState extends State<TrackTransferPage> {
   final _formKey = GlobalKey<FormState>();
   late UserProfileProvider provider;
   TrackTransfer? transferInfo;
-  bool showError=false;
+  bool showError = false;
 
   @override
   void dispose() {
@@ -67,294 +67,402 @@ class _TrackTransferPageState extends State<TrackTransferPage> {
           ),
         ],
       ),
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            showError?
-                Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      elevation: 2,
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                    child: Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: trackIdCon,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.track_changes_sharp,
+                            color: MyColor.blue,
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
+                          labelText: 'Transfer Id',
+                          hintStyle: TextStyle(),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2, color: MyColor.blue),
+                            //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: .2,
+                              color: Colors.grey.shade500,
+                            ),
+                            //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2, color: Colors.red),
+                            //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'TransferId is required to track';
+                          } else
+                            return null;
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          fixedSize: Size.fromHeight(50),
+                          backgroundColor: Color(0xff02A6EB)),
+                      onPressed: () async {
+                        provider.trackTransferList.clear();
+                        if (_formKey.currentState!.validate()) {
+                          EasyLoading.show();
+                          await provider
+                              .getTransferInfoByTransferId(trackIdCon.text)
+                              .then((value) {
+                            EasyLoading.dismiss();
+                            print('Returning value $value');
+                            if (value != null) {
+                              setState(() {
+                                // showError=true;
+                                // transferInfo = value;
+                              });
+                            }
+                            if (value == null) {
+                              print('ERROR IS FOUND');
+                              setState(() {
+                                // showError=false;
+                              });
+                            }
+                          });
+                        }
+                      },
+                      child: Text('Track')),
+                ),
+              ],
+            ),
+          ),
+          provider.trackTransferList.length==0?Center(child: Text('No Data Found')):Text(''),
+          ...provider.trackTransferList
+              .map((e) => TransactionItem(transferInfo: e))
+              .toList()
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Form(
+          //     key: _formKey,
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(left: 4.0),
+          //       child: TextFormField(
+          //         controller: trackIdCon,
+          //         decoration: InputDecoration(
+          //           prefixIcon: Icon(
+          //             Icons.track_changes_sharp,
+          //             color: MyColor.blue,
+          //           ),
+          //           fillColor: Colors.white,
+          //           filled: true,
+          //           labelText: 'Transfer Id',
+          //           hintStyle: TextStyle(),
+          //           focusedBorder: OutlineInputBorder(
+          //             borderSide: BorderSide(width: 2, color: MyColor.blue),
+          //             //<-- SEE HERE
+          //             borderRadius: BorderRadius.circular(5.0),
+          //           ),
+          //           enabledBorder: OutlineInputBorder(
+          //             borderSide: BorderSide(
+          //               width: .2,
+          //               color: Colors.grey.shade500,
+          //             ),
+          //             //<-- SEE HERE
+          //             borderRadius: BorderRadius.circular(5.0),
+          //           ),
+          //           errorBorder: OutlineInputBorder(
+          //             borderSide: BorderSide(width: 2, color: Colors.red),
+          //             //<-- SEE HERE
+          //             borderRadius: BorderRadius.circular(15.0),
+          //           ),
+          //         ),
+          //         validator: (value) {
+          //           if (value == null || value.isEmpty) {
+          //             return 'TransferId is required to track';
+          //           } else
+          //             return null;
+          //         },
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.all(0.0),
+          //   child: ElevatedButton(
+          //       style: ElevatedButton.styleFrom(
+          //           fixedSize: Size.fromHeight(50),
+          //           backgroundColor: Color(0xff02A6EB)),
+          //       onPressed: () async {
+          //         if (_formKey.currentState!.validate()) {
+          //           EasyLoading.show();
+          //           await  provider.getTransferInfoByTransferId(trackIdCon.text)
+          //               .then((value) {
+          //             EasyLoading.dismiss();
+          //             print('Returning value $value');
+          //             if (value != null) {
+          //               setState(() {
+          //                 showError=true;
+          //                 transferInfo = value;
+          //               });
+          //             }
+          //             if(value==null) {
+          //               print('ERROR IS FOUND');
+          //               setState(() {
+          //                 showError=false;
+          //               });
+          //             }
+          //           });
+          //         }
+          //       },
+          //       child: Text('Track')),
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class TransactionItem extends StatelessWidget {
+  const TransactionItem({
+    Key? key,
+    required this.transferInfo,
+  }) : super(key: key);
+
+  final TrackTransfer? transferInfo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  elevation: 2,
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                transferInfo == null
-                                    ? Text('Invoice :')
-                                    : Text(
-                                        'Invoice : ${transferInfo!.invoice ?? '000'}',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                transferInfo == null
-                                    ? Text('Item Ref:')
-                                    : Text(
-                                        'Item Ref : ${transferInfo!.itemReference ?? '000'}',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
                             transferInfo == null
-                                ? Text(
-                                    'Recipient Name : Demo',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )
+                                ? Text('Invoice :')
                                 : Text(
-                                    'Recipient Name : : ${transferInfo!.recipientName ?? 'Demo'}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    'Invoice : ${transferInfo!.invoice ?? '000'}',
+                                    style: TextStyle(fontSize: 14),
                                   ),
-                            Divider(
-                              height: 5,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                transferInfo == null
-                                    ? Text('Send Amount : 000')
-                                    : Text(
-                                        'Send Amount : ${transferInfo!.sendAmount ?? '000'}'),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                transferInfo == null
-                                    ? Text('Fees : 0000')
-                                    : Text(
-                                        'Fees : ${transferInfo!.fees ?? '000'}')
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                transferInfo == null
-                                    ? Text('You pay in total : 0000')
-                                    : Text(
-                                        'You pay in total : ${transferInfo!.payableAmount ?? '000'}')
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Divider(
-                              height: 5,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                transferInfo == null
-                                    ? Text(
-                                        'Exchange Rate : 1 AUD-> 0000',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : Text(
-                                        'Exchange Rate : 1 AUD-> ${transferInfo!.rate ?? '0000'} ${transferInfo!.receiveCurr ?? 'Null'}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Divider(
-                              height: 5,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                transferInfo == null
-                                    ? Text(
-                                        'Your recipient gets',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : Text(
-                                        'Your recipient gets ${transferInfo!.recipientGetAmount ?? '000'}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Divider(
-                              height: 5,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [Text('Transaction Method :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Fund Of Source :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Purpose :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Beneficiary Relationship :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Local Agent Name :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Local Agent City :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Local Agent Branch :')],
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Row(
-                              children: [Text('Status:')],
-                            ),
+                            transferInfo == null
+                                ? Text('Item Ref:')
+                                : Text(
+                                    'Item Ref : ${transferInfo!.itemReference ?? '000'}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ):ListTile(title: Text('No record found according to your Item Reference'),),
-                Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextFormField(
-                    controller: trackIdCon,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.track_changes_sharp,
-                        color: MyColor.blue,
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      labelText: 'Transfer Id',
-                      hintStyle: TextStyle(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: MyColor.blue),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: .2,
-                          color: Colors.grey.shade500,
+                        SizedBox(
+                          height: 5,
                         ),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2, color: Colors.red),
-                        //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
+                        transferInfo == null
+                            ? Text(
+                                'Recipient Name : Demo',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                'Recipient Name : : ${transferInfo!.recipientName ?? 'Demo'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                        Divider(
+                          height: 5,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            transferInfo == null
+                                ? Text('Send Amount : 000')
+                                : Text(
+                                    'Send Amount : ${transferInfo!.sendAmount ?? '000'}'),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            transferInfo == null
+                                ? Text('Fees : 0000')
+                                : Text(
+                                    'Fees : ${transferInfo!.fees ?? '000'}')
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            transferInfo == null
+                                ? Text('You pay in total : 0000')
+                                : Text(
+                                    'You pay in total : ${transferInfo!.payableAmount ?? '000'}')
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(
+                          height: 5,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            transferInfo == null
+                                ? Text(
+                                    'Exchange Rate : 1 AUD-> 0000',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text(
+                                    'Exchange Rate : 1 AUD-> ${transferInfo!.rate ?? '0000'} ${transferInfo!.receiveCurr ?? 'Null'}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(
+                          height: 5,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            transferInfo == null
+                                ? Text(
+                                    'Your recipient gets',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text(
+                                    'Your recipient gets ${transferInfo!.recipientGetAmount ?? '000'}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(
+                          height: 5,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [Text('Transaction Method :')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Fund Of Source :')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Purpose :')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [
+                            Text('Beneficiary Relationship :')
+                          ],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Local Agent Name :')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Local Agent City :')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Local Agent Branch :')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Status:')],
+                        ),
+                      ],
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'TransferId is required to track';
-                      } else
-                        return null;
-                    },
                   ),
                 ),
               ),
-            ),
-                Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: Size.fromHeight(50),
-                      backgroundColor: Color(0xff02A6EB)),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      EasyLoading.show();
-                    await  provider.getTransferInfoByTransferId(trackIdCon.text)
-                          .then((value) {
-                        EasyLoading.dismiss();
-                        print('Returning value $value');
-                        if (value != null) {
-                          setState(() {
-                            showError=true;
-                            transferInfo = value;
-                          });
-                        }
-                        if(value==null) {
-                          print('ERROR IS FOUND');
-                          setState(() {
-                            showError=false;
-                          });
-                        }
-                      });
-                    }
-                  },
-                  child: Text('Track')),
-            )
-          ],
-        ),
-      ),
-    );
+              SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+        );
   }
 }
