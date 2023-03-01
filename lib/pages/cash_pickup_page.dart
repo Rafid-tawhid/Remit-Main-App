@@ -12,7 +12,7 @@ import '../models/bank_agent_data_model.dart';
 import '../models/calculator_info_model.dart';
 import '../models/get_branch_data_model.dart';
 import '../models/recipents_model.dart';
-import '../models/recipient_relationship_page.dart';
+import 'recipient_relationship_page.dart';
 import '../providers/user_profile_provider.dart';
 
 class CashPickupPage extends StatefulWidget {
@@ -43,6 +43,7 @@ class _CashPickupPageState extends State<CashPickupPage> {
   void initState() {
     calculatorInfo = SetCalculatorAndRecipientInfo.getCalculatorInfo();
     recipientsInfo = SetCalculatorAndRecipientInfo.getRecipientInfo();
+    EasyLoading.dismiss();
     super.initState();
   }
 
@@ -63,6 +64,10 @@ class _CashPickupPageState extends State<CashPickupPage> {
       }
     }
     callOnce = false;
+
+    //exception for india
+
+
     super.didChangeDependencies();
   }
 
@@ -72,23 +77,28 @@ class _CashPickupPageState extends State<CashPickupPage> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
+            onTap: (){
               Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),
@@ -474,25 +484,28 @@ class _CashPickupPageState extends State<CashPickupPage> {
             //BUTTON AND VALIDATION
             Padding(
               padding: const EdgeInsets.all(12.0),
-              child: ElevatedButton(
-                onPressed: ()  {
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: ()  {
 
-                  if(bankInfo==null||branchInfo==null){
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
-                  }
-                  else {
+                    if(bankInfo==null||branchInfo==null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
+                    }
+                    else {
 
-                    Navigator.pushNamed(context, RecipientRelationShipPage.routeName);
-                  }
+                      Navigator.pushNamed(context, RecipientRelationShipPage.routeName);
+                    }
 
-                },
-                child: Text(
-                  'Next',
-                  style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                  },
+                  child: Text(
+                    'Next',
+                    style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: Size.fromHeight(50),
+                      backgroundColor: Color(0xff02A6EB)),
                 ),
-                style: ElevatedButton.styleFrom(
-                    fixedSize: Size.fromHeight(50),
-                    backgroundColor: Color(0xff02A6EB)),
               ),
             ),
           ],

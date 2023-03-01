@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/models/checkout_payment_model.dart';
 import 'package:remit_app/pages/congratulations_page.dart';
+import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
+import 'package:remit_app/pages/user_transfer_log_page.dart';
 
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_calculator_info.dart';
+import '../helper_method/get_user_info.dart';
 import '../models/calculator_info_model.dart';
 import '../models/payment_method.dart';
 import '../models/recipents_model.dart';
 import '../models/submit_recipient_relation_agent_info_model.dart';
 import '../providers/calculator_provider.dart';
 import '../providers/user_profile_provider.dart';
+import 'home_page.dart';
 
 class CheckOutPayment extends StatefulWidget {
   static const String routeName='/checkout_payment';
@@ -37,7 +42,7 @@ class _CheckOutPaymentState extends State<CheckOutPayment> {
     calculatorInfo = SetCalculatorAndRecipientInfo.getCalculatorInfo();
     recipientsInfo = SetCalculatorAndRecipientInfo.getRecipientInfo();
     checkout=SetCalculatorAndRecipientInfo.checkoutPaymentModel;
-
+    EasyLoading.dismiss();
     super.initState();
   }
 
@@ -56,23 +61,28 @@ class _CheckOutPaymentState extends State<CheckOutPayment> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
+            onTap: (){
               Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),
@@ -277,7 +287,11 @@ class _CheckOutPaymentState extends State<CheckOutPayment> {
                         backgroundColor: Color(0xff02A6EB)
                     ),
                     onPressed: (){
-                      Navigator.pushNamed(context, CongratulationsPage.routeName);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Congratulations')));
+                      Navigator.pushNamed(context, TransferLogPage.routeName).then((value){
+                        Navigator.pushReplacementNamed(context, HomePage.routeName);
+                      });
+                      // Navigator.pushReplacementNamed(context, CongratulationsPage.routeName,);
                     }, child: Text('I Have paid',style: TextStyle(fontSize: 18),)),
                 SizedBox(height: 10,),
                 ElevatedButton(
@@ -286,7 +300,9 @@ class _CheckOutPaymentState extends State<CheckOutPayment> {
                         backgroundColor: Colors.white,
                     ),
                     onPressed: (){
-
+                      Navigator.pushNamed(context, TransferLogPage.routeName).then((value){
+                        Navigator.pushReplacementNamed(context, HomePage.routeName);
+                      });
 
                     }, child: Text('I\'ll transfer my money later',style: TextStyle(fontSize: 18,color: Colors.black),)),
               ],

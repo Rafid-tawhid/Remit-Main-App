@@ -55,6 +55,10 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
   final emailCon=TextEditingController();
   final countryCon=TextEditingController();
 
+  void initState() {
+    EasyLoading.dismiss();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -110,8 +114,18 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
+                ),
               ),
             ),
           ),

@@ -286,27 +286,29 @@ class _LoginPageState extends State<LoginPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Checkbox(
-                                                value: checkBox,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    checkBox = value!;
-                                                  });
-                                                },
-                                                side: BorderSide(
-                                                    color: MyColor.blue,
-                                                    width: 2),
-                                              ),
-                                              Text(
-                                                'Remember Me',
-                                                style: TextStyle(
-                                                    color:
-                                                        Colors.grey.shade600),
-                                              ),
-                                            ],
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: checkBox,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      checkBox = value!;
+                                                    });
+                                                  },
+                                                  side: BorderSide(
+                                                      color: MyColor.blue,
+                                                      width: 2),
+                                                ),
+                                                Text(
+                                                  'Remember Me',
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade600),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           Padding(
                                             padding:
@@ -373,7 +375,7 @@ class _LoginPageState extends State<LoginPage> {
                                             });
 
                                             //get all user info by email and password
-                                            await userProfileProvider.getUserInfoByEmailPassword(emailCon.text, passCon.text)
+                                            await userProfileProvider.getUserInfoByEmailPassword(emailCon.text.trim(), passCon.text.trim())
                                                 .then((data) async {
                                               print('RECEIVE DATA $data');
                                               if (data == null) {

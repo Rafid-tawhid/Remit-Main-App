@@ -23,20 +23,25 @@ class MyDialog{
   static Future<dynamic> showErrorMsgDialog(BuildContext context, data) {
     List<String> errorList=[];
     var errors=ErrorsModel.fromJson(data);
-    if(errors.errors!.email!=null){
-      errorList.addAll(errors.errors!.email!);
+    print(errors.toJson());
+    if(errors!=null){
+      if(errors.errors!.email!=null){
+        errorList.addAll(errors.errors!.email!);
+      }
+      if(errors.errors!.password!=null){
+        errorList.addAll(errors.errors!.password!);
+      }
+      else {
+         errorList[0]=errors.errors.toString();
+      }
     }
-    if(errors.errors!.password!=null){
-      errorList.addAll(errors.errors!.password!);
+    else{
+      errorList[0]=data.toString();
     }
-    else {
-      errorList[0]=errors.errors.toString();
-    }
-    return showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
+
+    return showDialog(context: context, builder: (context) => AlertDialog(
           title: Text("Error"),
-          content: Text(errorList.first.toString()),
+          content: errorList.length>0?Text(errorList.first.toString()):Text(data.toString()),
           actions: [
             ElevatedButton(
                 onPressed: () {
@@ -64,3 +69,4 @@ class MyDialog{
         ));
   }
 }
+

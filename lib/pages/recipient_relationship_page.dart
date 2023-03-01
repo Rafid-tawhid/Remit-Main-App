@@ -15,12 +15,12 @@ import '../custom_widgits/dialog_widgits.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_calculator_info.dart';
 import '../helper_method/get_user_info.dart';
-import '../pages/checkout_page.dart';
-import '../pages/user_profile_page.dart';
+import 'checkout_page.dart';
+import 'user_profile_page.dart';
 import '../providers/calculator_provider.dart';
-import 'bank_agent_data_model.dart';
-import 'calculator_info_model.dart';
-import 'get_branch_data_model.dart';
+import '../models/bank_agent_data_model.dart';
+import '../models/calculator_info_model.dart';
+import '../models/get_branch_data_model.dart';
 
 class RecipientRelationShipPage extends StatefulWidget {
   static const String routeName='/recipient_relationship';
@@ -67,6 +67,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
   void initState() {
     calculatorInfo = SetCalculatorAndRecipientInfo.getCalculatorInfo();
     recipientsInfo = SetCalculatorAndRecipientInfo.getRecipientInfo();
+    EasyLoading.dismiss();
     super.initState();
   }
 
@@ -87,23 +88,28 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
+            onTap: (){
               Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),
@@ -490,7 +496,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
                     senderOccupation!,sourceOfFund!,
                     sendingPurpose!);
 
-                //main huge api
+                //main huge api Final api
                 callSubmitRecipientRelationApi();
 
 
@@ -526,6 +532,8 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
     final branchInfo= SetCalculatorAndRecipientInfo.branchInfo;
     final funds= SetCalculatorAndRecipientInfo.fund;
     final bankAccNumber= SetCalculatorAndRecipientInfo.bankAccNo;
+    final ifseAccNo= SetCalculatorAndRecipientInfo.ifseRouteNo;
+    final typeOfAccount= SetCalculatorAndRecipientInfo.typeOfAcc;
 
     //create model
     submit_recipient_model=SubmitRecipientRelationAgentInfoModel(
@@ -547,8 +555,8 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
         bankId:branchInfo==null?'': branchInfo.bankid??'',
         locationId:branchInfo==null?'':branchInfo.locationid??'',
         branchInfo:branch??'',
-        payoutBankCode:branchInfo==null?'':branchInfo.bankid??'',
-        typeOfAccount:'',
+        payoutBankCode:ifseAccNo??'',
+        typeOfAccount:typeOfAccount??'',
         branchId:branchInfo==null?'':branchInfo.bankid??'',
         bankAccNumber:bankAccNumber==null?'':bankAccNumber,
         agentName:agent??'',
@@ -562,10 +570,11 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
       EasyLoading.dismiss();
       if(value['status']==true){
         print(value.toString());
-
-         Navigator.pushNamed(context, CheckoutPage.routeName);
+        print('THIS IS CALLING........');
+        Navigator.pushNamed(context, CheckoutPage.routeName);
       }
       if(value['status']==false){
+        print('error IS CALLING........');
         MyDialog.showErrorMsgDialog(context, value);
       }
 

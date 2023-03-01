@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/colors.dart';
@@ -22,6 +23,13 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
+
+  @override
+  void initState() {
+    EasyLoading.dismiss();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

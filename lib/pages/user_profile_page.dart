@@ -55,7 +55,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         Text("Edit Profile"),
                       ],
                     ),
-                    value: '/profile',
+                    value: '/image',
                   ),
                   // PopupMenuItem(
                   //   child: Row(
@@ -119,12 +119,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: ClipOval(
-                          child: Image.asset(
-                            'images/logo.png',
-                            fit: BoxFit.fill,
-                            width: 70,
-                          )),
+                      child:  Container(
+
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(.5),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(

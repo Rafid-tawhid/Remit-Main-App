@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/pages/home_page.dart';
+import 'package:remit_app/pages/user_profile_page.dart';
 import '../custom_widgits/button1.dart';
+import '../helper_method/get_user_info.dart';
 
 
 
@@ -49,11 +51,33 @@ class _OtpPageState extends State<OtpPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        title:  Text('Enter OTP',style: TextStyle(color: Colors.black,fontSize: 20),),
+        title: Image.asset('images/logo.png',width: 120,),
+        centerTitle: true,
+        actions: [
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, UserProfilePage.routeName);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,

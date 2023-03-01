@@ -21,34 +21,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
       backgroundColor: Colors.white,
       drawer: MyDrawer(),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
-        elevation: 0.0,
-        title: Image.asset('images/logo.png',width: 120,),
-        centerTitle: true,
-        actions: [
-          InkWell(
-            onTap: (){
-              Navigator.pushNamed(context, UserProfilePage.routeName);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
-              child: Container(
-
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(.5),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+        title: Text('About Us'),
       ),
       body: ListView(
         children: [

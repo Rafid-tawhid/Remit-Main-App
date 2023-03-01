@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
+import 'package:remit_app/custom_widgits/dialog_widgits.dart';
 import 'package:remit_app/custom_widgits/show_error_dialoge.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/pages/launcher_page.dart';

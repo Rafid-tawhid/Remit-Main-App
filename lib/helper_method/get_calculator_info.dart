@@ -15,6 +15,8 @@ class SetCalculatorAndRecipientInfo{
   static String? branchName;
   static String? agentName;
   static String? bankAccNo;
+  static String? ifseRouteNo;
+  static String? typeOfAcc;
 
   static Recipients? recipients;
   static LocalAgent? localAgent;
@@ -64,6 +66,12 @@ class SetCalculatorAndRecipientInfo{
 
   static setSubmitInfoBankTransferBankAccNo(String BankaccNo){
     bankAccNo=BankaccNo;
+  }
+
+  //for india
+  static setSubmitRouteNameBankAccType(String ifscNo,bankAccType){
+    ifseRouteNo=ifscNo;
+    typeOfAcc=bankAccType;
   }
 
 

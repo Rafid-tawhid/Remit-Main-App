@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/helper_method/helper_class.dart';
 import 'package:remit_app/models/track_transfer_model.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import '../colors.dart';
+import '../helper_method/get_user_info.dart';
 import '../pages/user_profile_page.dart';
 import 'button1.dart';
 import 'button_2.dart';
@@ -36,6 +38,10 @@ class _TrackTransferPageState extends State<TrackTransferPage> {
     provider = Provider.of<UserProfileProvider>(context, listen: true);
     super.didChangeDependencies();
   }
+  void initState() {
+    EasyLoading.dismiss();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +59,23 @@ class _TrackTransferPageState extends State<TrackTransferPage> {
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, UserProfilePage.routeName);
+            onTap: (){
+
+             Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),
@@ -407,51 +422,53 @@ class TransactionItem extends StatelessWidget {
                           height: 5,
                         ),
                         Row(
-                          children: [Text('Transaction Method :')],
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Row(
-                          children: [Text('Fund Of Source :')],
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Row(
-                          children: [Text('Purpose :')],
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Row(
                           children: [
-                            Text('Beneficiary Relationship :')
+                            Text('Transaction Method : ${transferInfo!.transactionMethod??''}'),
                           ],
                         ),
                         SizedBox(
                           height: 3,
                         ),
                         Row(
-                          children: [Text('Local Agent Name :')],
+                          children: [Text('Fund Of Source : ${transferInfo!.fundSource??''}')],
                         ),
                         SizedBox(
                           height: 3,
                         ),
                         Row(
-                          children: [Text('Local Agent City :')],
+                          children: [Text('Purpose : ${transferInfo!.purpose??''}')],
                         ),
                         SizedBox(
                           height: 3,
                         ),
                         Row(
-                          children: [Text('Local Agent Branch :')],
+                          children: [
+                            Text('Beneficiary Relationship : ${transferInfo!.beneficiaryRelationship??''}')
+                          ],
                         ),
                         SizedBox(
                           height: 3,
                         ),
                         Row(
-                          children: [Text('Status:')],
+                          children: [Text('Local Agent Name :${transferInfo!.localAgentName??''}')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Local Agent City : ${transferInfo!.localAgentCity??''}')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Local Agent Branch : ${transferInfo!.branchName??''}')],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Row(
+                          children: [Text('Status: ${Transfer.getTransferStatusById(transferInfo!.transferStatus!)}')],
                         ),
                       ],
                     ),

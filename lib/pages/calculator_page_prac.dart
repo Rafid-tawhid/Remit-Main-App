@@ -69,6 +69,22 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
   final FocusNode sendFocus=FocusNode();
   final FocusNode receiveFocus=FocusNode();
 
+  final ScrollController _controller = ScrollController();
+
+// This is what you're looking for!
+  void _scrollDown() {
+    print('SCROLL IS CALLING');
+    _controller.jumpTo(_controller.position.maxScrollExtent);
+  }
+
+  @override
+  void initState() {
+    // remove previous objects bank or cash info
+    clearPreviousInfo();
+    EasyLoading.dismiss();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     if (callOnce) {
@@ -126,8 +142,18 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
+                ),
               ),
             ),
           ),
@@ -141,6 +167,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
           margin: EdgeInsets.all(10),
           padding: EdgeInsets.symmetric(horizontal: 25),
           child: ListView(
+            controller: _controller,
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -405,6 +432,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                   Future.delayed(Duration.zero,(){
                                     getTheFeesAndTotalAmount(sendControler.text,
                                         receiveControler.text);
+                                    _scrollDown();
                                   });
                                 });
 
@@ -509,6 +537,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                     Future.delayed(Duration.zero,(){
                                       getTheFeesAndTotalAmount(sendControler.text,
                                           receiveControler.text);
+                                      _scrollDown();
                                     });
                                   });
 
@@ -918,7 +947,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                       text: '${fees} ',
                                       style: TextStyle(color: Colors.grey)),
                                   TextSpan(
-                                      text: ' ${currencyName}',
+                                      text: 'AUD',
                                       style: TextStyle(color: Colors.black))
                                 ]),
                               ),
@@ -941,7 +970,7 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                                           '${(double.parse(sendControler.text) + double.parse(fees)).toStringAsFixed(2)} ',
                                       style: TextStyle(color: Colors.grey)),
                                   TextSpan(
-                                      text: ' ${currencyName}',
+                                      text: 'AUD',
                                       style: TextStyle(color: Colors.black))
                                 ]),
                               ),
@@ -1016,17 +1045,20 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
                               onPressed: () {
                                 FocusScope.of(context).requestFocus(new FocusNode());
                                 if (_fromKey.currentState!.validate()) {
-
+                                  EasyLoading.show();
                                   //called same method twice for unfocus textfield
                                   getTheFeesAndTotalAmount(sendControler.text,
                                           receiveControler.text).then((value){
-                                            Future.delayed(Duration.zero,(){
+                                            Future.delayed(Duration(milliseconds: 100),(){
                                               getTheFeesAndTotalAmount(sendControler.text,
                                                   receiveControler.text);
+                                              EasyLoading.dismiss();
+                                              _scrollDown();
                                             });
+                                            EasyLoading.dismiss();
                                   });
-
                                 }
+                                EasyLoading.dismiss();
                               },
                               child: Text(
                                 'Continue',
@@ -1221,6 +1253,28 @@ class _CalculatorPage2State extends State<CalculatorPage2> {
       }
 
     });
+  }
+
+  void clearPreviousInfo() {
+
+    SetCalculatorAndRecipientInfo.calculatorInfoModel=null;
+
+    SetCalculatorAndRecipientInfo.branchName=null;
+    SetCalculatorAndRecipientInfo.agentName=null;
+    SetCalculatorAndRecipientInfo.bankAccNo=null;
+    SetCalculatorAndRecipientInfo.ifseRouteNo=null;
+    SetCalculatorAndRecipientInfo.typeOfAcc=null;
+
+    SetCalculatorAndRecipientInfo.recipients=null;
+    SetCalculatorAndRecipientInfo.localAgent=null;
+    SetCalculatorAndRecipientInfo.bankInfo=null;
+    SetCalculatorAndRecipientInfo.branchInfo=null;
+
+    SetCalculatorAndRecipientInfo.relationship=null;
+    SetCalculatorAndRecipientInfo.occupation=null;
+    SetCalculatorAndRecipientInfo.fund=null;
+    SetCalculatorAndRecipientInfo.purpose=null;
+    SetCalculatorAndRecipientInfo.checkoutPaymentModel=null;
   }
 
 

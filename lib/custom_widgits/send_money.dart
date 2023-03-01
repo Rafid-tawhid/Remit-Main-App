@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:remit_app/custom_widgits/track_transfer.dart';
 import '../colors.dart';
+import '../helper_method/get_user_info.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 import '../pages/user_profile_page.dart';
@@ -40,8 +41,18 @@ class _SendMoneyWidgetState extends State<SendMoneyWidget> {
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage('https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
+                ),
               ),
             ),
           ),

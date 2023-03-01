@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
+import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 
 class ContactPage extends StatefulWidget {
@@ -43,31 +44,9 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: MyDrawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: MyColor.blue, size: 25),
-          elevation: 0.0,
-          title: Image.asset(
-            'images/logo.png',
-            width: 120,
-          ),
-          centerTitle: true,
-          actions: [
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context,UserProfilePage.routeName);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('Contact Us'),
+      ),
         body: SingleChildScrollView(
 
           child: Column(

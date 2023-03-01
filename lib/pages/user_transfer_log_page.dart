@@ -5,6 +5,7 @@ import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 
 import '../custom_widgits/drawer.dart';
+import '../helper_method/helper_class.dart';
 
 class TransferLogPage extends StatefulWidget {
   static const String routeName='/transfer_log';
@@ -47,14 +48,18 @@ class _TransferLogPageState extends State<TransferLogPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                                child: Text('Date : ${e.createdAt!.substring(0,10)}',style: TextStyle(fontWeight: FontWeight.bold),)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Item Reference',style: TextStyle(fontWeight: FontWeight.bold),),
-                                Text(e.itemReference??'',style: TextStyle(fontWeight: FontWeight.bold),)
+                                Text('Invoice : ${e.invoice!.substring(0,10)}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                Text('Date : ${e.createdAt!.substring(0,10)}',style: TextStyle(fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Item Reference :${e.itemReference}',style: TextStyle(fontWeight: FontWeight.bold),),
+
                               ],
                             ),
                             SizedBox(height: 4,),
@@ -70,7 +75,15 @@ class _TransferLogPageState extends State<TransferLogPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('Send Amount'),
-                                Text(e.sendAmount??'')
+                                Text(double.parse(e.sendAmount??'').toStringAsFixed(4))
+                              ],
+                            ),
+                            SizedBox(height: 4,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Receive Amount'),
+                                Text(double.parse(e.recipientGetAmount??'').toStringAsFixed(4))
                               ],
                             ),
                             SizedBox(height: 4,),
@@ -78,7 +91,7 @@ class _TransferLogPageState extends State<TransferLogPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('Rate'),
-                                Text('1 AUD->${e.rate}')
+                                Text('1 AUD->${double.parse(e.rate??'').toStringAsFixed(4)}')
                               ],
                             ),
                             SizedBox(height: 4,),
@@ -86,7 +99,7 @@ class _TransferLogPageState extends State<TransferLogPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('Paid'),
-                                Text('${e.status}')
+                                Text(Transfer.getTransferStatusById(e.status!)??'')
                               ],
                             ),
                           ],

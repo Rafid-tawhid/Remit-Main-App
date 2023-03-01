@@ -34,5 +34,52 @@ class MapUtils {
     }
   }
 }
+class Transfer {
+
+  static String? getTransferStatusById(String transfer_status){
+    String? status;
+     switch(transfer_status){
+      case "1" : {
+        status = "Information Needed";
+      }
+      break;
+      case "2" : {
+        status= "Awaiting";
+      }
+      break;
+      case "3" : {
+        status= "Not Paid";
+      }
+      break;
+      case "4" : {
+        status= "Pending";
+      }
+      break;
+      case "5" : {
+        return "Approved";
+      }
+      case "6" : {
+        status= "InCompleted";
+      }
+      break;
+      case "7" : {
+        status= "Canceled";
+      }
+      break;
+      case "8" : {
+        status= "Onhold";
+      }
+      break;
+      case "9" : {
+        status= "Request Cancel";
+      }
+      break;
+
+    }
+    return status;
+  }
+
+
+}
 
 

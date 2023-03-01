@@ -8,10 +8,11 @@ import 'package:remit_app/pages/user_profile_page.dart';
 
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
+import '../helper_method/get_user_info.dart';
 import '../models/bank_agent_data_model.dart';
 import '../models/calculator_info_model.dart';
 import '../models/get_branch_data_model.dart';
-import '../models/recipient_relationship_page.dart';
+import 'recipient_relationship_page.dart';
 import '../providers/user_profile_provider.dart';
 
 class BankTransferPage extends StatefulWidget {
@@ -28,6 +29,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
   late Recipients? recipientsInfo;
   LocalAgent? localAgent;
   BankInfo? bankInfo;
+  String? typeOfAccount;
   BranchInfo? branchInfo;
   bool branchFound=true;
   final bankAccNoCon=TextEditingController();
@@ -36,6 +38,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
   BranchInfo? branchName;
   String? exceptionLocationId;
   String? exceptionBankId;
+  bool exceptionForIndia=false;
 
   @override
   void dispose() {
@@ -49,6 +52,11 @@ class _BankTransferPageState extends State<BankTransferPage> {
   void initState() {
     calculatorInfo=SetCalculatorAndRecipientInfo.getCalculatorInfo();
     recipientsInfo=SetCalculatorAndRecipientInfo.getRecipientInfo();
+    if(recipientsInfo!.country=='India'){
+      exceptionForIndia=true;
+    }
+      EasyLoading.dismiss();
+
     super.initState();
   }
 
@@ -59,23 +67,28 @@ class _BankTransferPageState extends State<BankTransferPage> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
-              Navigator.pushNamed(context,UserProfilePage.routeName);
+            onTap: (){
+              Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),
@@ -327,10 +340,19 @@ class _BankTransferPageState extends State<BankTransferPage> {
                     if(bankInfo==null||bankAccNoCon.text.isEmpty){
                       print('All filed required');
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
+                      return;
+                    }
+                    if(exceptionForIndia==true&& (ifscCon==null||ifscCon.text.isEmpty)){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
+                      return;
+                    }
+                    if(exceptionForIndia==true&& typeOfAccount==null){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
+                      return;
                     }
                     else {
                       if(branchInfo==null){
-                        branchName=BranchInfo(branch: branchNameCon.text,locationid: exceptionLocationId,bankid:exceptionBankId );
+                        branchName=BranchInfo(branch: branchNameCon.text,locationid: exceptionLocationId,bankid:exceptionBankId);
                         branchInfo=branchName;
                       }
                       print('Show info Local............');
@@ -342,6 +364,9 @@ class _BankTransferPageState extends State<BankTransferPage> {
 
                      //SET BANK ACCOUNT
                       SetCalculatorAndRecipientInfo.setSubmitInfoBankTransferBankAccNo(bankAccNoCon.text);
+
+                      //set route Name and type of bank for india
+                      SetCalculatorAndRecipientInfo.setSubmitRouteNameBankAccType(ifscCon.text.trim(),typeOfAccount);
 
                       Navigator.pushNamed(context, RecipientRelationShipPage.routeName);
 
@@ -389,6 +414,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
           builder: (context, provider, _) => Padding(
             padding: const EdgeInsets.all(16.0),
             child: DropdownButtonFormField<BankInfo>(
+              menuMaxHeight: 300,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
                     enabledBorder: OutlineInputBorder(),
@@ -400,11 +426,8 @@ class _BankTransferPageState extends State<BankTransferPage> {
                 ),
                 isExpanded: true,
                 onChanged: (value) {
-
-
                   //calling the branch by bank name if doesnt show input field
                   setState(() {
-
                     bankInfo=value;
                     print(bankInfo!.agent);
                     EasyLoading.show();
@@ -445,13 +468,14 @@ class _BankTransferPageState extends State<BankTransferPage> {
                 },
                 items: provider.bankInfoList
                     .map((bank) => DropdownMenuItem<BankInfo>(
+
                     value: bank,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 12.0),
                       child: Row(
                         children: [
                           // Icon(Icons.ac_unit,size: 25,),
-                          Text(bank!.agent??'Null')
+                          Flexible(child: Text(bank!.agent??'Null',overflow: TextOverflow.visible,))
                         ],
                       ),
                     )))
@@ -529,14 +553,14 @@ class _BankTransferPageState extends State<BankTransferPage> {
               child: Row(
                 children: [
                   Text(
-                    'IFSC/BSB/Routing No(Optional)',
+                    'IFSC/BSB/Routing No :${exceptionForIndia?'':'Optional'}',
                     style: TextStyle(color: MyColor.grey, fontSize: 16),
                   ),
-                  // const Icon(
-                  //   Icons.star,
-                  //   color: Colors.red,
-                  //   size: 12,
-                  // ),
+                  exceptionForIndia?Icon(
+                    Icons.star,
+                    color: Colors.red,
+                    size: 12,
+                  ):Icon(Icons.add,color: Colors.transparent,),
                 ],
               ),
             ),
@@ -570,7 +594,51 @@ class _BankTransferPageState extends State<BankTransferPage> {
                 ),
               ),
             ),
+
           ],
+        ),
+        SizedBox(height: 10,),
+
+        if(exceptionForIndia)Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: DropdownButtonFormField<String>(
+              menuMaxHeight: 300,
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
+                  enabledBorder: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder()),
+              value: typeOfAccount,
+              hint: Text(
+                '  Select One',
+                style: TextStyle(color: Colors.black),
+              ),
+              isExpanded: true,
+              onChanged: (value) {
+                typeOfAccount=value;
+                print(value);
+              },
+
+              validator: (value) {
+                if (value == null) {
+                  return "can't empty";
+                } else {
+                  return null;
+                }
+              },
+              items: ['NRE Account','Family support']
+                  .map((bank) => DropdownMenuItem<String>(
+
+                  value: bank,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Row(
+                      children: [
+                        // Icon(Icons.ac_unit,size: 25,),
+                        Flexible(child: Text(bank,overflow: TextOverflow.visible,))
+                      ],
+                    ),
+                  )))
+                  .toList()),
         ),
       ],
     );

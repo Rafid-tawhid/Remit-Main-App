@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
 import '../helper_method/get_user_info.dart';
+import '../helper_method/helper_class.dart';
 import '../pages/about_us_page.dart';
 import '../pages/calculator_page.dart';
 import '../pages/contact_us_page.dart';
@@ -161,22 +162,22 @@ class MyDrawer extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  selectedIndex=1;
+                  Navigator.pushNamed(context, HomePage.routeName);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       width: 20,
                     ),
-                    Icon(
-                      Icons.add_card_outlined,
-                      color: Colors.white,
-                    ),
+                    Icon(MyIcons2.person,color: Colors.white,),
                     SizedBox(
                       width: 10,
                     ),
                     const Text(
-                      'Receiving',
+                      'Recipient',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -213,6 +214,8 @@ class MyDrawer extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+                  selectedIndex=3;
+                  Navigator.pushNamed(context, HomePage.routeName);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -221,7 +224,7 @@ class MyDrawer extends StatelessWidget {
                       width: 20,
                     ),
                     Icon(
-                      Icons.transfer_within_a_station_outlined,
+                      MyIcons.location,
                       color: Colors.white,
                     ),
                     SizedBox(
@@ -236,32 +239,32 @@ class MyDrawer extends StatelessWidget {
                   ],
                 ),
               ),
-              TextButton(
-                onPressed: () {
-
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Icon(
-                      Icons.help_outline,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'Help Center',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // TextButton(
+              //   onPressed: () {
+              //
+              //   },
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       SizedBox(
+              //         width: 20,
+              //       ),
+              //       Icon(
+              //         Icons.help_outline,
+              //         color: Colors.white,
+              //       ),
+              //       SizedBox(
+              //         width: 10,
+              //       ),
+              //       const Text(
+              //         'Help Center',
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, ContactPage.routeName);

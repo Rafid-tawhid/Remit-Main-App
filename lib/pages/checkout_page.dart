@@ -45,6 +45,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
      calculatorInfo = SetCalculatorAndRecipientInfo.getCalculatorInfo();
      recipientsInfo = SetCalculatorAndRecipientInfo.getRecipientInfo();
+     EasyLoading.dismiss();
     super.initState();
   }
 
@@ -61,23 +62,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
+            onTap: (){
               Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),

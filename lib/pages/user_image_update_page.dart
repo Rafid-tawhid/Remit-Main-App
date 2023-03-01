@@ -74,22 +74,22 @@ class _UserImageUpdatePageState extends State<UserImageUpdatePage> {
                 Uint8List imagebytes = await imagefile.readAsBytes();
 
                 String base64string = base64.encode(imagebytes); //convert bytes to base64 string
-                // //print(base64string);
-                // final userProfile=UpdateUserProfile(
-                //     phone_number: "0467680966",
-                // );
-                // UserApiCalls.update_user_profile(userProfile).then((value) {
-                //   print('value ${value.toString()}');
-                // });
-
-                if(_imagePath==null){
-
-                }
-                else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Please select an image'),
-                  ));
-                }
+                 print(base64string);
+                final userProfile=UpdateUserProfile(
+                    profile_image: base64string,
+                );
+                UserApiCalls.update_user_profile(userProfile).then((value) {
+                  print('value ${value.toString()}');
+                });
+                //
+                // if(_imagePath==null){
+                //
+                // }
+                // else {
+                //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //     content: Text('Please select an image'),
+                //   ));
+                // }
 
               },
               child: Text('Update Image'))

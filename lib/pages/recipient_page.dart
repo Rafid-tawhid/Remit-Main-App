@@ -71,6 +71,11 @@ class _ReceipientPageState extends State<ReceipientPage> {
     super.dispose();
   }
 
+  void initState() {
+    EasyLoading.dismiss();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     GetUserDetails.getUserToken().then((value) {
@@ -101,23 +106,28 @@ class _ReceipientPageState extends State<ReceipientPage> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
+            onTap: (){
               Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),
@@ -849,8 +859,19 @@ class _ReceipientPageState extends State<ReceipientPage> {
                        await provider.getBankAgentData(token!,calculatorInfo.countryId!,calculatorInfo.serviceId!).then((value) {
                          EasyLoading.dismiss();
                        });
-                       //set recipient Info
-                       SetCalculatorAndRecipientInfo.setRecipeintInfo(recipient!);
+                       //set recipient Info (IF any Change)
+                       SetCalculatorAndRecipientInfo.setRecipeintInfo(Recipients(
+                         id: recipient!.id,
+                         userId: recipient!.userId,
+                         firstname: firstNameCon.text,
+                         middlename: middleNameCon.text,
+                         lastname: lastNameCon.text,
+                         phone: phoneCon.text,
+                         email: emailCon.text,
+                         streetName: addressCon.text,
+                         country: recipient!.country,
+                         streetCity: cityCon.text,
+                       ));
                        //go to BANK TRANSFER page
                        if(calculatorInfo.serviceId=='3'){
                          Navigator.pushNamed(context, BankTransferPage.routeName);

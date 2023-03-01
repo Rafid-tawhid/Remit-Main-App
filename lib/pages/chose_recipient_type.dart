@@ -11,7 +11,7 @@ import '../colors.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_user_info.dart';
 import '../models/calculator_info_model.dart';
-import '../models/recipient_relationship_page.dart';
+import 'recipient_relationship_page.dart';
 import '../providers/user_profile_provider.dart';
 
 class ChooseRecipientType extends StatefulWidget {
@@ -55,6 +55,13 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
     agentbankNameCon.dispose();
     super.dispose();
   }
+
+
+  void initState() {
+    EasyLoading.dismiss();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     provider=Provider.of(context,listen: true);
@@ -94,23 +101,28 @@ class _ChooseRecipientTypeState extends State<ChooseRecipientType> {
       drawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColor.blue, size: 25),
+        iconTheme: IconThemeData(color: MyColor.blue,size: 25),
         elevation: 0.0,
-        title: Image.asset(
-          'images/logo.png',
-          width: 120,
-        ),
+        title: Image.asset('images/logo.png',width: 120,),
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: () {
+            onTap: (){
               Navigator.pushNamed(context, UserProfilePage.routeName);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 12.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/FhC3LvHXkAEMEUZ.png',
+              padding: const EdgeInsets.only(right: 12.0,top: 5,bottom: 5),
+              child: Container(
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(.5),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                  ),
                 ),
               ),
             ),

@@ -31,6 +31,11 @@ class _HomePageState extends State<HomePage> {
   String? token;
   String? password;
 
+  void initState() {
+    EasyLoading.dismiss();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
 
