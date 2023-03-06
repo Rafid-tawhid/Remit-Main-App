@@ -1,25 +1,19 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/custom_widgits/dialog_widgits.dart';
 import 'package:remit_app/custom_widgits/tab_widgits_list.dart';
 import 'package:remit_app/helper_method/get_calculator_info.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/pages/cash_pickup_page.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../api_calls/user_recipients_calls.dart';
 import '../colors.dart';
-import '../custom_widgits/button1.dart';
 import '../custom_widgits/drawer.dart';
 import '../models/calculator_info_model.dart';
 import '../pages/user_profile_page.dart';
 import 'bank_transfer_page.dart';
-import 'chose_recipient_type.dart';
 import 'home_page.dart';
 
 class ReceipientPage extends StatefulWidget {
@@ -857,29 +851,38 @@ class _ReceipientPageState extends State<ReceipientPage> {
                      if(_formKey.currentState!.validate()){
                        EasyLoading.show();
                        await provider.getBankAgentData(token!,calculatorInfo.countryId!,calculatorInfo.serviceId!).then((value) {
-                         EasyLoading.dismiss();
+
+                         if(value!=null){
+                           EasyLoading.dismiss();
+                           //set recipient Info (IF any Change)
+                           SetCalculatorAndRecipientInfo.setRecipeintInfo(Recipients(
+                             id: recipient!.id,
+                             userId: recipient!.userId,
+                             firstname: firstNameCon.text,
+                             middlename: middleNameCon.text,
+                             lastname: lastNameCon.text,
+                             phone: phoneCon.text,
+                             email: emailCon.text,
+                             streetName: addressCon.text,
+                             country: recipient!.country,
+                             streetCity: cityCon.text,
+                           ));
+                           //go to BANK TRANSFER page
+                           if(calculatorInfo.serviceId=='3'){
+                             Navigator.pushNamed(context, BankTransferPage.routeName);
+                           }
+                           //go to cash pickup page
+                           if(calculatorInfo.serviceId=='4'){
+                             Navigator.pushNamed(context, CashPickupPage.routeName);
+                           }
+                         }
+                         else {
+                           EasyLoading.dismiss();
+                           MyDialog.showServerProblemDialog(context);
+                         }
                        });
-                       //set recipient Info (IF any Change)
-                       SetCalculatorAndRecipientInfo.setRecipeintInfo(Recipients(
-                         id: recipient!.id,
-                         userId: recipient!.userId,
-                         firstname: firstNameCon.text,
-                         middlename: middleNameCon.text,
-                         lastname: lastNameCon.text,
-                         phone: phoneCon.text,
-                         email: emailCon.text,
-                         streetName: addressCon.text,
-                         country: recipient!.country,
-                         streetCity: cityCon.text,
-                       ));
-                       //go to BANK TRANSFER page
-                       if(calculatorInfo.serviceId=='3'){
-                         Navigator.pushNamed(context, BankTransferPage.routeName);
-                       }
-                       //go to cash pickup page
-                       if(calculatorInfo.serviceId=='4'){
-                         Navigator.pushNamed(context, CashPickupPage.routeName);
-                       }
+
+
                      }
                     },
                     child: Text(

@@ -383,7 +383,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 EasyLoading.dismiss();
                                                 ShowErrorDialoge(context);
                                               } else {
-                                                if (data['success'] == true) {
+                                                if (data['status'] == true) {
                                                   final user = await Data.fromJson(data['data']);
                                                   final token = data['user_token'];
                                                   print('THIS IS USER TOKEN $token');

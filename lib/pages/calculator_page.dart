@@ -735,33 +735,46 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                                   onPressed: () async {
                                                     if (formKey2.currentState!.validate()) {
                                                       EasyLoading.show();
-
-                                                      await CalculatorAPICalls.getCuponDetails(
-                                                          cuponControler.text)
-                                                          .then((cupon) {
+                                                      await CalculatorAPICalls.getPromoCodeValues(
+                                                        cuponControler.text.trim(),
+                                                        finalRate,
+                                                        sendControler.text.trim(),
+                                                        _country!.id,
+                                                        serviceId
+                                                      ).then((value) {
                                                         EasyLoading.dismiss();
-                                                        double reduceFees = 0.0;
-                                                        if (cupon != null) {
+                                                        print('Promo code values ${value.toString()}');
 
-                                                          if (cupon.data!.discountType == "P") {
-                                                            double val = double.parse(cupon.data!.reduceFee!) * double.parse(cuponFixedRate!);
-                                                            reduceFees = double.parse((val / 100).toStringAsFixed(4));
-                                                          }
-                                                          if (cupon.data!.discountType == "F") {
-                                                            reduceFees = double.parse(double.parse(cupon.data!.reduceFee!).toStringAsFixed(4));
-                                                          }
-
-                                                          Navigator.pop(context);
-                                                          showDialog(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  showCuponCongratulationsDialog(reduceFees,cupon.data!.discountType));
-                                                        } else {
-                                                          setState(() {
-                                                            showCuponMsg = 'Invalid Cupon Code';
-                                                          });
-                                                        }
                                                       });
+
+                                                      //important api call may use later
+
+                                                      // await CalculatorAPICalls.getCuponDetails(
+                                                      //     cuponControler.text)
+                                                      //     .then((cupon) {
+                                                      //   EasyLoading.dismiss();
+                                                      //   double reduceFees = 0.0;
+                                                      //   if (cupon != null) {
+                                                      //
+                                                      //     if (cupon.data!.discountType == "P") {
+                                                      //       double val = double.parse(cupon.data!.reduceFee!) * double.parse(cuponFixedRate!);
+                                                      //       reduceFees = double.parse((val / 100).toStringAsFixed(4));
+                                                      //     }
+                                                      //     if (cupon.data!.discountType == "F") {
+                                                      //       reduceFees = double.parse(double.parse(cupon.data!.reduceFee!).toStringAsFixed(4));
+                                                      //     }
+                                                      //
+                                                      //     Navigator.pop(context);
+                                                      //     showDialog(
+                                                      //         context: context,
+                                                      //         builder: (context) =>
+                                                      //             showCuponCongratulationsDialog(reduceFees,cupon.data!.discountType));
+                                                      //   } else {
+                                                      //     setState(() {
+                                                      //       showCuponMsg = 'Invalid Cupon Code';
+                                                      //     });
+                                                      //   }
+                                                      // });
                                                     }
                                                     // Navigator.pop(context);
                                                     // Navigator.pushNamed(context, HomePage.routeName);
@@ -1000,27 +1013,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                       currency_rate: finalRate,
                                       service_charge: fees,
                                     );
-                                    final model = CalculatorInfoModel(
-                                        countryName: _country!.name,
-                                        countryId: _country!.id,
-                                        serviceName: serviceName,
-                                        serviceId: serviceId,
-                                        currency: currencyName,
-                                        sendAmount: sendControler.text,
-                                        fees: fees,
-                                        totalPayable: (double.parse(sendControler.text) + double.parse(fees!)).toString(),
-                                        exchangeRate: finalRate,
-                                        recipientGets: receiveControler.text);
 
-                                         //set invoice
-                                        await submitCalculatorForInvoice(submitModel);
+                                    //set invoice
+                                    await submitCalculatorForInvoice(submitModel);
 
-                                      //set calculator Info
 
-                                      SetCalculatorAndRecipientInfo.setCalculatorInfo(model);
-
-                                      EasyLoading.dismiss();
-                                      Navigator.pushNamed(context, ReceipientPage.routeName, arguments: model);
                                   },
                                   child: Text(
                                     'Send',
@@ -1131,10 +1128,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // final cuponInfo=CuponModel(
-                    //   promocode: cuponControler.text,
-                    //   discount:
-                    // );
+
                     setState(() {
                       getCuponValue=true;
                       finalRate='${double.parse(cuponFixedRate!) + reduceFees}';
@@ -1227,28 +1221,60 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Future<void> submitCalculatorForInvoice(SubmitCalculatorModel submitModel) async {
     SendMoney sendMoney;
     await CalculatorAPICalls.sendCalculatorSubmitInfo(submitModel).then((value) {
-      if(value['status']==true){
-        var invoice=value['invoice'];
-        print('Invoice : $invoice');
-        //set invoice
-        provider.setUserInvoice(invoice);
-        //call send money data
-        CalculatorAPICalls.getSendMoneyDataAfterSubmit(userToken!, invoice).then((value) {
-          if(value['status']==true){
-            sendMoney=SendMoney.fromJson(value['sendMoney']);
-            print('sendMoney.itemId ${sendMoney.itemId}');
-          }
-          if(value['status']==false){
-            var message=value['errors'];
-            MyDialog.showErrorMsgDialog(context, value);
-          }
-        });
-      }
-     else if(value['status']==false){
-        var message=value['errors'];
-        MyDialog.showErrorMsgDialog(context, value);
+
+      if(value!=null){
+        if(value['status']==true){
+          var invoice=value['invoice'];
+          print('Invoice : $invoice');
+          //set invoice
+          provider.setUserInvoice(invoice);
+
+          final model = CalculatorInfoModel(
+              countryName: _country!.name,
+              countryId: _country!.id,
+              serviceName: serviceName,
+              serviceId: serviceId,
+              currency: currencyName,
+              sendAmount: sendControler.text,
+              fees: fees,
+              totalPayable: (double.parse(sendControler.text) + double.parse(fees!)).toString(),
+              exchangeRate: finalRate,
+              recipientGets: receiveControler.text);
+          SetCalculatorAndRecipientInfo.setCalculatorInfo(model);
+
+          //set calculator Info
+          EasyLoading.dismiss();
+          Navigator.pushNamed(context, ReceipientPage.routeName, arguments: model).then((value){
+            clearPreviousInfo();
+          });
+
+          //important api may be use later
+
+          //call send money data
+          // CalculatorAPICalls.getSendMoneyDataAfterSubmit(userToken!, invoice).then((value) {
+          //   if(value['status']==true){
+          //     sendMoney=SendMoney.fromJson(value['sendMoney']);
+          //     print('sendMoney.itemId ${sendMoney.itemId}');
+          //   }
+          //   if(value['status']==false){
+          //     var message=value['errors'];
+          //     MyDialog.showErrorMsgDialog(context, value);
+          //   }
+          // });
+        }
+        else if(value['status']==false){
+          var message=value['errors'];
+          EasyLoading.dismiss();
+          MyDialog.showErrorMsgDialog(context, value);
+        }
+        else {
+          EasyLoading.dismiss();
+          MyDialog.showServerProblemDialog(context);
+        }
       }
       else {
+        EasyLoading.dismiss();
+        print('Else is called');
         MyDialog.showServerProblemDialog(context);
       }
 
@@ -1256,6 +1282,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   void clearPreviousInfo() {
+
+    print('Clear previous items.....');
 
     SetCalculatorAndRecipientInfo.calculatorInfoModel=null;
 

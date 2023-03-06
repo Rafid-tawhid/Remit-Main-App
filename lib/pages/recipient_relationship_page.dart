@@ -539,7 +539,7 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
     submit_recipient_model=SubmitRecipientRelationAgentInfoModel(
         userToken:GetUserDetails.token,
         invoice:calculatorProvider.getUserInvoice(),
-        recipientId:recipientsInfo!.userId??'',
+        recipientId:recipientsInfo!.id.toString()??'',
         firstName:recipientsInfo!.firstname??'',
         middleName:recipientsInfo!.middlename??'',
         lastName:recipientsInfo!.lastname??'',
