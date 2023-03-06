@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remit_app/custom_widgits/tab_widgits_list.dart';
+import 'package:remit_app/helper_method/admin_config.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 import 'package:remit_app/pages/login_page.dart';
@@ -67,7 +68,7 @@ class MyDrawer extends StatelessWidget {
                       SizedBox(height: 5,),
                       Align(
                         alignment: Alignment.center,
-                          child: Text('Danesh Exchange',style: TextStyle(color: Colors.white),overflow: TextOverflow.ellipsis,)),
+                          child: Text(AdminAccessConfig.appName??'Danesh Exchange',style: TextStyle(color: Colors.white),overflow: TextOverflow.ellipsis,)),
                       SizedBox(height: 15,),
                       Divider(
                         color: Colors.white,

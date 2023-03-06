@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:remit_app/custom_widgits/dialog_widgits.dart';
 import 'package:remit_app/custom_widgits/show_error_dialoge.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
+import 'package:remit_app/models/app_settings_model.dart';
 import 'package:remit_app/pages/launcher_page.dart';
 
 import '../helper_method/admin_config.dart';
@@ -13,8 +14,32 @@ import '../models/payment_method.dart';
 import '../models/update_user_profile_model.dart';
 
 String baseUrl='https://remit.daneshexchange.com/staging/';
+// String baseUrl=AdminAccessConfig.base_url!;
 
 class UserApiCalls {
+
+  static Future<dynamic> getAppSettings()  async {
+    var data;
+    var settings;
+
+    try {
+      Response response = await get(
+          Uri.parse('https://remit.daneshexchange.com/api/basic/get_basic_configuration'));
+          data = await jsonDecode(response.body.toString());
+      return data;
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return data;
+  }
+
+
+    // print('THIS IS Bank agent DATA ${data}');
+
+
+
+
 
    static Future<dynamic> getUserInfoByEmailPassword(email,pass)  async {
      var data;
@@ -314,6 +339,7 @@ class UserApiCalls {
    }
 
 
+
    static Future<dynamic> checkOutPaymentItem(String invoice,String transferMethod)  async {
 
      var data;
@@ -383,6 +409,11 @@ class UserApiCalls {
      // print('THIS IS Bank agent DATA ${data}');
      return data;
    }
+
+
+
+
+
 }
 
 

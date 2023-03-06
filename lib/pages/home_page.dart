@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
-import 'package:remit_app/pages/calculator_page_prac.dart';
+import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 
 import '../custom_widgits/home.dart';

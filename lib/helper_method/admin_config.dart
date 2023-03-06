@@ -10,8 +10,11 @@ class AdminAccessConfig{
   static const String name='Rafid';
   static const String secret_key='bitBirds';
   static const String app_id='01682832598';
+  static String?  appName;
+  static String?  apiMode;
+  static  String? base_url;
 
-  static const String base_url='https://remit.daneshexchange.com/';
+  // static const String base_url='https://remit.daneshexchange.com/';
 
 
 
@@ -31,4 +34,6 @@ class AdminAccessConfig{
    return tokenData;
   }
  }
+
+
 }

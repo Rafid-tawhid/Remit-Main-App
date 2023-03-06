@@ -6,6 +6,7 @@ import 'package:remit_app/models/payment_method.dart';
 import 'package:remit_app/models/recipents_model.dart';
 
 import '../api_calls/user_recipients_calls.dart';
+import '../models/app_settings_model.dart';
 import '../models/sender_relationship_model.dart';
 import '../models/track_transfer_model.dart';
 import '../models/user_transfer_log_model.dart';
@@ -36,11 +37,32 @@ class UserProfileProvider extends ChangeNotifier{
   List<PaymentMethods> paymentMethodList=[];
 
   List<TrackTransfer> trackTransferList=[];
+  List<BasicSettings> basicSettingsList=[];
+
+
+  Future<List<BasicSettings>> getAppSettings() async{
+
+    await UserApiCalls.getAppSettings().then((value) {
+
+      print(value['basic_settings']);
+         for(Map i in value['basic_settings']){
+           basicSettingsList.add(BasicSettings.fromJson(i));
+         }
+
+
+     });
+
+     return basicSettingsList;
+  }
 
 
    Future<dynamic> getUserInfoByEmailPassword(email,pass){
     return UserApiCalls.getUserInfoByEmailPassword(email, pass);
   }
+
+
+
+
 
   Future<List<Recipients>> getRecipientsByEmailToken(String email,String pass) async{
 
