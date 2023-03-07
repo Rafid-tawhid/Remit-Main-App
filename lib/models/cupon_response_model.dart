@@ -44,15 +44,16 @@ class CouponData {
       String? promoCode, 
       String? discount, 
       String? discountType, 
-      num? discountFee, 
+      String? discountFee, 
       String? calculateWith, 
-      num? discountValue, 
-      num? discountPrice, 
-      num? feesAfterDiscount, 
-      num? rateAfterDiscount, 
-      num? payableAmountAfterDiscount, 
-      num? recipientGetAmount, 
-      num? recipientGetAmountDiscount,}){
+      String? discountValue, 
+      String? discountPrice, 
+      String? feesAfterDiscount, 
+      String? rate, 
+      String? rateAfterDiscount, 
+      String? payableAmountAfterDiscount, 
+      String? recipientGetAmount, 
+      String? recipientGetAmountDiscount,}){
     _promoCode = promoCode;
     _discount = discount;
     _discountType = discountType;
@@ -61,6 +62,7 @@ class CouponData {
     _discountValue = discountValue;
     _discountPrice = discountPrice;
     _feesAfterDiscount = feesAfterDiscount;
+    _rate = rate;
     _rateAfterDiscount = rateAfterDiscount;
     _payableAmountAfterDiscount = payableAmountAfterDiscount;
     _recipientGetAmount = recipientGetAmount;
@@ -76,6 +78,7 @@ class CouponData {
     _discountValue = json['discount_value'];
     _discountPrice = json['discount_price'];
     _feesAfterDiscount = json['fees_after_discount'];
+    _rate = json['rate'];
     _rateAfterDiscount = json['rate_after_discount'];
     _payableAmountAfterDiscount = json['payable_amount_after_discount'];
     _recipientGetAmount = json['recipient_get_amount'];
@@ -84,27 +87,29 @@ class CouponData {
   String? _promoCode;
   String? _discount;
   String? _discountType;
-  num? _discountFee;
+  String? _discountFee;
   String? _calculateWith;
-  num? _discountValue;
-  num? _discountPrice;
-  num? _feesAfterDiscount;
-  num? _rateAfterDiscount;
-  num? _payableAmountAfterDiscount;
-  num? _recipientGetAmount;
-  num? _recipientGetAmountDiscount;
+  String? _discountValue;
+  String? _discountPrice;
+  String? _feesAfterDiscount;
+  String? _rate;
+  String? _rateAfterDiscount;
+  String? _payableAmountAfterDiscount;
+  String? _recipientGetAmount;
+  String? _recipientGetAmountDiscount;
 CouponData copyWith({  String? promoCode,
   String? discount,
   String? discountType,
-  num? discountFee,
+  String? discountFee,
   String? calculateWith,
-  num? discountValue,
-  num? discountPrice,
-  num? feesAfterDiscount,
-  num? rateAfterDiscount,
-  num? payableAmountAfterDiscount,
-  num? recipientGetAmount,
-  num? recipientGetAmountDiscount,
+  String? discountValue,
+  String? discountPrice,
+  String? feesAfterDiscount,
+  String? rate,
+  String? rateAfterDiscount,
+  String? payableAmountAfterDiscount,
+  String? recipientGetAmount,
+  String? recipientGetAmountDiscount,
 }) => CouponData(  promoCode: promoCode ?? _promoCode,
   discount: discount ?? _discount,
   discountType: discountType ?? _discountType,
@@ -113,6 +118,7 @@ CouponData copyWith({  String? promoCode,
   discountValue: discountValue ?? _discountValue,
   discountPrice: discountPrice ?? _discountPrice,
   feesAfterDiscount: feesAfterDiscount ?? _feesAfterDiscount,
+  rate: rate ?? _rate,
   rateAfterDiscount: rateAfterDiscount ?? _rateAfterDiscount,
   payableAmountAfterDiscount: payableAmountAfterDiscount ?? _payableAmountAfterDiscount,
   recipientGetAmount: recipientGetAmount ?? _recipientGetAmount,
@@ -121,15 +127,16 @@ CouponData copyWith({  String? promoCode,
   String? get promoCode => _promoCode;
   String? get discount => _discount;
   String? get discountType => _discountType;
-  num? get discountFee => _discountFee;
+  String? get discountFee => _discountFee;
   String? get calculateWith => _calculateWith;
-  num? get discountValue => _discountValue;
-  num? get discountPrice => _discountPrice;
-  num? get feesAfterDiscount => _feesAfterDiscount;
-  num? get rateAfterDiscount => _rateAfterDiscount;
-  num? get payableAmountAfterDiscount => _payableAmountAfterDiscount;
-  num? get recipientGetAmount => _recipientGetAmount;
-  num? get recipientGetAmountDiscount => _recipientGetAmountDiscount;
+  String? get discountValue => _discountValue;
+  String? get discountPrice => _discountPrice;
+  String? get feesAfterDiscount => _feesAfterDiscount;
+  String? get rate => _rate;
+  String? get rateAfterDiscount => _rateAfterDiscount;
+  String? get payableAmountAfterDiscount => _payableAmountAfterDiscount;
+  String? get recipientGetAmount => _recipientGetAmount;
+  String? get recipientGetAmountDiscount => _recipientGetAmountDiscount;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -141,6 +148,7 @@ CouponData copyWith({  String? promoCode,
     map['discount_value'] = _discountValue;
     map['discount_price'] = _discountPrice;
     map['fees_after_discount'] = _feesAfterDiscount;
+    map['rate'] = _rate;
     map['rate_after_discount'] = _rateAfterDiscount;
     map['payable_amount_after_discount'] = _payableAmountAfterDiscount;
     map['recipient_get_amount'] = _recipientGetAmount;

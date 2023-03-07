@@ -20,6 +20,7 @@ import '../helper_method/helper_class.dart';
 import '../models/calculator_info_model.dart';
 import '../models/country_models.dart';
 import '../models/cupon_model.dart';
+import '../models/cupon_response_model.dart';
 import '../models/get_sent_money_model.dart';
 import '../providers/calculator_provider.dart';
 import '../providers/user_profile_provider.dart';
@@ -37,6 +38,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final sendControler = TextEditingController();
   final receiveControler = TextEditingController();
   final cuponControler = TextEditingController();
+  String calculatorFixedRate='0.0';
 
   late CalculatorProvider provider;
   late UserProfileProvider userProfileProvider;
@@ -60,6 +62,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   String? cuponFixedRate;
   String? userMail;
   String? userToken;
+  String? discountType;
   bool showRateInfo = false;
   bool getCuponValue = false;
 
@@ -82,12 +85,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
     // remove previous objects bank or cash info
     clearPreviousInfo();
     EasyLoading.dismiss();
+
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     if (callOnce) {
+
       provider = Provider.of(context, listen: true);
       _country = provider.getAllCountriesInfoList.first;
       serviceList = provider
@@ -95,6 +100,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       currencyList = provider.getAllCountriesInfoList.first.currencyDetails!;
 
       finalRate = _country!.currencyDetails!.first.finalRate;
+
       cuponFixedRate = _country!.currencyDetails!.first.finalRate;
       serviceId = _country!.currencyDetails!.first!.serviceId;
       currencyName = _country!.currencyDetails!.first!.currency;
@@ -111,6 +117,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
         userToken=value;
       });
 
+      //called for unfocus and get first values fees
+      getTheFeesAndTotalAmount(sendControler.text,
+          receiveControler.text).then((value){
+        Future.delayed(Duration.zero,(){
+          getTheFeesAndTotalAmount(sendControler.text,
+              receiveControler.text);
+        });
+      });
 
     }
     callOnce = false;
@@ -284,10 +298,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                         });
                                       }
 
-                                      // _country!.currencyDetails!.forEach((element) {
-                                      //   print(element.toString());
-                                      // });
-                                      // provider.getAllCurrencyByCurrencyDts(_country.currencyDetails!);
+                                      //called same method twice for unfocus textfield
+                                      getTheFeesAndTotalAmount(sendControler.text,
+                                          receiveControler.text).then((value){
+                                        Future.delayed(Duration.zero,(){
+                                          getTheFeesAndTotalAmount(sendControler.text,
+                                              receiveControler.text);
+                                          _scrollDown();
+                                        });
+                                      });
+
                                     },
                                     items: provider.getAllCountriesInfoList,
                                     dropdownDecoratorProps: DropDownDecoratorProps(
@@ -332,7 +352,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ),
 
 
-                    Text('Select Service',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                    Text('Delivery Method',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                     const SizedBox(
                       height: 5,
                     ),
@@ -384,6 +404,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           await provider.getFinalRate(
                               _country!.id!, serviceId!, currencyName!);
                           finalRate = provider.finalRate.toString();
+                          cuponFixedRate=provider.finalRate.toString();
                           print('finalRate $finalRate');
                           setState(() {
                             showSendMoneyBtn = false;
@@ -735,16 +756,29 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                                   onPressed: () async {
                                                     if (formKey2.currentState!.validate()) {
                                                       EasyLoading.show();
+
                                                       await CalculatorAPICalls.getPromoCodeValues(
                                                         cuponControler.text.trim(),
-                                                        finalRate,
+                                                          cuponFixedRate,
                                                         sendControler.text.trim(),
                                                         _country!.id,
                                                         serviceId
                                                       ).then((value) {
                                                         EasyLoading.dismiss();
-                                                        print('Promo code values ${value.toString()}');
 
+                                                          if(value!=null){
+                                                            final data=CouponData.fromJson(value['coupon_data']);
+                                                            Navigator.pop(context);
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (context) =>
+                                                                    showCuponCongratulationsDialog2(data));
+                                                          }
+                                                          else {
+                                                            setState(() {
+                                                              showCuponMsg = 'Invalid Cupon Code';
+                                                            });
+                                                          }
                                                       });
 
                                                       //important api call may use later
@@ -912,6 +946,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             style: TextStyle(color: Colors.blue),
                           ),
                         )),
+
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
@@ -937,7 +972,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     SizedBox(
                       height: 5,
                     ),
-                    if (showRateInfo)
+
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -1073,7 +1108,83 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
 
 
-  AlertDialog showCuponCongratulationsDialog(double reduceFees, String? discountType) {
+  // AlertDialog showCuponCongratulationsDialog(double reduceFees, String? discountType) {
+  //
+  //   return AlertDialog(
+  //     title: Text('Congratulations'),
+  //     content: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         FittedBox(
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Text('Exchange Rate : 1 AUD ='),
+  //               Text(' $cuponFixedRate $currencyName',
+  //                   style: TextStyle(decoration: TextDecoration.lineThrough)),
+  //             ],
+  //           ),
+  //         ),
+  //         Wrap(
+  //           children: [
+  //             Align(
+  //               child: Padding(
+  //                 padding: const EdgeInsets.only(top: 14, bottom: 8),
+  //                 child: discountType=='P'?Text('Discount rate $reduceFees (%) :'):Text('Discount Fixed ${reduceFees*100} $currencyName'),
+  //               ),
+  //               alignment: Alignment.center,
+  //             ),
+  //             SizedBox(
+  //               height: 15,
+  //             ),
+  //             Align(
+  //               alignment: Alignment.center,
+  //               child: Text(
+  //                 '1 AUD = ${double.parse(cuponFixedRate!) + reduceFees}',
+  //                 textAlign: TextAlign.center,
+  //               ),
+  //             ),
+  //             SizedBox(
+  //               height: 15,
+  //             ),
+  //           ],
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(top: 12.0),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //             children: [
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child: Text('Remove'),
+  //                 style: ElevatedButton.styleFrom(primary: Colors.grey),
+  //               ),
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //
+  //                   setState(() {
+  //                     getCuponValue=true;
+  //                     finalRate='${double.parse(cuponFixedRate!) + reduceFees}';
+  //                     receiveControler.text='${(double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2)}';
+  //                     print('receiveControler ${receiveControler.text}');
+  //                   });
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child: Text('Get Discount'),
+  //               ),
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  AlertDialog showCuponCongratulationsDialog2(CouponData couponData) {
+
+    discountType=couponData.discountType;
 
     return AlertDialog(
       title: Text('Congratulations'),
@@ -1085,7 +1196,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Exchange Rate : 1 AUD ='),
-                Text(' $cuponFixedRate $currencyName',
+                Text(' ${finalRate} $currencyName',
                     style: TextStyle(decoration: TextDecoration.lineThrough)),
               ],
             ),
@@ -1095,22 +1206,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
               Align(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 14, bottom: 8),
-                  child: discountType=='P'?Text('Discount rate $reduceFees (%) :'):Text('Discount Fixed ${reduceFees*100} $currencyName'),
+                  child: discountType=='P'?FittedBox(child: Text('Discount rate ${couponData.discount} (%) = ${couponData.rateAfterDiscount} ${currencyName}')):FittedBox(child: Text('Discount Rate (Fixed) = ${couponData.rateAfterDiscount} $currencyName')),
                 ),
                 alignment: Alignment.center,
               ),
               SizedBox(
                 height: 15,
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  '1 AUD = ${double.parse(cuponFixedRate!) + reduceFees}',
-                  textAlign: TextAlign.center,
-                ),
-              ),
+
               SizedBox(
-                height: 15,
+                height: 25,
               ),
             ],
           ),
@@ -1131,9 +1236,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
                     setState(() {
                       getCuponValue=true;
-                      finalRate='${double.parse(cuponFixedRate!) + reduceFees}';
-                      receiveControler.text='${(double.parse(sendControler.text)*double.parse(finalRate!)).toStringAsFixed(2)}';
-                      print('receiveControler ${receiveControler.text}');
+                      finalRate='${couponData.rateAfterDiscount}';
+                      receiveControler.text='${couponData.recipientGetAmountDiscount}';
                     });
                     Navigator.pop(context);
                   },
@@ -1146,11 +1250,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
       ),
     );
   }
-
-  // Future<dynamic> getRate(String text, String? id, String? serviceId) async {
-  //   return await provider.getServiceCharges(sendControler.text,
-  //       currency_details!.countryTableId, currency_details!.serviceId!);
-  // }
 
   void showErrorMessage(String value) {
     print(value);
@@ -1172,6 +1271,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       });
     }
   }
+
 
   Future<void> getTheFeesAndTotalAmount(String send, String receive) async {
     EasyLoading.show();
@@ -1308,5 +1408,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
 
 }
+
 
 

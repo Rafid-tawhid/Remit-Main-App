@@ -238,12 +238,12 @@ class CalculatorAPICalls {
 
 
   //get promo code values
-  static Future<CuponResponseModel?> getPromoCodeValues(promo_code,rate,send_amount,country_id,service_id) async {
+  static Future<dynamic> getPromoCodeValues(promo_code,rate,send_amount,country_id,service_id) async {
     var data;
     print('$promo_code,$rate,$send_amount,$country_id,$service_id');
     await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS Promo code TOKEN ${auth['token']}');
-      try {
+
         Response response = await post(
           Uri.parse('${baseUrl}api/get_coupon_values'),
           headers: {
@@ -257,19 +257,16 @@ class CalculatorAPICalls {
             'service_id':service_id
           }
         );
-        print(response.body.toString());
         if (response.statusCode == 200) {
           data = await jsonDecode(response.body.toString());
-          data=CouponData.fromJson(data['coupon_data']);
+           // data=CouponData.fromJson(data['coupon_data']);
           return data;
         } else {
           print('Failed........Cupon');
           data=null;
           return data;
         }
-      } catch (e) {
-        print(e.toString());
-      }
+
     });
 
     return data;
