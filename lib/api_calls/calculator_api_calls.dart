@@ -107,7 +107,7 @@ class CalculatorAPICalls {
 
   static Future<dynamic> sendCalculatorSubmitInfo(
       SubmitCalculatorModel model) async {
-    print(model.toMap());
+    print('This is submit model ${model.toMap()}');
     var data;
     await UserApiCalls.getAuthToken().then((auth) async {
       print('THIS IS Submit calculator TOKEN ${auth['token']}');

@@ -1,4 +1,7 @@
+import 'cupon_response_model.dart';
+
 class CalculatorInfoModel{
+  CouponData? couponData;
   String? serviceName;
   String? serviceId;
   String? countryName;
@@ -16,7 +19,8 @@ class CalculatorInfoModel{
 
 
   CalculatorInfoModel(
-      {this.serviceName,
+      {this.couponData,
+        this.serviceName,
       this.serviceId,
       this.countryName,
       this.countryId,
@@ -47,6 +51,7 @@ class CalculatorInfoModel{
     map['previousRate']=previousRate;
     map['discountType']=discountType;
     map['discountText']=discountText;
+    map['couponData']=couponData;
 
     return map;
   }

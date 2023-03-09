@@ -773,33 +773,36 @@ class _CashPickupPageState extends State<CashPickupPage> {
             //BUTTON AND VALIDATION
             Padding(
               padding: const EdgeInsets.all(12.0),
-              child: ElevatedButton(
-                onPressed: () {
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () {
 
-                  if(localAgent==null||branchNameBylocalAgent==null||localAgentName==null){
-                    print('All filed required');
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
-                  }
-                  else {
-                    print('Show info Local............');
-                    print(ifscCon.text);
-                    print(localAgent!.agentCity);
-                    print(branchNameBylocalAgent);
-                    print(localAgentName);
-                    //set cash pickup info
-                    SetCalculatorAndRecipientInfo.setSubmitInfoCashPickUp(localAgent!, branchNameBylocalAgent!, localAgentName!);
-                    Navigator.pushNamed(context, RecipientRelationShipPage.routeName);
-                  }
+                    if(localAgent==null||branchNameBylocalAgent==null||localAgentName==null){
+                      print('All filed required');
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select all required field')));
+                    }
+                    else {
+                      print('Show info Local............');
+                      print(ifscCon.text);
+                      print(localAgent!.agentCity);
+                      print(branchNameBylocalAgent);
+                      print(localAgentName);
+                      //set cash pickup info
+                      SetCalculatorAndRecipientInfo.setSubmitInfoCashPickUp(localAgent!, branchNameBylocalAgent!, localAgentName!);
+                      Navigator.pushNamed(context, RecipientRelationShipPage.routeName);
+                    }
 
 
-                },
-                child: Text(
-                  'Next',
-                  style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                  },
+                  child: Text(
+                    'Next',
+                    style: MyStyle.mytext(TextStyle(fontSize: 16)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: Size.fromHeight(50),
+                      backgroundColor: Color(0xff02A6EB)),
                 ),
-                style: ElevatedButton.styleFrom(
-                    fixedSize: Size.fromHeight(50),
-                    backgroundColor: Color(0xff02A6EB)),
               ),
             ),
           ],

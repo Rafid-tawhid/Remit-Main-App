@@ -132,8 +132,8 @@ class _ReceipientPageState extends State<ReceipientPage> {
         key: _formKey,
         child: ListView(
           children: [
-            if (hideBilling)
-              Padding(
+
+            Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
                   elevation: 2,
@@ -237,6 +237,10 @@ class _ReceipientPageState extends State<ReceipientPage> {
                           height: 5,
                           color: Colors.black,
                         ),
+                        SizedBox(height: 5,),
+                        if(calculatorInfo.hasDiscount!)Align(
+                          alignment:Alignment.centerLeft,
+                            child: Text(calculatorInfo.discountText!))
                       ],
                     ),
                   ),
