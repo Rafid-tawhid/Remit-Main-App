@@ -48,6 +48,13 @@ class SubmitCalculatorModel{
     map['currency_rate']=currency_rate;
     map['service_charge']=service_charge;
     map['input_receiver_currency']=input_receiver_currency;
+    // map['session_id']='';
+    map['promo_code']='';
+    map['discount']='';
+    map['discount_type']='';
+    map['calculate_with']='';
+    map['discount_value']='';
+    map['discount_price']='';
     // map['session_id']=session_id;
     // map['promo_code']=promo_code;
     // map['discount']=discount;

@@ -47,7 +47,7 @@ class UserRecipientCalls {
     print('THIS IS Bank agent DATA API $token, $country_id,$service_id');
     var data;
     await UserApiCalls.getAuthToken().then((auth) async {
-      try {
+
         Response response = await post(
             Uri.parse('${baseUrl}api/get_bank_agent_data'),
             headers: {
@@ -58,12 +58,12 @@ class UserRecipientCalls {
               "country_id": country_id,
               "service_id": service_id,
             });
-          data =await jsonDecode(response.body.toString());
-          return data;
-
-      } catch (e) {
-        print(e.toString());
-      }
+        if (response.statusCode == 200) {
+          data = await jsonDecode(response.body.toString());
+        } else {
+          print(response.body);
+          data = null;
+        }
     });
 
     // print('THIS IS Bank agent DATA ${data}');
@@ -74,7 +74,6 @@ class UserRecipientCalls {
 
     var data;
     await UserApiCalls.getAuthToken().then((auth) async {
-      try {
         Response response = await post(
             Uri.parse('${baseUrl}api/add_recipient'),
             headers: {
@@ -82,15 +81,15 @@ class UserRecipientCalls {
             },
             body: recipient.toMap()
         );
-        data =await jsonDecode(response.body.toString());
-        return data;
-
-      } catch (e) {
-        print(e.toString());
-      }
+        if(response.statusCode==200){
+          data =await jsonDecode(response.body.toString());
+        }
+        else{
+          print(response.body);
+          data=null;
+        }
     });
 
-    // print('THIS IS Bank agent DATA ${data}');
     return data;
   }
 

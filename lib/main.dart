@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:remit_app/pages/about_us_page.dart';
 import 'package:remit_app/pages/bank_transfer_page.dart';
 import 'package:remit_app/pages/calculator_page.dart';
-import 'package:remit_app/pages/calculator_page_prac.dart';
+import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/cash_pickup_page.dart';
 import 'package:remit_app/pages/checkout_page.dart';
 import 'package:remit_app/pages/checkout_payments.dart';
@@ -76,7 +76,6 @@ class MyApp extends StatelessWidget {
           UserImageUpdatePage.routeName:(context)=>UserImageUpdatePage(),
           UserIdentityVerification.routeName:(context)=>UserIdentityVerification(),
           CalculatorPage.routeName:(context)=>CalculatorPage(),
-          CalculatorPage2.routeName:(context)=>CalculatorPage2(),
           ReceipientPage.routeName:(context)=>ReceipientPage(),
           ChooseRecipientType.routeName:(context)=>ChooseRecipientType(),
           TransferLogPage.routeName:(context)=>TransferLogPage(),

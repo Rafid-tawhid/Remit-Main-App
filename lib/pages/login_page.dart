@@ -4,7 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remit_app/models/user_profile_model.dart';
-import 'package:remit_app/pages/calculator_page_prac.dart';
+import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_page.dart';
 import 'package:remit_app/providers/calculator_provider.dart';
@@ -365,8 +365,9 @@ class _LoginPageState extends State<LoginPage> {
 
                                             //call all country full info
                                             EasyLoading.show();
-                                            provider.getAllCountryInfo(context).then((value){
+                                           await provider.getAllCountryInfo(context).then((value){
                                               if(value.length>0){
+
                                               }
                                               else {
                                                 EasyLoading.dismiss();
@@ -382,7 +383,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 EasyLoading.dismiss();
                                                 ShowErrorDialoge(context);
                                               } else {
-                                                if (data['success'] == true) {
+                                                if (data['status'] == true) {
                                                   final user = await Data.fromJson(data['data']);
                                                   final token = data['user_token'];
                                                   print('THIS IS USER TOKEN $token');

@@ -57,7 +57,14 @@ class _AboutUsPageState extends State<AboutUsPage> {
               children: [
                 Text('Our Mission',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                 Flexible(
-                    child: Text('''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum''',textAlign: TextAlign.start,))
+                    child: Text('''\u2022 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit.''',textAlign: TextAlign.start,)),
+                SizedBox(height: 5,),
+                Flexible(
+                    child: Text('''\u2022 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit.''',textAlign: TextAlign.start,)),
+                SizedBox(height: 5,),
+                Flexible(
+                    child: Text('''\u2022 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit.''',textAlign: TextAlign.start,)),
+
               ],
             ),
           ),
