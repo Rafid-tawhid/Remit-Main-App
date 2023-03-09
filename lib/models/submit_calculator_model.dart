@@ -49,19 +49,19 @@ class SubmitCalculatorModel{
     map['service_charge']=service_charge;
     map['input_receiver_currency']=input_receiver_currency;
     // map['session_id']='';
-    map['promo_code']='';
-    map['discount']='';
-    map['discount_type']='';
-    map['calculate_with']='';
-    map['discount_value']='';
-    map['discount_price']='';
-    // map['session_id']=session_id;
-    // map['promo_code']=promo_code;
-    // map['discount']=discount;
-    // map['discount_type']=discount_type;
-    // map['calculate_with']=calculate_with;
-    // map['discount_value']=discount_value;
-    // map['discount_price']=discount_price;
+    // map['promo_code']='';
+    // map['discount']='';
+    // map['discount_type']='';
+    // map['calculate_with']='';
+    // map['discount_value']='';
+    // map['discount_price']='';
+    // map['session_id']=session_id??'';
+    map['promo_code']=promo_code??'';
+    map['discount']=discount??'';
+    map['discount_type']=discount_type??'';
+    map['calculate_with']=calculate_with??'';
+    map['discount_value']=discount_value??'';
+    map['discount_price']=discount_price??'';
     return map;
   }
   SubmitCalculatorModel.fromMap(Map<String,dynamic> map){

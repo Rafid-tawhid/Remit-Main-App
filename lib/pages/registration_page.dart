@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/colors.dart';
+import 'package:remit_app/custom_widgits/dialog_widgits.dart';
 import 'package:remit_app/pages/home_page.dart';
 import 'package:remit_app/pages/registration_step2.dart';
 
@@ -482,7 +487,30 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             onPressed: (){
                               if(_formKey.currentState!.validate()){
-                                Navigator.pushNamed(context, RegistrationStep2.routeName);
+                                EasyLoading.show();
+                                UserApiCalls.registration_Step1(
+                                  emailCon.text,
+                                  confirmmailCon.text,
+                                  passCon.text,
+                                  checkBox2?1:0
+                                ).then((response) async {
+                                  EasyLoading.dismiss();
+                                  if(response!=null){
+                                    final data=await jsonDecode(response.body.toString());
+                                    if(response.statusCode==200){
+                                      MyDialog.showMsgDialog(context, 'Succesful', 'Registration complete');
+                                    }
+                                    else{
+                                      MyDialog.showErrorMsgDialog(context, data);
+                                    }
+                                  }
+                                  else {
+                                    MyDialog.showServerProblemDialog(context);
+                                  }
+
+                                });
+
+                               // Navigator.pushNamed(context, RegistrationStep2.routeName);
                               }
                             }, child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),

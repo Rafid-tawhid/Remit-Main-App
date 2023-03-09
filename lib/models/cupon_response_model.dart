@@ -44,16 +44,16 @@ class CouponData {
       String? promoCode, 
       String? discount, 
       String? discountType, 
-      String? discountFee, 
+      dynamic? discountFee, 
       String? calculateWith, 
-      String? discountValue, 
-      String? discountPrice, 
-      String? feesAfterDiscount, 
+      dynamic? discountValue, 
+      dynamic? discountPrice, 
+      dynamic? feesAfterDiscount, 
       String? rate, 
-      String? rateAfterDiscount, 
-      String? payableAmountAfterDiscount, 
-      String? recipientGetAmount, 
-      String? recipientGetAmountDiscount,}){
+      dynamic? rateAfterDiscount, 
+      dynamic? payableAmountAfterDiscount, 
+      dynamic? recipientGetAmount, 
+      dynamic? recipientGetAmountDiscount,}){
     _promoCode = promoCode;
     _discount = discount;
     _discountType = discountType;
@@ -87,29 +87,29 @@ class CouponData {
   String? _promoCode;
   String? _discount;
   String? _discountType;
-  String? _discountFee;
+  dynamic? _discountFee;
   String? _calculateWith;
-  String? _discountValue;
-  String? _discountPrice;
-  String? _feesAfterDiscount;
+  dynamic? _discountValue;
+  dynamic? _discountPrice;
+  dynamic? _feesAfterDiscount;
   String? _rate;
-  String? _rateAfterDiscount;
-  String? _payableAmountAfterDiscount;
-  String? _recipientGetAmount;
-  String? _recipientGetAmountDiscount;
+  dynamic? _rateAfterDiscount;
+  dynamic? _payableAmountAfterDiscount;
+  dynamic? _recipientGetAmount;
+  dynamic? _recipientGetAmountDiscount;
 CouponData copyWith({  String? promoCode,
   String? discount,
   String? discountType,
-  String? discountFee,
+  dynamic? discountFee,
   String? calculateWith,
-  String? discountValue,
-  String? discountPrice,
-  String? feesAfterDiscount,
+  dynamic? discountValue,
+  dynamic? discountPrice,
+  dynamic? feesAfterDiscount,
   String? rate,
-  String? rateAfterDiscount,
-  String? payableAmountAfterDiscount,
-  String? recipientGetAmount,
-  String? recipientGetAmountDiscount,
+  dynamic? rateAfterDiscount,
+  dynamic? payableAmountAfterDiscount,
+  dynamic? recipientGetAmount,
+  dynamic? recipientGetAmountDiscount,
 }) => CouponData(  promoCode: promoCode ?? _promoCode,
   discount: discount ?? _discount,
   discountType: discountType ?? _discountType,
@@ -127,16 +127,16 @@ CouponData copyWith({  String? promoCode,
   String? get promoCode => _promoCode;
   String? get discount => _discount;
   String? get discountType => _discountType;
-  String? get discountFee => _discountFee;
+  dynamic? get discountFee => _discountFee;
   String? get calculateWith => _calculateWith;
-  String? get discountValue => _discountValue;
-  String? get discountPrice => _discountPrice;
-  String? get feesAfterDiscount => _feesAfterDiscount;
+  dynamic? get discountValue => _discountValue;
+  dynamic? get discountPrice => _discountPrice;
+  dynamic? get feesAfterDiscount => _feesAfterDiscount;
   String? get rate => _rate;
-  String? get rateAfterDiscount => _rateAfterDiscount;
-  String? get payableAmountAfterDiscount => _payableAmountAfterDiscount;
-  String? get recipientGetAmount => _recipientGetAmount;
-  String? get recipientGetAmountDiscount => _recipientGetAmountDiscount;
+  dynamic? get rateAfterDiscount => _rateAfterDiscount;
+  dynamic? get payableAmountAfterDiscount => _payableAmountAfterDiscount;
+  dynamic? get recipientGetAmount => _recipientGetAmount;
+  dynamic? get recipientGetAmountDiscount => _recipientGetAmountDiscount;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -156,4 +156,8 @@ CouponData copyWith({  String? promoCode,
     return map;
   }
 
+  @override
+  String toString() {
+    return 'CouponData{_promoCode: $_promoCode, _discount: $_discount, _discountType: $_discountType, _discountFee: $_discountFee, _calculateWith: $_calculateWith, _discountValue: $_discountValue, _discountPrice: $_discountPrice, _feesAfterDiscount: $_feesAfterDiscount, _rate: $_rate, _rateAfterDiscount: $_rateAfterDiscount, _payableAmountAfterDiscount: $_payableAmountAfterDiscount, _recipientGetAmount: $_recipientGetAmount, _recipientGetAmountDiscount: $_recipientGetAmountDiscount}';
+  }
 }
