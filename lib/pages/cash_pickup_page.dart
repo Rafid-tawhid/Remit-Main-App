@@ -321,6 +321,8 @@ class _CashPickupPageState extends State<CashPickupPage> {
                           EasyLoading.show();
                           branchInfo = null;
                         });
+
+                        //GET Branch data by bank name
                         provider
                             .getBranchDataByBankName(
                             calculatorInfo!.countryId,

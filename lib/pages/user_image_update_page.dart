@@ -3,11 +3,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/colors.dart';
+import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/models/update_user_profile_model.dart';
+import 'package:remit_app/models/user_profile_model.dart';
+import 'package:remit_app/pages/user_profile_page.dart';
 
 class UserImageUpdatePage extends StatefulWidget {
   static const String routeName='/image';
@@ -66,7 +70,6 @@ class _UserImageUpdatePageState extends State<UserImageUpdatePage> {
               ),
               onPressed: ()async{
 
-
                 String imagepath = _imagePath!;
 
                 File imagefile = File(imagepath);
@@ -74,22 +77,24 @@ class _UserImageUpdatePageState extends State<UserImageUpdatePage> {
                 Uint8List imagebytes = await imagefile.readAsBytes();
 
                 String base64string = base64.encode(imagebytes); //convert bytes to base64 string
-                 print(base64string);
-                final userProfile=UpdateUserProfile(
-                    profile_image: base64string,
-                );
-                UserApiCalls.update_user_profile(userProfile).then((value) {
-                  print('value ${value.toString()}');
+
+
+                updatePhoneNumber(base64string);
+
+                UserApiCalls.update_user_profile(UpdateUserProfile(
+                  profile_image: base64string
+                )).then((value) {
+
                 });
-                //
-                // if(_imagePath==null){
-                //
-                // }
-                // else {
-                //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //     content: Text('Please select an image'),
-                //   ));
-                // }
+
+                if(_imagePath!=null){
+                  print(imagefile);
+                }
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Please select an image'),
+                  ));
+                }
 
               },
               child: Text('Update Image'))
@@ -108,15 +113,38 @@ class _UserImageUpdatePageState extends State<UserImageUpdatePage> {
       });
     }
 
-    // File imageFile = new File(selectedImage.path);
-    // List<int> imageBytes = imageFile.readAsBytesSync();
-    // String base64Image = Base64Encoder.urlSafe().convert(imageBytes);
   }
 
   checkpermission_opengallery() async {
     var gallaryStatus=await Permission.photos.status;
     print(gallaryStatus);
 
+  }
+
+  void updatePhoneNumber(String base64Url) {
+    EasyLoading.show();
+    UserApiCalls.update_user_profile(UpdateUserProfile(
+      profile_image: base64Url
+    )).then((value) {
+      UserApiCalls.getUserInfo().then((data) async {
+        final user = await Data.fromJson(data['data']);
+        await GetUserDetails.setUserInfo(user);
+        EasyLoading.dismiss();
+        Navigator.pushNamed(context, UserProfilePage.routeName);
+        setState(() {
+        });
+        if(value['status']==true){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(value['message']),
+          ));
+        }
+      });
+    });
   }
 
 }

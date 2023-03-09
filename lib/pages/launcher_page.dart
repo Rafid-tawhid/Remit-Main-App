@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/helper_method/admin_config.dart';
 import 'package:remit_app/pages/calculator_page.dart';
 import 'package:remit_app/pages/login_page.dart';
 import 'package:remit_app/providers/calculator_provider.dart';
@@ -18,7 +19,7 @@ import '../helper_method/get_user_info.dart';
 import '../helper_method/helper_class.dart';
 import '../helper_method/network_check.dart';
 import '../models/user_profile_model.dart';
-import 'calculator_page_prac.dart';
+import 'calculator_page.dart';
 import 'home_page.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -72,6 +73,7 @@ class _LauncherPageState extends State<LauncherPage> {
 
   @override
   void didChangeDependencies() {
+    userProfileProvider=Provider.of(context,listen: false);
     Network.checkConnectivity();
     Future.delayed(
         Duration(
@@ -84,6 +86,9 @@ class _LauncherPageState extends State<LauncherPage> {
         // showSeipPopUp();
       }
     });
+
+
+
     subscription = Connectivity().onConnectivityChanged.listen((result) {
       print('Listening.................');
       if (result == ConnectivityResult.wifi ||
@@ -118,6 +123,56 @@ class _LauncherPageState extends State<LauncherPage> {
         });
       }
     });
+
+
+
+
+    //dynamic app settings
+
+    // subscription = Connectivity().onConnectivityChanged.listen((result) {
+    //   print('Listening.................');
+    //   if (result == ConnectivityResult.wifi ||
+    //       result == ConnectivityResult.mobile) {
+    //       EasyLoading.show();
+    //       provider=Provider.of(context,listen: false);
+    //
+    //     // get app basic settings
+    //     userProfileProvider.getAppSettings().then((value) {
+    //
+    //
+    //       // set app settings
+    //       userProfileProvider.basicSettingsList.forEach((element) {
+    //         if(element.fieldKey=='app_title'){
+    //
+    //           AdminAccessConfig.appName=element.fieldValue;
+    //         }
+    //         if(element.fieldKey=='api_url'){
+    //           AdminAccessConfig.base_url=element.fieldValue;
+    //         }
+    //       });
+    //       print('AdminAccessConfig.appName ${AdminAccessConfig.appName}');
+    //       print('AdminAccessConfig.base_url ${AdminAccessConfig.base_url}');
+    //
+    //       //CALL All country charges info
+    //       provider.getserviceChargeofAllCountry().then((value) {
+    //         EasyLoading.dismiss();
+    //         if(value.length>0){
+    //           print('value.length Called.... ${value.length}');
+    //           Navigator.pushNamed(context, LoginPage.routeName);
+    //         }
+    //         else {
+    //           EasyLoading.dismiss();
+    //           ShowErrorDialoge(context);
+    //         }
+    //       });
+    //     });
+    //
+    //   } else {
+    //     setState(() {
+    //       ShowNoNetworkDialoge();
+    //     });
+    //   }
+    // });
 
     super.didChangeDependencies();
   }

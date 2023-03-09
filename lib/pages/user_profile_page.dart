@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:remit_app/colors.dart';
 import 'package:remit_app/helper_method/get_user_info.dart';
 import 'package:remit_app/models/update_user_profile_model.dart';
 import 'package:remit_app/models/user_profile_model.dart';
+import 'package:remit_app/pages/user_image_update_page.dart';
 import 'package:remit_app/pages/user_password_update_page.dart';
 
 import '../api_calls/user_api_calls.dart';
@@ -22,6 +26,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
   final occupationCon=TextEditingController();
   final addressCon=TextEditingController();
   final phoneCon=TextEditingController();
+  ImageSource _imageSource = ImageSource.gallery;
+  File? file;
+  String? _imagePath = 'No File Chosen';
 
   @override
   void dispose() {
@@ -109,30 +116,44 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   SizedBox(
                     width: 20,
                   ),
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: MyColor.blue,
-
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child:  Container(
-
+                  Stack(
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(10),
+                          color: MyColor.blue,
 
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(.5),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                          padding: const EdgeInsets.all(4.0),
+                          child:  Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(.5),
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(GetUserDetails.userProfileModel!.image!,),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      Positioned(
+                        right: 0,
+                          top: 0,
+                          child: InkWell(
+                            onTap: () async{
+
+                              //update image
+                           Navigator.pushNamed(context, UserImageUpdatePage.routeName);
+
+                            },
+                              child: Icon(Icons.add,color: Colors.white,size: 25,))),
+                    ],
                   ),
                   SizedBox(
                     width: 20,
@@ -533,6 +554,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
         }
       });
     });
+  }
+
+  void _getImage() async {
+    final selectedImage = await ImagePicker().pickImage(source: _imageSource);
+    print('selectedImage $selectedImage');
+    if (selectedImage != null) {
+      setState(() {
+        file = File(selectedImage!.path);
+        _imagePath = selectedImage.path;
+      });
+    }
   }
 
 }

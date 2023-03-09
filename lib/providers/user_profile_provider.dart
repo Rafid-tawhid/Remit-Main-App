@@ -6,6 +6,7 @@ import 'package:remit_app/models/payment_method.dart';
 import 'package:remit_app/models/recipents_model.dart';
 
 import '../api_calls/user_recipients_calls.dart';
+import '../models/app_settings_model.dart';
 import '../models/sender_relationship_model.dart';
 import '../models/track_transfer_model.dart';
 import '../models/user_transfer_log_model.dart';
@@ -36,11 +37,32 @@ class UserProfileProvider extends ChangeNotifier{
   List<PaymentMethods> paymentMethodList=[];
 
   List<TrackTransfer> trackTransferList=[];
+  List<BasicSettings> basicSettingsList=[];
+
+
+  Future<List<BasicSettings>> getAppSettings() async{
+
+    await UserApiCalls.getAppSettings().then((value) {
+
+      print(value['basic_settings']);
+         for(Map i in value['basic_settings']){
+           basicSettingsList.add(BasicSettings.fromJson(i));
+         }
+
+
+     });
+
+     return basicSettingsList;
+  }
 
 
    Future<dynamic> getUserInfoByEmailPassword(email,pass){
     return UserApiCalls.getUserInfoByEmailPassword(email, pass);
   }
+
+
+
+
 
   Future<List<Recipients>> getRecipientsByEmailToken(String email,String pass) async{
 
@@ -68,28 +90,36 @@ class UserProfileProvider extends ChangeNotifier{
   }
 
 
-  Future<void> getBankAgentData(String token,String country_id,String service_id) async{
+  Future<dynamic> getBankAgentData(String token,String country_id,String service_id) async{
 
-    await  UserRecipientCalls.getBankAgentData(token,country_id,service_id).then((data) {
+    var value;
 
-      bankInfoList.clear();
-      localAgentList.clear();
-      if(data['status']==true){
-        for(Map i in data['bank_info']){
-          bankInfoList.add(BankInfo.fromJson(i));
+    await UserRecipientCalls.getBankAgentData(token,country_id,service_id).then((data) {
+
+
+      if(data!=null){
+        bankInfoList.clear();
+        localAgentList.clear();
+        if(data['status']==true){
+          for(Map i in data['bank_info']){
+            bankInfoList.add(BankInfo.fromJson(i));
+          }
+          for(Map i in data['local_agent']){
+            localAgentList.add(LocalAgent.fromJson(i));
+          }
         }
-        for(Map i in data['local_agent']){
-          localAgentList.add(LocalAgent.fromJson(i));
-        }
+        value=data;
       }
       else {
-        return data;
+        value=data;
       }
 
     });
 
     print('bankInfoList.length ${bankInfoList.length}');
     print('localAgentList.length ${localAgentList.length}');
+
+    return value;
   }
 
   Future<void> getSenderRelationshipData() async {
@@ -121,28 +151,32 @@ class UserProfileProvider extends ChangeNotifier{
 
    Future<dynamic> getBranchDataByBankName(country_id,service_id,bank_name,agent_city)async{
      print(country_id+service_id+bank_name+agent_city);
+     var value;
     await  UserApiCalls.getBranchData(country_id, service_id, bank_name, '').then((data) {
+      if(data!=null){
+        if(data['status']==true){
+          print(data.toString());
+          branchInfoList.clear();
+          localagentBranchList.clear();
+          for(Map i in data['branch_info']){
+            branchInfoList.add(BranchInfo.fromJson(i));
+          }
+          for(Map i in data['local_agent_branch']){
+            localagentBranchList.add(LocalAgentBranch.fromJson(i));
+          }
+          notifyListeners();
 
-      if(data['status']==true){
-        print(data.toString());
-        branchInfoList.clear();
-        localagentBranchList.clear();
-        for(Map i in data['branch_info']){
-          branchInfoList.add(BranchInfo.fromJson(i));
-        }
-        for(Map i in data['local_agent_branch']){
-          localagentBranchList.add(LocalAgentBranch.fromJson(i));
-        }
-        notifyListeners();
+          value=data;
 
+        }
       }
-
       else {
-        print('Fake..........');
         print(data.toString());
+        value=null;
       }
-
     });
+
+    return value;
   }
 
 

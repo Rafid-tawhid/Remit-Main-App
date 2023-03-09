@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:remit_app/custom_widgits/dialog_widgits.dart';
 import 'package:remit_app/helper_method/get_calculator_info.dart';
 import 'package:remit_app/models/recipents_model.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
@@ -436,25 +437,31 @@ class _BankTransferPageState extends State<BankTransferPage> {
                   provider.getBranchDataByBankName(
                       calculatorInfo!.countryId,
                       calculatorInfo!.serviceId,bankInfo!.agent,'').then((value) {
-                    EasyLoading.dismiss();
-                    provider.branchInfoList.forEach((element) {
-                      if(element.branch==""){
-                        //IF NO BRANCH FOUND LOCATIONID AND BANK ID SHOULD BE FROM LIST (EXCEPTION)
-                        print('No Branch Found');
-                        exceptionLocationId=element.locationid;
-                        exceptionBankId=element.bankid;
+                        if(value!=null){
+                          EasyLoading.dismiss();
+                          provider.branchInfoList.forEach((element) {
+                            if(element.branch==""){
+                              //IF NO BRANCH FOUND LOCATIONID AND BANK ID SHOULD BE FROM LIST (EXCEPTION)
+                              print('No Branch Found');
+                              exceptionLocationId=element.locationid;
+                              exceptionBankId=element.bankid;
 
-                        setState(() {
-                          branchFound=false;
-                        });
-                      }
-                      else {
-                        print(element.branch);
-                        setState(() {
-                          branchFound=true;
-                        });
-                      }
-                    });
+                              setState(() {
+                                branchFound=false;
+                              });
+                            }
+                            else {
+                              print(element.branch);
+                              setState(() {
+                                branchFound=true;
+                              });
+                            }
+                          });
+                        }
+                        else{
+                          EasyLoading.dismiss();
+                          MyDialog.showServerProblemDialog(context);
+                        }
                   });
 
                 },

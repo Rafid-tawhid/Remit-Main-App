@@ -11,7 +11,7 @@ import 'package:remit_app/pages/home_page.dart';
 
 
 import '../helper_method/get_user_info.dart';
-import '../pages/calculator_page_prac.dart';
+import '../pages/calculator_page.dart';
 import '../pages/user_profile_page.dart';
 import 'button1.dart';
 import 'drawer.dart';

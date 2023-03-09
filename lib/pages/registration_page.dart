@@ -19,8 +19,8 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool showPass=true;
-  bool checkBox=false;
-  bool checkBox2=false;
+  bool checkBox=true;
+  bool checkBox2=true;
 
   final emailCon = TextEditingController();
   final confirmmailCon = TextEditingController();

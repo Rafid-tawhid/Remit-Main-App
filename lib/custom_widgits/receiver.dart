@@ -615,17 +615,17 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          validator: (val){
-                            if(val==null||val.isEmpty){
-                              return 'Email is required';
-                            }
-                            if(!EmailValidator.validate(val)){
-                              return 'Please give a valid email';
-                            }
-                            else {
-                              return null;
-                            }
-                          },
+                          // validator: (val){
+                          //   if(val==null||val.isEmpty){
+                          //     return 'Email is required';
+                          //   }
+                          //   if(!EmailValidator.validate(val)){
+                          //     return 'Please give a valid email';
+                          //   }
+                          //   else {
+                          //     return null;
+                          //   }
+                          // },
 
                         ),
                       ),
@@ -762,22 +762,43 @@ class _ReceipientWidgetState extends State<ReceipientWidget> {
         city: cityCon.text,
         country: countryInfo!.name!
     );
+
+
+
     UserRecipientCalls.createNewRecipient(recipient).then((value) async {
 
-     await provider.getRecipientsByEmailToken('',userToken).then((value) {
-        EasyLoading.dismiss();
-        clearField();
-        print('RECIPIENTS ${value.length}');
-      });
-      EasyLoading.dismiss();
-      if(value!=null){
-        MyDialog.showMsgDialog(
-            context,
-            'Sucessfull',
-            '${value['message']}'
-        );
-      }
 
+      print('This is return value $value');
+      //success call check
+      if(value!=null){
+        //authintication check
+       if(value['status']==true){
+        EasyLoading.dismiss();
+        await provider.getRecipientsByEmailToken('',userToken).then((value) {
+          EasyLoading.dismiss();
+          clearField();
+          print('RECIPIENTS ${value.length}');
+        });
+        EasyLoading.dismiss();
+        if(value!=null){
+          MyDialog.showMsgDialog(
+              context,
+              'Sucessfull',
+              '${value['message']}'
+          );
+        }
+      }
+       else{
+         print('This is called');
+        MyDialog.showErrorMsgDialog(context, value);
+      }
+     }
+
+      //failed error
+     else {
+       EasyLoading.dismiss();
+       MyDialog.showServerProblemDialog(context);
+     }
     });
   }
 
