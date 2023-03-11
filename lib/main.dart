@@ -27,6 +27,7 @@ import 'package:remit_app/pages/user_identity_varification.dart';
 import 'package:remit_app/pages/user_password_update_page.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
 import 'package:remit_app/pages/user_transfer_log_page.dart';
+import 'package:remit_app/providers/app_provider.dart';
 import 'package:remit_app/providers/calculator_provider.dart';
 import 'package:remit_app/providers/user_profile_provider.dart';
 import 'custom_widgits/receiver.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_)=>UserProfileProvider()),
         ChangeNotifierProvider(create: (_)=>CalculatorProvider()),
+        ChangeNotifierProvider(create: (_)=>AppInfoProvider()),
 
       ],
       child: MaterialApp(

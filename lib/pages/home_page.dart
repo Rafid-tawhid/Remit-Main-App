@@ -15,6 +15,7 @@ import '../custom_widgits/send_money.dart';
 import '../custom_widgits/tab_widgits_list.dart';
 import '../helper_method/helper_class.dart';
 import '../models/user_profile_model.dart';
+import '../providers/app_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   bool callOnce=true;
   String? token;
   String? password;
+  late AppInfoProvider appInfoProvider;
 
   void initState() {
     EasyLoading.dismiss();
@@ -42,6 +44,8 @@ class _HomePageState extends State<HomePage> {
     EasyLoading.dismiss();
 
     provider=Provider.of(context,listen: false);
+    appInfoProvider=Provider.of(context,listen: false);
+
     if(callOnce){
       provider.getSenderRelationshipData();
       provider.getPaymentMethodList();
@@ -52,6 +56,9 @@ class _HomePageState extends State<HomePage> {
           print('RECIPIENTS ${value.length}');
         });
       });
+
+      //get about us page dynamic info
+      appInfoProvider.getAboutUsPageInfo();
 
       callOnce=false;
     }

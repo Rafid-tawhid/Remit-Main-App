@@ -549,7 +549,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             ),
                             validator: (val) {
                               if (val == null || val.isEmpty) {
+
                                 return 'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+                              }
+                              if (double.parse(val)>=double.parse(currency_details!.maximumLimit!)) {
+
+                                return 'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+                              }
+                              else {
+                                return null;
                               }
                             },
                           ),
@@ -1063,29 +1071,30 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                 fixedSize: Size.fromHeight(50),
                                 backgroundColor: Color(0xff02A6EB)),
                             onPressed: showError?null: () async {
-                              EasyLoading.show();
 
-
-                              final submitModel = SubmitCalculatorModel(
-                                email: userMail,
-                                user_token: userToken,
-                                getCountry: _country!.id,
-                                service_id: serviceId,
-                                receive_currency_code: currencyName,
-                                input_aud_currency: sendControler.text,
-                                input_receiver_currency: receiveControler.text,
-                                currency_rate: finalRate,
-                                service_charge: fees,
-                                promo_code: couponInfo==null?'':couponInfo!.promoCode,
-                                discount: couponInfo==null?'':couponInfo!.discount.toString(),
-                                discount_type: couponInfo==null?'':couponInfo!.discountType,
-                                calculate_with: couponInfo==null?'':couponInfo!.calculateWith,
-                                discount_value: couponInfo==null?'':couponInfo!.discountValue.toString(),
-                                discount_price: couponInfo==null?'':couponInfo!.discountPrice.toString(),
-                              );
-
-                              //set invoice
-                              await submitCalculatorForInvoice(submitModel);
+                             if(_fromKey.currentState!.validate()){
+                               EasyLoading.show();
+                               //submit model
+                               final submitModel = SubmitCalculatorModel(
+                                 email: userMail,
+                                 user_token: userToken,
+                                 getCountry: _country!.id,
+                                 service_id: serviceId,
+                                 receive_currency_code: currencyName,
+                                 input_aud_currency: sendControler.text,
+                                 input_receiver_currency: receiveControler.text,
+                                 currency_rate: finalRate,
+                                 service_charge: fees,
+                                 promo_code: couponInfo==null?'':couponInfo!.promoCode,
+                                 discount: couponInfo==null?'':couponInfo!.discount.toString(),
+                                 discount_type: couponInfo==null?'':couponInfo!.discountType,
+                                 calculate_with: couponInfo==null?'':couponInfo!.calculateWith,
+                                 discount_value: couponInfo==null?'':couponInfo!.discountValue.toString(),
+                                 discount_price: couponInfo==null?'':couponInfo!.discountPrice.toString(),
+                               );
+                               //set invoice
+                               await submitCalculatorForInvoice(submitModel);
+                             }
                             },
                             child: Text(
                               'Send',
@@ -1423,50 +1432,60 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   Future<void> getTheFeesAndTotalAmount(String send, String receive) async {
-    EasyLoading.show();
-    print('Final Rate of total are ${send} and ${receive}');
-    if (double.parse(receive) <=
-        double.parse(currency_details!.minimumLimit!)) {
-      EasyLoading.dismiss();
+    if(double.parse(send)==0||double.parse(receive)==0){
       setState(() {
         showError = true;
         showErrorMsg =
-            'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+        'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
       });
-      return;
-    } else if (double.parse(receive) >
-        double.parse(currency_details!.maximumLimit!)) {
-      EasyLoading.dismiss();
-      setState(() {
-        showError = true;
-        showErrorMsg =
-            'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
-      });
-      return;
-    } else {
-      print('${sendControler.text},${_country!.id},$serviceId');
-      EasyLoading.dismiss();
-      var serviceCharge = provider.getServiceFeesFromList(
-          _country!.id!, serviceId!, sendControler.text);
-
-      if (serviceCharge != null) {
-        setState(() {
-          fees = serviceCharge;
-          showSendMoneyBtn = true;
-          showRateInfo = true;
-        });
-      }
-
-      // await getRate(sendControler.text, _country!.id, serviceId).then((charge) {
-      //   print(charge['service_fee']);
-      //   EasyLoading.dismiss();
-      //   setState(() {
-      //     fees = charge['service_fee'].toString();
-      //     // showSendBtn=true;
-      //   });
-      // });
     }
-    EasyLoading.dismiss();
+    else {
+      EasyLoading.show();
+      print('Final Rate of total are ${send} and ${receive}');
+      if (double.parse(receive) <=
+          double.parse(currency_details!.minimumLimit!)) {
+        EasyLoading.dismiss();
+        setState(() {
+          showError = true;
+          showErrorMsg =
+          'Minimum Amount ${currency_details!.minimumLimit} ${currencyName}';
+        });
+        return;
+      } else if (double.parse(receive) >
+          double.parse(currency_details!.maximumLimit!)) {
+        EasyLoading.dismiss();
+        setState(() {
+          showError = true;
+          showErrorMsg =
+          'Maximum Amount ${currency_details!.maximumLimit} ${currencyName}';
+        });
+        return;
+      } else {
+        print('${sendControler.text},${_country!.id},$serviceId');
+        EasyLoading.dismiss();
+        var serviceCharge = provider.getServiceFeesFromList(
+            _country!.id!, serviceId!, sendControler.text);
+
+        if (serviceCharge != null) {
+          setState(() {
+            fees = serviceCharge;
+            showSendMoneyBtn = true;
+            showRateInfo = true;
+          });
+        }
+
+        // await getRate(sendControler.text, _country!.id, serviceId).then((charge) {
+        //   print(charge['service_fee']);
+        //   EasyLoading.dismiss();
+        //   setState(() {
+        //     fees = charge['service_fee'].toString();
+        //     // showSendBtn=true;
+        //   });
+        // });
+      }
+      EasyLoading.dismiss();
+    }
+
     return;
   }
 
@@ -1503,14 +1522,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
           SetCalculatorAndRecipientInfo.setCalculatorInfo(model);
 
-
           //set calculator Info
           EasyLoading.dismiss();
-          Navigator.pushNamed(context, ReceipientPage.routeName,
-                  arguments: model)
-              .then((value) {
-            // clearPreviousInfo();
-          });
+          if(_fromKey.currentState!.validate()){
+            Navigator.pushNamed(context, ReceipientPage.routeName,
+                arguments: model)
+                .then((value) {
+              // clearPreviousInfo();
+            });
+          }
 
           //important api may be use later
 
@@ -1647,9 +1667,9 @@ class ExchangeRateFeesPayableWidget extends StatelessWidget {
                     TextSpan(
                         text: 'Total Payable Amount : ',
                         style: TextStyle(color: Colors.black)),
-                    TextSpan(
+                   TextSpan(
                         text:
-                        '${(double.parse(sendControler.text) + double.parse(fees)).toStringAsFixed(2)} ',
+                        '${(double.parse(sendControler.text.isEmpty?'0':sendControler.text) + double.parse(fees)).toStringAsFixed(2)} ',
                         style: TextStyle(color: Colors.grey)),
                     TextSpan(
                         text: 'AUD',

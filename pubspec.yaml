@@ -56,6 +56,8 @@ dependencies:
   google_maps_flutter:
   url_launcher:
   art_sweetalert: ^0.0.5
+  flutter_html: ^3.0.0-alpha.3
+
 
 
 

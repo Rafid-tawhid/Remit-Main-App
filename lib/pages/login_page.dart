@@ -12,6 +12,7 @@ import 'package:remit_app/providers/user_profile_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_calls/user_api_calls.dart';
+import '../api_calls/app_info_api.dart';
 import '../colors.dart';
 import '../custom_widgits/button1.dart';
 import '../custom_widgits/button_2.dart';
@@ -391,7 +392,9 @@ class _LoginPageState extends State<LoginPage> {
                                                  await GetUserDetails.setUserMailAndToken(user_mail, token);
                                                  await GetUserDetails.setUserInfo(user);
                                                   EasyLoading.dismiss();
-                                                  Navigator.pushReplacementNamed(context, HomePage.routeName);
+
+
+                                                 Navigator.pushReplacementNamed(context, HomePage.routeName);
 
                                                 } else {
                                                   EasyLoading.dismiss();

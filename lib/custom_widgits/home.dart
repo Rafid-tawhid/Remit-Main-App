@@ -10,7 +10,9 @@ import 'package:remit_app/models/user_profile_model.dart';
 import 'package:remit_app/pages/home_page.dart';
 
 
+import '../api_calls/app_info_api.dart';
 import '../helper_method/get_user_info.dart';
+import '../models/why_choseus_info_model.dart';
 import '../pages/calculator_page.dart';
 import '../pages/user_profile_page.dart';
 import 'button1.dart';
@@ -108,6 +110,9 @@ class _HomeWidgetState extends State<HomeWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 30,),
+
+
+
               Text('Why Choose Us', style: TextStyle(color: MyColor.blue,fontSize: 24,fontWeight: FontWeight.bold),),
 
               SizedBox(height: 20,),

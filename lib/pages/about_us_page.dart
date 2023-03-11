@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:remit_app/api_calls/user_api_calls.dart';
 import 'package:remit_app/pages/user_profile_page.dart';
+import 'package:remit_app/providers/app_provider.dart';
 
+import '../api_calls/app_info_api.dart';
 import '../colors.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_user_info.dart';
+import '../models/why_choseus_info_model.dart';
 
 class AboutUsPage extends StatefulWidget {
   const AboutUsPage({Key? key}) : super(key: key);
@@ -15,6 +21,15 @@ class AboutUsPage extends StatefulWidget {
 }
 
 class _AboutUsPageState extends State<AboutUsPage> {
+
+  late AppInfoProvider provider;
+
+  @override
+  void didChangeDependencies() {
+    provider=Provider.of(context,listen: true);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,22 +37,52 @@ class _AboutUsPageState extends State<AboutUsPage> {
       drawer: MyDrawer(),
       appBar: AppBar(
         title: Text('About Us'),
+        backgroundColor: MyColor.blue,
       ),
       body: ListView(
         children: [
           SizedBox(height: 30,),
           SvgPicture.asset('svg/home.svg',width: 300,height: 220,),
-          Padding(
-           padding: const EdgeInsets.all(16.0),
-           child: Column(
-             mainAxisSize: MainAxisSize.min,
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               Text('Who we are',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-               Flexible(child: Text(''''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.')'''))
-             ],
-           ),
-         ),
+
+
+          Container(
+            // decoration: BoxDecoration(
+            //
+            //   gradient: LinearGradient(
+            //     begin: Alignment.centerRight,
+            //     end: Alignment.centerLeft,
+            //     colors: [
+            //       Colors.lightBlueAccent,
+            //       MyColor.blue,
+            //     ],),
+            // ),
+
+            child: Column(
+              children: [
+                SizedBox(height: 40,),
+                Align(
+                    alignment:Alignment.center,
+                    child: Text(provider.aboutInfoModel.whychooseuscontent!.first.content!.name??'Why Chose Us?',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: MyColor.blue),)),
+                ...provider.whyChoseUsList.map((e) =>Column(
+                  crossAxisAlignment:  CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Icon(Icons.camera_sharp),
+                    ),
+                    //Image.network(provider.baseImgUrl+e.content!.contentMedia!.description!.image!,height: 100,width: 100,),
+                    Text(e.content!.name!,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                    Flexible(child: Html(
+                      data: e.description!.shortDescription,style: {
+                      'p':Style(textAlign: TextAlign.center),
+                    },
+                    )),
+                  ],)
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
