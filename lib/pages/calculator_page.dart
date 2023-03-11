@@ -1285,7 +1285,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           children: [
                             Text('Exchange Rate: 1 AUD='),
                             Text(
-                              '${couponData.rate} ${currencyName}',
+                              '${double.parse(couponData.rate!).toStringAsFixed(2)} ${currencyName}',
                               style: TextStyle(
                                   decoration: TextDecoration.lineThrough),
                             ),
@@ -1336,7 +1336,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       FittedBox(
                         child: discountType == 'P'
                             ? Text(
-                                'Discount Send Amount ${couponData.discount}(%) = ${couponData.discountValue} ${currencyName}')
+                                'Discount Send Amount ${couponData.discount}(%) = ${double.parse(couponData.discountValue!.toString()).toStringAsFixed(2)} ${currencyName}')
                             : Text(
                                 'Discount Send Amount (Fixed) 1 AUD =${couponData.discountValue} ${currencyName}'),
                       )
@@ -1383,8 +1383,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       if(couponData.calculateWith=='send_amount'){
 
                         promoCodeText = discountType == 'P'
-                            ? 'Discount Send Amount ${couponData.discount}(%) = ${couponData.discountValue} AUD'
-                            : 'Discount Send Amount (Fixed) ${couponData.discountValue} AUD';
+                            ? 'Discount Send Amount ${couponData.discount}(%) = ${double.parse(couponData.discountValue!.toString()).toStringAsFixed(2)} AUD'
+                            : 'Discount Send Amount (Fixed) ${double.parse(couponData.discountValue!.toString()).toStringAsFixed(2)} AUD';
                         //set send amount and show text
                         receiveControler.text=couponData.recipientGetAmountDiscount.toString();
                       }
@@ -1503,12 +1503,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
           SetCalculatorAndRecipientInfo.setCalculatorInfo(model);
 
+
           //set calculator Info
           EasyLoading.dismiss();
           Navigator.pushNamed(context, ReceipientPage.routeName,
                   arguments: model)
               .then((value) {
-            clearPreviousInfo();
+            // clearPreviousInfo();
           });
 
           //important api may be use later
