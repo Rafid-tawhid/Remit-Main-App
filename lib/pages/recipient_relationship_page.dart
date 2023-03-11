@@ -15,6 +15,7 @@ import '../custom_widgits/dialog_widgits.dart';
 import '../custom_widgits/drawer.dart';
 import '../helper_method/get_calculator_info.dart';
 import '../helper_method/get_user_info.dart';
+import 'bank_transfer_page.dart';
 import 'checkout_page.dart';
 import 'user_profile_page.dart';
 import '../providers/calculator_provider.dart';
@@ -118,115 +119,28 @@ class _RecipientRelationShipPageState extends State<RecipientRelationShipPage> {
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 2,
-              child: Container(
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${calculatorInfo!.serviceName}',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    Align(
-                        alignment: Alignment.topRight,
-                        child: Text('AUD-${calculatorInfo!.currency}')),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      height: 5,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Send Amount'),
-                        Text('${calculatorInfo!.sendAmount} AUD')
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text('Fees'), Text('${calculatorInfo!.fees} AUD')],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('You pay in total'),
-                        Text('${calculatorInfo!.totalPayable} AUD')
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Divider(
-                      height: 5,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Exchange Rate',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '1 AUD->${calculatorInfo!.exchangeRate} ${calculatorInfo!.currency}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Divider(
-                      height: 5,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Your recipient gets',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '${calculatorInfo!.recipientGets} ${calculatorInfo!.currency}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Divider(
-                      height: 5,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+
+          //show card without discount
+          if (!calculatorInfo!.hasDiscount!)
+            AllNormalCalculatorCardInfo(calculatorInfo: calculatorInfo),
+
+          //show card with rate discount
+          if (calculatorInfo!.hasDiscount == true &&
+              calculatorInfo!.couponData!.calculateWith == 'rate')
+            AllCalculatorInfoWithRateCoupon(calculatorInfo: calculatorInfo),
+
+          //show card with fess discount
+          if (calculatorInfo!.hasDiscount == true &&
+              calculatorInfo!.couponData!.calculateWith == 'fees')
+
+            AllCalculatorInfoWithFeesCoupon(calculatorInfo: calculatorInfo),
+
+
+          //show card with send amount discount
+          if (calculatorInfo!.hasDiscount == true &&
+              calculatorInfo!.couponData!.calculateWith == 'send_amount')
+            AllCalculatorInfoWithSendCoupon(calculatorInfo: calculatorInfo),
+
           SizedBox(
             height: 20,
           ),

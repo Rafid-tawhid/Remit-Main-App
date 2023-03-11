@@ -1014,13 +1014,13 @@ class CalculatorInfoWithSendCoupon extends StatelessWidget {
 class NormalCalculatorInfo extends StatelessWidget {
   const NormalCalculatorInfo({
     Key? key,
-    required this.serviceName,
-    required this.currency,
-    required this.sendAmount,
-    required this.fees,
-    required this.totalPayable,
-    required this.rate,
-    required this.recipientGets,
+    this.serviceName,
+    this.currency,
+    this.sendAmount,
+    this.fees,
+    this.totalPayable,
+    this.rate,
+    this.recipientGets,
   }) : super(key: key);
 
   final String? serviceName;
@@ -1398,9 +1398,9 @@ class CalculatorInfoWithFeesCoupon extends StatelessWidget {
                   : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Discount Fees (Fixed) ',style: TextStyle(fontWeight: FontWeight.bold),),
+                  Text('Discount Fees ${calculatorInfo.couponData!.discount} (Fixed) ',style: TextStyle(fontWeight: FontWeight.bold),),
                   Text(
-                    ' ${calculatorInfo.couponData!.discountPrice} ${calculatorInfo.currency}',
+                    ' ${calculatorInfo.couponData!.discountPrice} AUD',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   )
                 ],

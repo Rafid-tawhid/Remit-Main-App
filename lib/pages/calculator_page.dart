@@ -1338,7 +1338,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             ? Text(
                                 'Discount Send Amount ${couponData.discount}(%) = ${double.parse(couponData.discountValue!.toString()).toStringAsFixed(2)} ${currencyName}')
                             : Text(
-                                'Discount Send Amount (Fixed) 1 AUD =${couponData.discountValue} ${currencyName}'),
+                                'Discount Send Amount (Fixed) ${couponData.discountValue} AUD'),
                       )
                     ],),
               ],
