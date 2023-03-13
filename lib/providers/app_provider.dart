@@ -3,15 +3,21 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:remit_app/api_calls/app_info_api.dart';
 
+import '../models/counter_up_models.dart';
+import '../models/who_weare_model.dart';
 import '../models/why_choseus_info_model.dart';
 
 
 
 class AppInfoProvider extends ChangeNotifier {
   late WhyChoseusInfoModel aboutInfoModel;
+  late WhoWeareModel whoWeAreInfoModel;
+  late CounterUpModels counterUpInfoModel;
 
   // late WhoWeareModel weareModel;
   List<WhyChooseUsContent> whyChoseUsList=[];
+  List<WhoWeAreContent> whoWeAreContentList=[];
+  List<CounterUpTemplate> counterUpTemplateList=[];
   String baseImgUrl='';
 
 
@@ -24,7 +30,18 @@ class AppInfoProvider extends ChangeNotifier {
         {
         baseImgUrl=value['img_url'];
         aboutInfoModel=WhyChoseusInfoModel.fromJson(value['why-choose-us']);
-        whyChoseUsList.addAll(aboutInfoModel!.whychooseuscontent!);
+        whoWeAreInfoModel=WhoWeareModel.fromJson(value['who-we-are']);
+        counterUpInfoModel=CounterUpModels.fromJson(value['counter-up']);
+
+        //add all why chose us content
+        whyChoseUsList.addAll(aboutInfoModel.whychooseuscontent!);
+        //add all who we are content
+        whoWeAreContentList.addAll(whoWeAreInfoModel.whowearecontent!);
+        //add counter up value
+        counterUpTemplateList.addAll(counterUpInfoModel.counteruptemplate!);
+
+
+
         // aboutInfoModel.whychooseuscontent!.forEach((element) {
         //   whyChoseUsList.add(element);
         // });

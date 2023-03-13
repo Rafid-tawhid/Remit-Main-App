@@ -1,55 +1,55 @@
 class WhoWeareModel {
   WhoWeareModel({
-      List<WhyChooseUsTemplate>? whychooseustemplate, 
-      List<WhyChooseUsContent>? whychooseuscontent,}){
-    _whychooseustemplate = whychooseustemplate;
-    _whychooseuscontent = whychooseuscontent;
+      List<WhoWeAreTemplate>? whowearetemplate, 
+      List<WhoWeAreContent>? whowearecontent,}){
+    _whowearetemplate = whowearetemplate;
+    _whowearecontent = whowearecontent;
 }
 
   WhoWeareModel.fromJson(dynamic json) {
-    if (json['why-choose-us-template'] != null) {
-      _whychooseustemplate = [];
-      json['why-choose-us-template'].forEach((v) {
-        _whychooseustemplate?.add(WhyChooseUsTemplate.fromJson(v));
+    if (json['who-we-are-template'] != null) {
+      _whowearetemplate = [];
+      json['who-we-are-template'].forEach((v) {
+        _whowearetemplate?.add(WhoWeAreTemplate.fromJson(v));
       });
     }
-    if (json['why-choose-us-content'] != null) {
-      _whychooseuscontent = [];
-      json['why-choose-us-content'].forEach((v) {
-        _whychooseuscontent?.add(WhyChooseUsContent.fromJson(v));
+    if (json['who-we-are-content'] != null) {
+      _whowearecontent = [];
+      json['who-we-are-content'].forEach((v) {
+        _whowearecontent?.add(WhoWeAreContent.fromJson(v));
       });
     }
   }
-  List<WhyChooseUsTemplate>? _whychooseustemplate;
-  List<WhyChooseUsContent>? _whychooseuscontent;
-WhoWeareModel copyWith({  List<WhyChooseUsTemplate>? whychooseustemplate,
-  List<WhyChooseUsContent>? whychooseuscontent,
-}) => WhoWeareModel(  whychooseustemplate: whychooseustemplate ?? _whychooseustemplate,
-  whychooseuscontent: whychooseuscontent ?? _whychooseuscontent,
+  List<WhoWeAreTemplate>? _whowearetemplate;
+  List<WhoWeAreContent>? _whowearecontent;
+WhoWeareModel copyWith({  List<WhoWeAreTemplate>? whowearetemplate,
+  List<WhoWeAreContent>? whowearecontent,
+}) => WhoWeareModel(  whowearetemplate: whowearetemplate ?? _whowearetemplate,
+  whowearecontent: whowearecontent ?? _whowearecontent,
 );
-  List<WhyChooseUsTemplate>? get whychooseustemplate => _whychooseustemplate;
-  List<WhyChooseUsContent>? get whychooseuscontent => _whychooseuscontent;
+  List<WhoWeAreTemplate>? get whowearetemplate => _whowearetemplate;
+  List<WhoWeAreContent>? get whowearecontent => _whowearecontent;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    if (_whychooseustemplate != null) {
-      map['why-choose-us-template'] = _whychooseustemplate?.map((v) => v.toJson()).toList();
+    if (_whowearetemplate != null) {
+      map['who-we-are-template'] = _whowearetemplate?.map((v) => v.toJson()).toList();
     }
-    if (_whychooseuscontent != null) {
-      map['why-choose-us-content'] = _whychooseuscontent?.map((v) => v.toJson()).toList();
+    if (_whowearecontent != null) {
+      map['who-we-are-content'] = _whowearecontent?.map((v) => v.toJson()).toList();
     }
     return map;
   }
 
 }
 
-class WhyChooseUsContent {
-  WhyChooseUsContent({
+class WhoWeAreContent {
+  WhoWeAreContent({
       num? id, 
-      String? contentId, 
-      Description2? description,
+      String? contentId,
+      WhoWeAreContentMainDescription? description,
       String? createdAt, 
-      Content? content,}){
+      WhoWeAreSubContent? content,}){
     _id = id;
     _contentId = contentId;
     _description = description;
@@ -57,24 +57,24 @@ class WhyChooseUsContent {
     _content = content;
 }
 
-  WhyChooseUsContent.fromJson(dynamic json) {
+  WhoWeAreContent.fromJson(dynamic json) {
     _id = json['id'];
     _contentId = json['content_id'];
-    _description = json['description'] != null ? Description2.fromJson(json['description']) : null;
+    _description = json['description'] != null ? WhoWeAreContentMainDescription.fromJson(json['description']) : null;
     _createdAt = json['created_at'];
-    _content = json['content'] != null ? Content.fromJson(json['content']) : null;
+    _content = json['content'] != null ? WhoWeAreSubContent.fromJson(json['content']) : null;
   }
   num? _id;
   String? _contentId;
-  Description2? _description;
+  WhoWeAreContentMainDescription? _description;
   String? _createdAt;
-  Content? _content;
-WhyChooseUsContent copyWith({  num? id,
+  WhoWeAreSubContent? _content;
+WhoWeAreContent copyWith({  num? id,
   String? contentId,
-  Description2? description,
+  WhoWeAreContentMainDescription? description,
   String? createdAt,
-  Content? content,
-}) => WhyChooseUsContent(  id: id ?? _id,
+  WhoWeAreSubContent? content,
+}) => WhoWeAreContent(  id: id ?? _id,
   contentId: contentId ?? _contentId,
   description: description ?? _description,
   createdAt: createdAt ?? _createdAt,
@@ -82,9 +82,9 @@ WhyChooseUsContent copyWith({  num? id,
 );
   num? get id => _id;
   String? get contentId => _contentId;
-  Description2? get description => _description;
+  WhoWeAreContentMainDescription? get description => _description;
   String? get createdAt => _createdAt;
-  Content? get content => _content;
+  WhoWeAreSubContent? get content => _content;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -102,8 +102,8 @@ WhyChooseUsContent copyWith({  num? id,
 
 }
 
-class Content {
-  Content({
+class WhoWeAreSubContent {
+  WhoWeAreSubContent({
       num? id, 
       String? name, 
       ContentMedia? contentMedia,}){
@@ -112,7 +112,7 @@ class Content {
     _contentMedia = contentMedia;
 }
 
-  Content.fromJson(dynamic json) {
+  WhoWeAreSubContent.fromJson(dynamic json) {
     _id = json['id'];
     _name = json['name'];
     _contentMedia = json['content_media'] != null ? ContentMedia.fromJson(json['content_media']) : null;
@@ -120,10 +120,10 @@ class Content {
   num? _id;
   String? _name;
   ContentMedia? _contentMedia;
-Content copyWith({  num? id,
+WhoWeAreSubContent copyWith({  num? id,
   String? name,
   ContentMedia? contentMedia,
-}) => Content(  id: id ?? _id,
+}) => WhoWeAreSubContent(  id: id ?? _id,
   name: name ?? _name,
   contentMedia: contentMedia ?? _contentMedia,
 );
@@ -146,24 +146,24 @@ Content copyWith({  num? id,
 class ContentMedia {
   ContentMedia({
       String? contentId, 
-      Description? description,}){
+      WhoWeAreSubContentSubDescription? description,}){
     _contentId = contentId;
     _description = description;
 }
 
   ContentMedia.fromJson(dynamic json) {
     _contentId = json['content_id'];
-    _description = json['description'] != null ? Description.fromJson(json['description']) : null;
+    _description = json['description'] != null ? WhoWeAreSubContentSubDescription.fromJson(json['description']) : null;
   }
   String? _contentId;
-  Description? _description;
+  WhoWeAreSubContentSubDescription? _description;
 ContentMedia copyWith({  String? contentId,
-  Description? description,
+  WhoWeAreSubContentSubDescription? description,
 }) => ContentMedia(  contentId: contentId ?? _contentId,
   description: description ?? _description,
 );
   String? get contentId => _contentId;
-  Description? get description => _description;
+  WhoWeAreSubContentSubDescription? get description => _description;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -176,18 +176,18 @@ ContentMedia copyWith({  String? contentId,
 
 }
 
-class Description {
-  Description({
+class WhoWeAreSubContentSubDescription {
+  WhoWeAreSubContentSubDescription({
       String? image,}){
     _image = image;
 }
 
-  Description.fromJson(dynamic json) {
+  WhoWeAreSubContentSubDescription.fromJson(dynamic json) {
     _image = json['image'];
   }
   String? _image;
-Description copyWith({  String? image,
-}) => Description(  image: image ?? _image,
+WhoWeAreSubContentSubDescription copyWith({  String? image,
+}) => WhoWeAreSubContentSubDescription(  image: image ?? _image,
 );
   String? get image => _image;
 
@@ -199,23 +199,23 @@ Description copyWith({  String? image,
 
 }
 
-class Description2 {
-  Description({
+class WhoWeAreContentMainDescription {
+  WhoWeAreContentMainDescription({
       String? title, 
       String? shortDescription,}){
     _title = title;
     _shortDescription = shortDescription;
 }
 
-  Description2.fromJson(dynamic json) {
+  WhoWeAreContentMainDescription.fromJson(dynamic json) {
     _title = json['title'];
     _shortDescription = json['short_description'];
   }
   String? _title;
   String? _shortDescription;
-Description2 copyWith({  String? title,
+  WhoWeAreContentMainDescription copyWith({  String? title,
   String? shortDescription,
-}) => Description(  title: title ?? _title,
+}) => WhoWeAreContentMainDescription(  title: title ?? _title,
   shortDescription: shortDescription ?? _shortDescription,
 );
   String? get title => _title;
@@ -230,12 +230,12 @@ Description2 copyWith({  String? title,
 
 }
 
-class WhyChooseUsTemplate {
-  WhyChooseUsTemplate({
+class WhoWeAreTemplate {
+  WhoWeAreTemplate({
       num? id, 
       String? languageId, 
       String? sectionName,
-      Description3? description,
+      WhoWeAreTemplateDescription? description,
       String? createdAt, 
       String? updatedAt,}){
     _id = id;
@@ -246,27 +246,27 @@ class WhyChooseUsTemplate {
     _updatedAt = updatedAt;
 }
 
-  WhyChooseUsTemplate.fromJson(dynamic json) {
+  WhoWeAreTemplate.fromJson(dynamic json) {
     _id = json['id'];
     _languageId = json['language_id'];
     _sectionName = json['section_name'];
-    _description = json['description'] != null ? Description3.fromJson(json['description']) : null;
+    _description = json['description'] != null ? WhoWeAreTemplateDescription.fromJson(json['description']) : null;
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
   }
   num? _id;
   String? _languageId;
   String? _sectionName;
-  Description3? _description;
+  WhoWeAreTemplateDescription? _description;
   String? _createdAt;
   String? _updatedAt;
-WhyChooseUsTemplate copyWith({  num? id,
+WhoWeAreTemplate copyWith({  num? id,
   String? languageId,
   String? sectionName,
-  Description3? description,
+  WhoWeAreTemplateDescription? description,
   String? createdAt,
   String? updatedAt,
-}) => WhyChooseUsTemplate(  id: id ?? _id,
+}) => WhoWeAreTemplate(  id: id ?? _id,
   languageId: languageId ?? _languageId,
   sectionName: sectionName ?? _sectionName,
   description: description ?? _description,
@@ -276,7 +276,7 @@ WhyChooseUsTemplate copyWith({  num? id,
   num? get id => _id;
   String? get languageId => _languageId;
   String? get sectionName => _sectionName;
-  Description3? get description => _description;
+  WhoWeAreTemplateDescription? get description => _description;
   String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
 
@@ -295,24 +295,40 @@ WhyChooseUsTemplate copyWith({  num? id,
 
 }
 
-class Description3 {
-  Description2({
-      String? title,}){
+class WhoWeAreTemplateDescription {
+  WhoWeAreTemplateDescription({
+      String? title, 
+      String? subTitle, 
+      String? shortDescription,}){
     _title = title;
+    _subTitle = subTitle;
+    _shortDescription = shortDescription;
 }
 
-  Description3.fromJson(dynamic json) {
+  WhoWeAreTemplateDescription.fromJson(dynamic json) {
     _title = json['title'];
+    _subTitle = json['sub_title'];
+    _shortDescription = json['short_description'];
   }
   String? _title;
-// Description3 copyWith({  String? title,
-// }) => Description3(title:  _title,
-// );
+  String? _subTitle;
+  String? _shortDescription;
+  WhoWeAreTemplateDescription copyWith({  String? title,
+  String? subTitle,
+  String? shortDescription,
+}) => WhoWeAreTemplateDescription(  title: title ?? _title,
+  subTitle: subTitle ?? _subTitle,
+  shortDescription: shortDescription ?? _shortDescription,
+);
   String? get title => _title;
+  String? get subTitle => _subTitle;
+  String? get shortDescription => _shortDescription;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['title'] = _title;
+    map['sub_title'] = _subTitle;
+    map['short_description'] = _shortDescription;
     return map;
   }
 
